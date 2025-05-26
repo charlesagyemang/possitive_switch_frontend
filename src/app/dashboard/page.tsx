@@ -1,5 +1,13 @@
 'use client';
 
+interface Candidate {
+  id: number;
+  name: string;
+  email: string;
+  parcel_dispatched: boolean;
+}
+
+
 import { useEffect, useState } from 'react';
 import { UserGroupIcon, EnvelopeIcon, TruckIcon } from '@heroicons/react/24/outline';
 import api from '@/lib/api';
@@ -7,7 +15,7 @@ import StatCard from '@/components/StatCard';
 import CandidateTable from '@/components/CandidateTable';
 
 export default function Dashboard() {
-  const [candidates, setCandidates] = useState([]);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
 
   useEffect(() => {
     api.get('/candidates').then((res) => {
