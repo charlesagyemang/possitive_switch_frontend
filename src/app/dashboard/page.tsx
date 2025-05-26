@@ -1,17 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { UserGroupIcon, EnvelopeIcon, TruckIcon } from '@heroicons/react/24/outline';
 import api from '@/lib/api';
-
-interface Candidate {
-  id: number;
-  name: string;
-  email: string;
-  parcel_dispatched: boolean;
-}
+import StatCard from '@/components/StatCard';
+import CandidateTable from '@/components/CandidateTable';
 
 export default function Dashboard() {
-  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
     api.get('/candidates').then((res) => {
@@ -19,27 +15,18 @@ export default function Dashboard() {
     });
   }, []);
 
+  const total = candidates.length;
+  const dispatched = candidates.filter((c) => c.parcel_dispatched).length;
+
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Candidate Dashboard</h1>
-      <table className="w-full border-collapse border">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="border p-2">Name</th>
-            <th className="border p-2">Email</th>
-            <th className="border p-2">Dispatched</th>
-          </tr>
-        </thead>
-        <tbody>
-          {candidates.map((c) => (
-            <tr key={c.id}>
-              <td className="border p-2">{c.name}</td>
-              <td className="border p-2">{c.email}</td>
-              <td className="border p-2">{c.parcel_dispatched ? '✅' : '❌'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </main>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <StatCard label="Total Candidates" value={total} icon={<UserGroupIcon className="h-6 w-6" />} />
+        <StatCard label="Emails Sent" value={total} icon={<EnvelopeIcon className="h-6 w-6" />} />
+        <StatCard label="Parcels Dispatched" value={dispatched} icon={<TruckIcon className="h-6 w-6" />} />
+      </div>
+
+      <CandidateTable candidates={candidates} />
+    </div>
   );
 }

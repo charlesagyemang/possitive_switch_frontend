@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import api from '@/lib/api';
 
-export default function Home() {
+export default function NewCandidate() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -17,40 +17,37 @@ export default function Home() {
       setMessage('🎉 Onboarding triggered & email sent!');
       setName('');
       setEmail('');
-    } catch (err: any) {
-      setMessage('⚠️ Failed to submit.');
+    } catch {
+      setMessage('⚠️ Something went wrong.');
     }
   };
 
   return (
-    <main className="flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-4">Trigger Onboarding</h1>
-
-      <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
+    <div>
+      <h1 className="text-xl text-black font-bold mb-4">New Candidate</h1>
+      <form onSubmit={handleSubmit} className="max-w-md space-y-4">
         <input
           type="text"
           placeholder="Candidate Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-3 border rounded"
+          className="w-full p-3 border rounded text-black"
           required
         />
-
         <input
           type="email"
           placeholder="Candidate Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-3 border rounded"
+          className="w-full p-3 border rounded text-black"
           required
         />
-
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded">
           Send Welcome Email
         </button>
       </form>
 
-      {message && <p className="mt-4 text-lg">{message}</p>}
-    </main>
+      {message && <p className="mt-4 text-green-700">{message}</p>}
+    </div>
   );
 }
