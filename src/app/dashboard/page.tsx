@@ -1,40 +1,55 @@
-'use client';
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
-interface Candidate {
-  id: number;
-  name: string;
-  email: string;
-  parcel_dispatched: boolean;
-}
-
-
-import { useEffect, useState } from 'react';
-import { UserGroupIcon, EnvelopeIcon, TruckIcon } from '@heroicons/react/24/outline';
-import api from '@/lib/api';
-import StatCard from '@/components/StatCard';
-import CandidateTable from '@/components/CandidateTable';
-
-export default function Dashboard() {
-  const [candidates, setCandidates] = useState<Candidate[]>([]);
-
-  useEffect(() => {
-    api.get('/candidates').then((res) => {
-      setCandidates(res.data);
-    });
-  }, []);
-
-  const total = candidates.length;
-  const dispatched = candidates.filter((c) => c.parcel_dispatched).length;
-
+export default function Page() {
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Total Candidates" value={total} icon={<UserGroupIcon className="h-6 w-6" />} />
-        <StatCard label="Emails Sent" value={total} icon={<EnvelopeIcon className="h-6 w-6" />} />
-        <StatCard label="Parcels Dispatched" value={dispatched} icon={<TruckIcon className="h-6 w-6" />} />
-      </div>
-
-      <CandidateTable candidates={candidates} />
-    </div>
-  );
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Building Your Application
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+            <div className="bg-muted/50 aspect-video rounded-xl" />
+            <div className="bg-muted/50 aspect-video rounded-xl" />
+            <div className="bg-muted/50 aspect-video rounded-xl" />
+          </div>
+          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }
