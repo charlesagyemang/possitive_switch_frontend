@@ -49,7 +49,7 @@ export function NavCompanies({
             <SidebarMenuButton asChild>
               <a href={item.url}>
                 {/* <item.icon />  */}
-                <Landmark />
+                <Landmark className="" />
                 <span className="truncate">{item.name}</span>
               </a>
             </SidebarMenuButton>

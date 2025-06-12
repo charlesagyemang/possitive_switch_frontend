@@ -40,11 +40,12 @@ export function CustomNavMain({
   };
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Manage Companies</SidebarGroupLabel>
+      <SidebarGroupLabel>Manage </SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
+              isActive={item.isActive}
               tooltip={item.title}
               asChild={!!item.url && !item.items}
             >
