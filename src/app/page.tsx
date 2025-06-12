@@ -11,7 +11,7 @@ function LandingPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-400 via-pink-200 to-violet-100">
       <div className="flex flex-col items-center gap-8">
         <h1 className="text-6xl font-bold text-violet-900 text-center">
-          Positive Switch App
+          Digital Onboarding System
         </h1>
         <Button
           onClick={() => router.push("/dashboard")}
