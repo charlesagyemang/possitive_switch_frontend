@@ -19,6 +19,12 @@ type BreadCrumbContextType = {
 const BreadCrumbContext = createContext<BreadCrumbContextType | null>(null);
 
 const exclude = ["sa"];
+
+const alias: Record<string, string> = {
+  sa: "Super Admin",
+  admin: "Admin",
+  user: "User",
+};
 export const BreadCrumbProvider = ({ children }: { children: ReactNode }) => {
   const [crumbs, setCrumbs] = useState<BreadCrumbType[]>([]);
 
@@ -29,7 +35,7 @@ export const BreadCrumbProvider = ({ children }: { children: ReactNode }) => {
       const excluded = exclude.includes(crumb);
       return {
         key: crumb,
-        name: crumb,
+        name: alias[crumb] || crumb,
         url: excluded ? "#" : `/${truncatedList.join("/")}`,
       };
     });
