@@ -65,6 +65,23 @@ const data = {
       isActive: true,
     },
   ],
+  companies: [
+    {
+      name: "Google Inc",
+      url: "#",
+      icon: RectangleGoggles,
+    },
+    {
+      name: "MazelTov Group",
+      url: "#",
+      icon: PieChart,
+    },
+    {
+      name: "Biibisoft LLC",
+      url: "#",
+      icon: AlarmClockCheck,
+    },
+  ],
   projects: [
     {
       name: "VR OnBoarding",
@@ -88,7 +105,11 @@ export function SuperAdminSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="shadow-xl shadow-violet-200" collapsible="icon" {...props}>
+    <Sidebar
+      className="shadow-xl shadow-violet-200"
+      collapsible="icon"
+      {...props}
+    >
       <SidebarHeader>
         <div className="flex items-center gap-3 py-1">
           <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
@@ -103,7 +124,7 @@ export function SuperAdminSidebar({
       </SidebarHeader>
       <SidebarContent>
         <CustomNavMain items={data.navMain} />
-        <NavCompanies companies={data.projects} />
+        <NavCompanies companies={data.companies} />
         <CustomNavProject projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
