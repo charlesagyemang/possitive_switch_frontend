@@ -43,7 +43,7 @@ export const BreadCrumbProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useBreadCrumbs = () => {
+export const useBreadCrumbs = (): BreadCrumbContextType => {
   const context = useContext(BreadCrumbContext);
   if (!context) {
     throw new Error("useBreadCrumb must be used within a BreadCrumbProvider");
