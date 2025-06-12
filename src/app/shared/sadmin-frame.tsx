@@ -36,7 +36,7 @@ function SuperAdminFrame({ children }: { children: React.ReactNode }) {
                       <BreadcrumbLink
                         key={crumb.key}
                         href={crumb.url}
-                        className="text-gray-700 cursor-pointer hover:underline capitalize hover:text-gray-900"
+                        className="text-gray-500 font-semibold cursor-pointer hover:underline capitalize hover:text-gray-900"
                       >
                         {crumb.name}
                       </BreadcrumbLink>

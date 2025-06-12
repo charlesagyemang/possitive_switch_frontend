@@ -14,7 +14,7 @@ function PageTitle({
     <div className="flex items-center">
       {Icon && <Icon className="mr-4 h-14 w-14 text-gray-300" />}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+        <h2 className="text-3xl font-bold text-primary">{title}</h2>
         <p className="mt-1 text-sm text-gray-500">{description}</p>
       </div>
     </div>
