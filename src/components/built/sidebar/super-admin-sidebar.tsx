@@ -36,8 +36,8 @@ import { NavCompanies } from "./nav-companies";
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Mr. Frimpong",
+    email: "m@bbsoft.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
@@ -65,13 +65,13 @@ const data = {
       name: "MazelTov Group",
       url: "#",
       icon: PieChart,
-      locked:true
+      locked: true,
     },
     {
       name: "Biibisoft Ltd",
       url: "#",
       icon: AlarmClockCheck,
-      locked:true
+      locked: true,
     },
   ],
   projects: [
