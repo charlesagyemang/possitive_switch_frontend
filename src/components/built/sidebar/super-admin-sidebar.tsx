@@ -46,29 +46,19 @@ const data = {
       logo: GalleryVerticalEnd,
       plan: "Super Admin",
     },
-    // {
-    //   name: "Acme Corp.",
-    //   logo: AudioWaveform,
-    //   plan: "Startup",
-    // },
-    // {
-    //   name: "Evil Corp.",
-    //   logo: Command,
-    //   plan: "Free",
-    // },
   ],
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/sa/dashboard",
       icon: Layout,
       isActive: true,
     },
   ],
   companies: [
     {
-      name: "Google Inc",
-      url: "#",
+      name: "New Fire Media",
+      url: "/c/new-fire-media",
       icon: RectangleGoggles,
     },
     {
@@ -106,7 +96,7 @@ export function SuperAdminSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
-      className="shadow-sm shadow-violet-200"
+      className="shadow-xs shadow-violet-200"
       collapsible="icon"
       {...props}
     >

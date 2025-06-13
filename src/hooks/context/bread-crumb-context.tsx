@@ -22,6 +22,7 @@ const exclude = ["sa"];
 
 const alias: Record<string, string> = {
   sa: "Super Admin",
+  c: "Company",
   admin: "Admin",
   user: "User",
 };

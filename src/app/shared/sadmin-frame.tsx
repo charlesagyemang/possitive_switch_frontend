@@ -21,7 +21,7 @@ function SuperAdminFrame({ children }: { children: React.ReactNode }) {
     <>
       {/* <SidebarInset> */}
       <SuperAdminSidebar />
-      <div className="flex h-dvh w-full flex-col overflow-hidden bg-gradient-to-br from-white via-primary/10 to-violet-50">
+      <div className="flex h-dvh w-full flex-col overflow-hidden bg-gradient-to-br from-white via-primary/5 to-primary/10">
         <header className="flex h-16 shrink-0 w-full items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <NavigationLayout />
         </header>

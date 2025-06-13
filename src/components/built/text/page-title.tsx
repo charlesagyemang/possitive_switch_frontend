@@ -15,7 +15,7 @@ function PageTitle({
   const renderIcon = () => {
     if (customIcon) return customIcon();
 
-    return Icon && <Icon className="mr-4 h-14 w-14 text-gray-300" />;
+    return Icon && <Icon className="mr-4 h-14 w-14 text-violet-100" />;
   };
   return (
     <div className="flex items-center">
