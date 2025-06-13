@@ -74,14 +74,14 @@ export const invitationColumns = [
     header: "Deadline",
     cell: (info) => info.getValue(),
   }),
-  candidateColumnHelper.accessor("status", {
+  candidateColumnHelper.accessor((row) => String(row.status), {
     header: "Status",
     cell: (info) => {
       const status = info.getValue();
       return <StatusBadge status={status} />;
     },
   }),
-  candidateColumnHelper.display({
+  candidateColumnHelper.accessor((row) => row.id, {
     id: "id",
     header: "Actions",
     cell: (info) => {
