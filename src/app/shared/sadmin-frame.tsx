@@ -47,7 +47,9 @@ function SuperAdminFrame({ children }: { children: React.ReactNode }) {
             })}
           </BreadcrumbList>
         </div>
-        <main className="h-full w-full ">{children}</main>
+        <main className="h-full w-full overflow-y-scroll scrollbar-hide pb-20 ">
+          {children}
+        </main>
         {/* </SidebarInset> */}
       </div>
     </>

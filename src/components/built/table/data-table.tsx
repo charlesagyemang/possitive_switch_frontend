@@ -74,7 +74,7 @@ export function GenericTable<TData, TValue>({
   const to = Math.min((pageIndex + 1) * pageSize, totalRecords);
 
   return (
-    <div className="w-full max-w-8xl mx-auto bg-white rounded-xl ">
+    <div className="w-full max-w-8xl mx-auto  rounded-xl ">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
         {name && <h2 className="text-2xl font-bold text-gray-800">{name}</h2>}
         <span className="text-xs ml-auto text-gray-500 bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
@@ -88,14 +88,14 @@ export function GenericTable<TData, TValue>({
           records
         </span>
       </div>
-      <div className="rounded-xl border border-gray-200 overflow-hidden">
+      <div className="rounded-xl border border-purple-100 overflow-hidden">
         <Table className="min-w-full">
-          <TableHeader className="bg-gradient-to-r from-gray-50 to-gray-100">
+          <TableHeader className="bg-gray-50 ">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead
-                    className="font-bold text-gray-700 uppercase tracking-wide px-4 py-3"
+                    className="font-bold text-xs bg-purple-50 text-gray-800 uppercase tracking-wide px-4 py-3"
                     key={header.id}
                   >
                     {header.isPlaceholder
@@ -109,13 +109,13 @@ export function GenericTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="bg-white">
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="hover:bg-gray-50 transition"
+                  className="hover:bg-red-50/50 transition border-b-purple-100"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell className="px-4 py-3" key={cell.id}>
@@ -155,7 +155,7 @@ export function GenericTable<TData, TValue>({
                   }}
                   className={
                     table.getCanPreviousPage()
-                      ? "hover:bg-gray-100"
+                      ? "hover:bg-primary/10"
                       : "opacity-50 pointer-events-none"
                   }
                 />
@@ -172,7 +172,7 @@ export function GenericTable<TData, TValue>({
                     }}
                     className={
                       i === currentPage
-                        ? "bg-gray-600 text-white border-gray-600"
+                        ? "bg-white text-primary border-primary hover:bg-primary/90 hover:text-white"
                         : "hover:bg-gray-100"
                     }
                   >
@@ -192,7 +192,7 @@ export function GenericTable<TData, TValue>({
                   }}
                   className={
                     table.getCanNextPage()
-                      ? "hover:bg-gray-100"
+                      ? "hover:bg-primary/10"
                       : "opacity-50 pointer-events-none"
                   }
                 />
