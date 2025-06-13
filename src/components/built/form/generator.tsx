@@ -5,7 +5,6 @@ import {
   useController,
 } from "react-hook-form";
 import { Textarea, Textbox } from "../input/input";
-import { RadioGroup } from "@radix-ui/react-dropdown-menu";
 import { RadioGroupComponent } from "../radio/radio";
 import { Label } from "@/components/ui/label";
 
@@ -28,7 +27,7 @@ export type CustomFormField = {
   placeholder?: string;
   options?: { value: string; label: string }[];
   required?: boolean;
-  rules?: any;
+  rules?: Record<string, any>;
   labelAccessor?: (item: Record<string, string> | string) => string;
   valueAccessor?: (item: Record<string, string> | string) => string;
   className?: string;

@@ -1,6 +1,5 @@
-import { Candidate, CandidateInvitation } from "@/app/seed/candidates";
+import { CandidateInvitation } from "@/app/seed/candidates";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge"; // Adjust the import path as needed
 import React from "react";
 import {
   AsDropdownMenu,
@@ -93,10 +92,10 @@ export const invitationColumns = ({
     id: "id",
     header: "",
     cell: (info) => {
-      const options: DOption[] = [
-        { label: "View", value: "view", onClick: () => {} },
-        { label: "Delete", value: "delete", onClick: () => {} },
-      ];
+      // const options: DOption[] = [
+      //   { label: "View", value: "view", onClick: () => {} },
+      //   { label: "Delete", value: "delete", onClick: () => {} },
+      // ];
       return (
         <AsDropdownMenu options={actions(info.row.original)} className="w-8">
           <button className="p-1 rounded hover:bg-muted">

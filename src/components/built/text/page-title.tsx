@@ -1,5 +1,5 @@
-import { IconNode, type LucideIcon } from "lucide-react";
-import React, { ReactNode } from "react";
+import { type LucideIcon } from "lucide-react";
+import React from "react";
 
 function PageTitle({
   title,

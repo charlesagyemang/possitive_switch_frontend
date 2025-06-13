@@ -1,5 +1,5 @@
 import { LucideIcon } from "lucide-react";
-import React, { ReactNode, useState, ComponentType } from "react";
+import React, { useState, ComponentType } from "react";
 
 export interface StepHeader {
   label: string;

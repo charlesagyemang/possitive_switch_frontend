@@ -2,7 +2,7 @@ import { Company } from "@/app/seed/companies";
 import { AsDropdownMenu } from "@/components/built/dropdown/custom-dropdown";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Users, UserPlus, Building2, Ellipsis } from "lucide-react";
+import {  Building2, Ellipsis } from "lucide-react";
 
 const companyColumnHelper = createColumnHelper<Company>();
 export const companyColumns = [

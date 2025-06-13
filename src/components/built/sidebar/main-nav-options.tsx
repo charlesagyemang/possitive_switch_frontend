@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useURLOptions } from "@/hooks/user-url-options";
+import { useURLOptions } from "@/hooks/use-url-options";
 
 export function CustomNavMain({
   items,
