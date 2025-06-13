@@ -65,11 +65,13 @@ const data = {
       name: "MazelTov Group",
       url: "#",
       icon: PieChart,
+      locked:true
     },
     {
-      name: "Biibisoft LLC",
+      name: "Biibisoft Ltd",
       url: "#",
       icon: AlarmClockCheck,
+      locked:true
     },
   ],
   projects: [

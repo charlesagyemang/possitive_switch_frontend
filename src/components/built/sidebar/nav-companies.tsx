@@ -1,29 +1,15 @@
 "use client";
 
 import {
-  Building,
-  Building2,
-  Folder,
-  Forward,
   Landmark,
   Lock,
-  MoreHorizontal,
-  Trash2,
   type LucideIcon,
 } from "lucide-react";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
@@ -36,6 +22,7 @@ export function NavCompanies({
     name: string;
     url: string;
     icon: LucideIcon;
+    locked?: boolean;
   }[];
 }) {
   const { isMobile } = useSidebar();
@@ -51,8 +38,13 @@ export function NavCompanies({
                 {/* <item.icon />  */}
                 <Landmark className="" />
                 <span className="truncate">{item.name}</span>
+
+                {/* {item.locked && (
+                  <Lock className="ml-auto text-sidebar-foreground/40" />
+                )} */}
               </a>
             </SidebarMenuButton>
+            {item.locked && <Lock className="absolute right-2 top-2 h-4 w-4 text-gray-300" />}
           </SidebarMenuItem>
         ))}
         {/* <SidebarMenuItem>
