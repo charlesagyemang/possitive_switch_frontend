@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { MoveRight } from "lucide-react";
+import { LoaderPinwheel, MoveRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import React from "react";
@@ -8,20 +8,55 @@ import React from "react";
 function LandingPage() {
   const router = useRouter();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-400 via-pink-200 to-violet-100">
-      <div className="flex flex-col items-center gap-8">
-        <h1 className="text-6xl font-bold text-violet-900 text-center">
-          Digital Onboarding System
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden animate-gradient-bg bg-gradient-to-tr from-blue-100 via-white to-violet-200">
+      {/* Decorative Shapes */}
+      <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-200 opacity-20 rounded-br-full blur-2xl z-0"></div>
+      <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-violet-300 opacity-20 rounded-tl-full blur-2xl z-0"></div>
+      <div className="relative z-10 flex flex-col items-center gap-10 px-12 py-16 bg-gradient-to-br from-white via-blue-50 to-violet-50 backdrop-blur-xl rounded-3xl shadow-lg border-none border-blue-100/60">
+        {/* <div className="flex items-center gap-3 mb-2">
+          <span className="inline-block w-3 h-3 bg-violet-400 rounded-full animate-pulse"></span>
+          <span className="uppercase text-xs font-semibold text-violet-600 tracking-widest">
+            Welcome
+          </span>
+        </div> */}
+        <LoaderPinwheel className="w-16 h-16 text-primary animate-spin mb-4" />
+        <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary via-violet-600 to-fuchsia-500 text-center drop-shadow-lg">
+          Digital Onboarding
         </h1>
+        <p className="text-lg md:text-2xl text-gray-700 text-center max-w-2xl font-medium">
+          Experience a seamless onboarding journey.
+          <br />
+          Fast, secure, and beautifully simple.
+        </p>
         <Button
           onClick={() => router.push("/sa/dashboard")}
-          variant={"default"}
+          variant="default"
           size="lg"
-          className="flex items-center gap-2"
+          className="flex items-center rounded-full gap-2 px-8 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-amber-500 hover:from-violet-500 hover:to-blue-600 transition-all duration-200 shadow-lg"
         >
-          Continue to Dashboard <MoveRight />
+          Get Started
+          <MoveRight className="w-6 h-6 ml-1" />
         </Button>
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-40 h-4 bg-gradient-to-r from-blue-200 via-violet-200 to-fuchsia-200 blur-lg opacity-60 rounded-full"></div>
       </div>
+      <style jsx global>{`
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+        .animate-gradient-bg {
+          background: linear-gradient(120deg, #bfdbfe, #fff, #c4b5fd);
+          background-size: 200% 200%;
+          animation: gradientBG 8s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
