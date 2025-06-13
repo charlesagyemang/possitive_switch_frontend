@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Landmark,
-  Lock,
-  type LucideIcon,
-} from "lucide-react";
+import { Landmark, Lock, type LucideIcon } from "lucide-react";
 
 import {
   SidebarGroup,
@@ -14,6 +10,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useURLOptions } from "@/hooks/user-url-options";
 
 export function NavCompanies({
   companies,
@@ -26,6 +23,7 @@ export function NavCompanies({
   }[];
 }) {
   const { isMobile } = useSidebar();
+  const { pathname } = useURLOptions();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -33,7 +31,7 @@ export function NavCompanies({
       <SidebarMenu>
         {companies.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton isActive={item.url === pathname} asChild>
               <a href={item.url}>
                 {/* <item.icon />  */}
                 <Landmark className="" />
@@ -44,7 +42,9 @@ export function NavCompanies({
                 )} */}
               </a>
             </SidebarMenuButton>
-            {item.locked && <Lock className="absolute right-2 top-2 h-4 w-4 text-gray-300" />}
+            {item.locked && (
+              <Lock className="absolute right-2 top-2 h-4 w-4 text-gray-300" />
+            )}
           </SidebarMenuItem>
         ))}
         {/* <SidebarMenuItem>

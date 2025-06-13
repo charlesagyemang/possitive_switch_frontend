@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { useURLOptions } from "@/hooks/user-url-options";
 
 export function CustomNavMain({
   items,
@@ -33,6 +34,7 @@ export function CustomNavMain({
     }[];
   }[];
 }) {
+  const { pathname } = useURLOptions();
   const Icon = ({ icon }: { icon?: LucideIcon }) => {
     if (!icon) return null;
     const IconComponent = icon;
@@ -45,7 +47,7 @@ export function CustomNavMain({
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
-              isActive={item.isActive}
+              isActive={item.url === pathname}
               tooltip={item.title}
               asChild={!!item.url && !item.items}
             >
