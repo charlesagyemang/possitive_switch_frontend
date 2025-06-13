@@ -14,8 +14,8 @@ import { Separator } from "@/components/ui/separator";
 
 function NavigationLayout() {
   return (
-    <div className="w-full bg-gradient-to-r from-indigo-50 via-white to-pink-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
-      <div className="w-full flex items-center shadow-xs gap-6 px-6 py-4  bg-opacity-90 border-b border-gray-200 dark:border-gray-800 backdrop-blur-md">
+    <div className="w-full bg-gradient-to-r from-primary/15 via-white to-pink-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+      <div className="w-full flex items-center shadow-sm gap-6 px-6 py-4  bg-opacity-90 border-none border-gray-200 dark:border-gray-800 backdrop-blur-md">
         <SidebarTrigger className="-ml-1 hover:scale-110 transition-transform duration-200" />
 
         <Separator

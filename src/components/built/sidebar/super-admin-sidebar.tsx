@@ -106,7 +106,7 @@ export function SuperAdminSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
-      className="shadow-xl shadow-violet-200"
+      className="shadow-sm shadow-violet-200"
       collapsible="icon"
       {...props}
     >
