@@ -1,3 +1,12 @@
+import {
+  ClockIcon,
+  CheckCircleIcon,
+  BookOpenIcon,
+  UserPlusIcon,
+  BadgeCheckIcon,
+  Clock,
+} from "lucide-react";
+
 export type Candidate = {
   id: string;
   first_name: string;
@@ -22,6 +31,33 @@ export type CandidateInvitation = {
   deadline: string;
 };
 
+export const INVITATION_STATUS = [
+  {
+    value: "pending",
+    label: "Pending",
+    Icon: Clock,
+  },
+  {
+    value: "signed",
+    label: "Signed",
+    Icon: CheckCircleIcon,
+  },
+  {
+    value: "orrientation",
+    label: "Orientation",
+    Icon: BookOpenIcon,
+  },
+  {
+    value: "onboarding",
+    label: "Onboarding",
+    Icon: UserPlusIcon,
+  },
+  {
+    value: "completed",
+    label: "Completed",
+    Icon: BadgeCheckIcon,
+  },
+];
 
 export const INVITATION_EXAMPLES: CandidateInvitation[] = [
   {
@@ -113,5 +149,5 @@ export const INVITATION_EXAMPLES: CandidateInvitation[] = [
     gender: "Male",
     status: "completed",
     deadline: "2024-07-31",
-  }
+  },
 ];
