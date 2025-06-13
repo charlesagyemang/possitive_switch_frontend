@@ -1,9 +1,15 @@
+"use client";
+import { ACTIVITIES_EXAMPLE, Activity } from "@/app/seed/activities";
 import SuperAdminRoot from "@/app/shared/wrappers/sadmin-root";
 import SadminSpace from "@/app/shared/wrappers/sadmin-space";
+import { GenericTable } from "@/components/built/table/data-table";
 import PageTitle from "@/components/built/text/page-title";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Handshake, Landmark, Mail, PersonStanding, Plus } from "lucide-react";
 import React from "react";
+import { invitationColumns } from "./company-table-structure";
+import { INVITATION_EXAMPLES } from "@/app/seed/candidates";
 
 function OneCompanyDashboard() {
   const cards = [
@@ -51,7 +57,7 @@ function OneCompanyDashboard() {
         <div className="flex items-center justify-between mb-6">
           <PageTitle
             Icon={Landmark}
-            title="New Fire Company"
+            title="New Fire Media"
             description="Create a new company to manage candidates and employees."
           />
 
@@ -89,9 +95,79 @@ function OneCompanyDashboard() {
             ))}
           </div>
         </div>
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 mt-8">
+          <div className="lg:col-span-7">
+            {/* Left side content (70%) */}
+            <Card className="shadow-none">
+              <CardContent>
+                <GenericTable
+                  pageSize={8}
+                  name="Invited Candidates"
+                  columns={invitationColumns}
+                  data={INVITATION_EXAMPLES}
+                />
+              </CardContent>
+            </Card>
+          </div>
+          <div className="lg:col-span-3">
+            {/* Right side content (30%) */}
+
+            <Card className="shadow-none">
+              <CardContent>
+                <div>
+                  <h2 className="text-lg font-semibold mb-3">
+                    Recent Activities
+                  </h2>
+                  <ul className="space-y-2 overflow-y-scroll scrollbar-hide max-h-[500px]">
+                    {ACTIVITIES_EXAMPLE.map((activity) => (
+                      <React.Fragment key={activity.id}>
+                        <ActivityCard activity={activity} />
+                      </React.Fragment>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </SadminSpace>
     </SuperAdminRoot>
   );
 }
 
 export default OneCompanyDashboard;
+
+const ActivityCard = ({ activity }: { activity: Activity }) => {
+  return (
+    <li
+      key={activity.id}
+      className="flex items-start gap-3 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+    >
+      <div className="flex items-center justify-center rounded-full w-7 h-7 bg-gray-200 dark:bg-gray-700">
+        {activity.type === "invite" && (
+          <Mail className="w-4 h-4 text-blue-600" />
+        )}
+        {activity.type === "sign" && (
+          <Handshake className="w-4 h-4 text-green-600" />
+        )}
+        {activity.type === "add" && (
+          <Plus className="w-4 h-4 text-yellow-600" />
+        )}
+        {activity.type === "accept" && (
+          <PersonStanding className="w-4 h-4 text-purple-600" />
+        )}
+      </div>
+      <div className="text-xs">
+        <span className="font-medium text-gray-900 dark:text-white capitalize">
+          {activity.type}
+        </span>
+        <span className="ml-1 text-gray-600 dark:text-gray-400">
+          {activity.notes}
+        </span>
+        <div className="text-[10px] text-gray-400 mt-0.5">
+          {new Date(activity.created_at).toLocaleString()}
+        </div>
+      </div>
+    </li>
+  );
+};
