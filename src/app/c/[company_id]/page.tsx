@@ -101,7 +101,7 @@ function OneCompanyDashboard() {
             <Card className="shadow-none">
               <CardContent>
                 <GenericTable
-                  pageSize={8}
+                  pageSize={7}
                   name="Invited Candidates"
                   columns={invitationColumns}
                   data={INVITATION_EXAMPLES}

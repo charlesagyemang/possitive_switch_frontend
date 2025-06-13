@@ -2,6 +2,11 @@ import { Candidate, CandidateInvitation } from "@/app/seed/candidates";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge"; // Adjust the import path as needed
 import React from "react";
+import {
+  AsDropdownMenu,
+  DOption,
+} from "@/components/built/dropdown/custom-dropdown";
+import { MoreVertical } from "lucide-react";
 
 const candidateColumnHelper = createColumnHelper<CandidateInvitation>();
 
@@ -74,6 +79,38 @@ export const invitationColumns = [
     cell: (info) => {
       const status = info.getValue();
       return <StatusBadge status={status} />;
+    },
+  }),
+  candidateColumnHelper.display({
+    id: "id",
+    header: "Actions",
+    cell: (info) => {
+      const row = info.row.original;
+      const options: DOption[] = [
+        {
+          label: "View",
+          value: "view",
+          onClick: () => {
+            // handle view action
+            // e.g., open modal or navigate
+          },
+        },
+        {
+          label: "Delete",
+          value: "delete",
+          onClick: () => {
+            // handle delete action
+            // e.g., show confirmation dialog
+          },
+        },
+      ];
+      return (
+        <AsDropdownMenu options={options}>
+          <button className="p-2 rounded hover:bg-muted">
+            <MoreVertical className="w-4 h-4" />
+          </button>
+        </AsDropdownMenu>
+      );
     },
   }),
 ];
