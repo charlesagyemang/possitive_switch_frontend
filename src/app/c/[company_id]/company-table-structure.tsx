@@ -7,6 +7,7 @@ import {
   DOption,
 } from "@/components/built/dropdown/custom-dropdown";
 import { MoreVertical } from "lucide-react";
+import { format } from "date-fns";
 
 const candidateColumnHelper = createColumnHelper<CandidateInvitation>();
 
@@ -60,7 +61,7 @@ function StatusBadge({ status }: { status: string }) {
 export const invitationColumns = [
   candidateColumnHelper.accessor("email", {
     header: "Email",
-    cell: (info) => info.getValue(),
+    cell: (info) => <b>{info.getValue()}</b>,
   }),
   candidateColumnHelper.accessor("first_name", {
     header: "First Name",
@@ -72,41 +73,29 @@ export const invitationColumns = [
   }),
   candidateColumnHelper.accessor("deadline", {
     header: "Deadline",
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const value = info.getValue();
+      if (!value) return "-";
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return value;
+      return format(date, "P"); // Shorter date format
+    },
   }),
   candidateColumnHelper.accessor((row) => String(row.status), {
     header: "Status",
-    cell: (info) => {
-      const status = info.getValue();
-      return <StatusBadge status={status} />;
-    },
+    cell: (info) => <StatusBadge status={info.getValue()} />,
   }),
   candidateColumnHelper.accessor((row) => row.id, {
     id: "id",
-    header: "Actions",
+    header: "",
     cell: (info) => {
-      const row = info.row.original;
       const options: DOption[] = [
-        {
-          label: "View",
-          value: "view",
-          onClick: () => {
-            // handle view action
-            // e.g., open modal or navigate
-          },
-        },
-        {
-          label: "Delete",
-          value: "delete",
-          onClick: () => {
-            // handle delete action
-            // e.g., show confirmation dialog
-          },
-        },
+        { label: "View", value: "view", onClick: () => {} },
+        { label: "Delete", value: "delete", onClick: () => {} },
       ];
       return (
         <AsDropdownMenu options={options}>
-          <button className="p-2 rounded hover:bg-muted">
+          <button className="p-1 rounded hover:bg-muted">
             <MoreVertical className="w-4 h-4" />
           </button>
         </AsDropdownMenu>

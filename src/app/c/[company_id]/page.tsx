@@ -143,7 +143,21 @@ const ActivityCard = ({ activity }: { activity: Activity }) => {
       key={activity.id}
       className="flex items-start gap-3 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
     >
-      <div className="flex items-center justify-center rounded-full w-7 h-7 bg-gray-200 dark:bg-gray-700">
+      <div
+        className={`flex items-center justify-center rounded-full w-7 h-7
+          ${
+            activity.type === "invite"
+              ? "bg-blue-100 dark:bg-blue-900"
+              : activity.type === "sign"
+              ? "bg-green-100 dark:bg-green-900"
+              : activity.type === "add"
+              ? "bg-yellow-100 dark:bg-yellow-900"
+              : activity.type === "accept"
+              ? "bg-purple-100 dark:bg-purple-900"
+              : "bg-gray-200 dark:bg-gray-700"
+          }
+        `}
+      >
         {activity.type === "invite" && (
           <Mail className="w-4 h-4 text-blue-600" />
         )}
