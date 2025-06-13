@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Candidate Management System",
-  description: "A simple employee management system by BBsoft",
+  title: "Digital Onboarding System",
+  description: "Seamless digital onboarding experience",
 };
 
 export default function RootLayout({
