@@ -58,7 +58,11 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-export const invitationColumns = [
+export const invitationColumns = ({
+  actions,
+}: {
+  actions: (r: CandidateInvitation) => DOption[];
+}) => [
   candidateColumnHelper.accessor("email", {
     header: "Email",
     cell: (info) => <b>{info.getValue()}</b>,
@@ -94,7 +98,7 @@ export const invitationColumns = [
         { label: "Delete", value: "delete", onClick: () => {} },
       ];
       return (
-        <AsDropdownMenu options={options}>
+        <AsDropdownMenu options={actions(info.row.original)} className="w-8">
           <button className="p-1 rounded hover:bg-muted">
             <MoreVertical className="w-4 h-4" />
           </button>

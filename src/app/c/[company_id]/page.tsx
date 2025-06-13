@@ -6,12 +6,27 @@ import { GenericTable } from "@/components/built/table/data-table";
 import PageTitle from "@/components/built/text/page-title";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Handshake, Landmark, Mail, PersonStanding, Plus } from "lucide-react";
+import {
+  Eye,
+  Handshake,
+  Landmark,
+  Mail,
+  PersonStanding,
+  Plus,
+} from "lucide-react";
 import React from "react";
 import { invitationColumns } from "./company-table-structure";
-import { INVITATION_EXAMPLES } from "@/app/seed/candidates";
+import {
+  CandidateInvitation,
+  INVITATION_EXAMPLES,
+} from "@/app/seed/candidates";
+import { DOption } from "@/components/built/dropdown/custom-dropdown";
+import { useRouter, useParams } from "next/navigation";
 
 function OneCompanyDashboard() {
+  const router = useRouter();
+  const params = useParams();
+
   const cards = [
     {
       title: "Total Invites",
@@ -50,6 +65,21 @@ function OneCompanyDashboard() {
       ring: "ring-2 ring-purple-400/30",
     },
   ];
+
+  const companyId = params.company_id as string;
+  const makeActions = (row: CandidateInvitation): DOption[] => {
+    return [
+      {
+        label: "View Details",
+        value: "view_details",
+        Icon: Eye,
+        onClick: () => {
+          router.push(`/c/${companyId}/invitation/${row.id}`);
+          // handle view details
+        },
+      },
+    ];
+  };
 
   return (
     <SuperAdminRoot>
@@ -103,7 +133,7 @@ function OneCompanyDashboard() {
                 <GenericTable
                   pageSize={7}
                   name="Invited Candidates"
-                  columns={invitationColumns}
+                  columns={invitationColumns({ actions: makeActions })}
                   data={INVITATION_EXAMPLES}
                 />
               </CardContent>
