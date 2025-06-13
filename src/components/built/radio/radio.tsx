@@ -1,7 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
-import { useController } from "react-hook-form";
 
 type RadioGroupComponentProps = {
   defaultValue?: string;
@@ -24,7 +23,6 @@ export function RadioGroupComponent(props: RadioGroupComponentProps) {
     valueAccessor,
     className,
     onChange,
-    name,
     // control,
     // rules,
     // required,

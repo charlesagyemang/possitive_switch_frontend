@@ -36,7 +36,7 @@ export function FlexibleAccordion(props: AccordionProps) {
     return (
       <AccordionTrigger
         className={`${item.headerClassName || ""}`}
-        custom={!!item.renderHeader}
+        // custom={!!item.renderHeader}
       >
         {item.title}
       </AccordionTrigger>

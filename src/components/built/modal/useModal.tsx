@@ -1,8 +1,6 @@
 import React, { ReactNode, useCallback, useState } from "react";
-import AppModal from "./modal";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,

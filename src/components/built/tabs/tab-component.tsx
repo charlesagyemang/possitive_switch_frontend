@@ -15,7 +15,7 @@ type TabComponentProps = {
   items: CustomTabItem[];
 };
 export function CustomTabComponent(props: TabComponentProps) {
-  const { defaultTab, className, items } = props;
+  const { defaultTab, items } = props;
   const [activeTab, setActiveTab] = useState<string | undefined>();
 
   useEffect(() => {

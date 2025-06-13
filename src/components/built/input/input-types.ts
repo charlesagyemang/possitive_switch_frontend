@@ -1,5 +1,4 @@
-import { FieldErrors, RegisterOptions, UseFormRegister } from "react-hook-form";
-import { UseFormRegisterReturn } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 export type TextboxProps = {
   name: string;

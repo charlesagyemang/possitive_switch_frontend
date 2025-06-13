@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,7 @@ type DropdownProps = {
   className?: string;
 };
 export function AsDropdownMenu(props: DropdownProps) {
-  const { children, className, options, name } = props;
+  const { children, options, name } = props;
 
   const render = (option: DOption) => {
     if (option.render) {

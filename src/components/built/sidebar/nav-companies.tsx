@@ -8,7 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
+
 } from "@/components/ui/sidebar";
 import { useURLOptions } from "@/hooks/use-url-options";
 
@@ -22,7 +22,7 @@ export function NavCompanies({
     locked?: boolean;
   }[];
 }) {
-  const { isMobile } = useSidebar();
+
   const { pathname } = useURLOptions();
 
   return (

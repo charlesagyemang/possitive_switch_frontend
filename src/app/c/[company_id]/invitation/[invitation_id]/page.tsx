@@ -17,7 +17,7 @@ import React, { useMemo } from "react";
 
 function InvitationView() {
   const params = useParams();
-  const { company_id, invitation_id } = params;
+  const {  invitation_id } = params;
 
   const invitation: CandidateInvitation | undefined = useMemo(() => {
     return INVITATION_EXAMPLES.find((inv) => inv.id === invitation_id);
