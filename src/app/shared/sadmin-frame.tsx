@@ -25,7 +25,7 @@ function SuperAdminFrame({ children }: { children: React.ReactNode }) {
         <header className="flex h-16 shrink-0 w-full items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <NavigationLayout />
         </header>
-        <div className="w-full mx-6 my-4">
+        <div className="w-full mx-12 my-4">
           <BreadcrumbList>
             {crumbs?.map((crumb, index) => {
               return (
