@@ -30,7 +30,8 @@ export default function SadminDashboard() {
             const cards = [
               {
                 title: "Candidates Invited",
-                description: "Total number of candidates invited",
+                description:
+                  "Total number of candidates invited for all companies",
                 value: 120,
                 icon: Users,
                 iconBg: "bg-white/70 text-blue-700",
@@ -39,7 +40,7 @@ export default function SadminDashboard() {
               },
               {
                 title: "Candidates Responded",
-                description: "Candidates who have responded",
+                description: "Candidates who have responded from all companies",
                 value: 85,
                 icon: UserCheck,
                 iconBg: "bg-white/70 text-green-700",
@@ -48,7 +49,7 @@ export default function SadminDashboard() {
               },
               {
                 title: "Companies",
-                description: "Companies on the platform",
+                description: "Companies that you manage on this platform",
                 value: 12,
                 icon: Building2,
                 iconBg: "bg-white/70 text-purple-700",
@@ -57,7 +58,7 @@ export default function SadminDashboard() {
               },
               {
                 title: "Employees",
-                description: "Total employees",
+                description: "Total candidates/employees in all companies",
                 value: 340,
                 icon: User,
                 iconBg: "bg-white/70 text-yellow-700",
