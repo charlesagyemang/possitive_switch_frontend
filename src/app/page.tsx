@@ -14,7 +14,7 @@ function LandingPage() {
           Digital Onboarding System
         </h1>
         <Button
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push("/sa/dashboard")}
           variant={"default"}
           size="lg"
           className="flex items-center gap-2"
