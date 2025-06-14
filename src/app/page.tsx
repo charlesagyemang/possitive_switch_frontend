@@ -28,7 +28,7 @@ function LandingPage() {
             Fast, secure, and beautifully simple.
           </p>
           <Button
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/auth/login")}
             variant="default"
             size="lg"
             className="flex items-center rounded-full gap-2 px-8 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-amber-500 hover:from-violet-500 hover:to-blue-600 transition-all duration-200 shadow-sm"

@@ -13,6 +13,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useURLOptions } from "@/hooks/use-url-options";
+import Link from "next/link";
 
 export function CustomNavMain({
   items,
@@ -48,10 +49,10 @@ export function CustomNavMain({
             >
               {/* {item.icon && <item.icon />} */}
               {item.url && !item.items ? (
-                <a href={item.url}>
+                <Link href={item.url}>
                   <Icon icon={item.icon} />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               ) : (
                 <span className="flex items-center gap-2">
                   <Icon icon={item.icon} />
@@ -64,10 +65,10 @@ export function CustomNavMain({
                 {item.items.map((subItem) => (
                   <SidebarMenuSubItem key={subItem.title}>
                     <SidebarMenuSubButton asChild>
-                      <a href={subItem.url}>
+                      <Link href={subItem.url}>
                         {subItem.icon && <subItem.icon />}{" "}
                         <span>{subItem.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 ))}

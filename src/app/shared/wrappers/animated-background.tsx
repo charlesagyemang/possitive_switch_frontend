@@ -8,7 +8,7 @@ function AnimatedBackground({ children }: { children: React.ReactNode }) {
       <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-violet-300 opacity-20 rounded-tl-full blur-2xl z-0"></div>
 
       <div className="w-full">{children}</div>
-      <style jsx global>{`
+      {/* <style jsx global>{`
         @keyframes gradientBG {
           0% {
             background-position: 0% 50%;
@@ -25,7 +25,7 @@ function AnimatedBackground({ children }: { children: React.ReactNode }) {
           background-size: 200% 200%;
           animation: gradientBG 8s ease-in-out infinite;
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 }
