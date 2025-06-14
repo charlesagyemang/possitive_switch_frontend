@@ -36,7 +36,7 @@ const data = {
   ],
   navMain: [
     {
-      title: "Dashboard",
+      title: "Example Dashboard",
       url: "/sa/dashboard",
       icon: Layout,
       isActive: true,
