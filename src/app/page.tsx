@@ -10,7 +10,7 @@ function LandingPage() {
   const router = useRouter();
   return (
     <AnimatedBackground>
-      <div className="relative z-10 flex flex-col items-center gap-10 px-12 py-16 bg-gradient-to-br from-white via-blue-50 to-violet-50 backdrop-blur-xl rounded-3xl shadow-sm border-none border-blue-100/60">
+      <div className="relative z-10 flex flex-col items-center gap-10 px-12 py-16 bg-gradient-to-br from-white via-blue-50 to-violet-50 backdrop-blur-xl rounded-3xl shadow-xl border-none border-blue-100/60">
         {/* <div className="flex items-center gap-3 mb-2">
           <span className="inline-block w-3 h-3 bg-violet-400 rounded-full animate-pulse"></span>
           <span className="uppercase text-xs font-semibold text-violet-600 tracking-widest">
@@ -27,7 +27,7 @@ function LandingPage() {
           Fast, secure, and beautifully simple.
         </p>
         <Button
-          onClick={() => router.push("/sa/dashboard")}
+          onClick={() => router.push("/login")}
           variant="default"
           size="lg"
           className="flex items-center rounded-full gap-2 px-8 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-amber-500 hover:from-violet-500 hover:to-blue-600 transition-all duration-200 shadow-sm"
