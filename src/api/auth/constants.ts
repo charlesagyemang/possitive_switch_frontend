@@ -1,0 +1,7 @@
+export const M_REGISTER_USER = "m-register-user" 
+export const M_LOGIN_USER = "m-login-user" 
+export const Q_WHO_AM_I = "m-who-ami"
+export const M_CREATE_COMPANY = "m-create-company"
+export const M_CREATE_CANDIDATE = "m-create-candidate"
+export const Q_LIST_COMPANIES = "q-list-companies"
+export const Q_LIST_CANDIDATES = "q-list-candidates"
