@@ -88,7 +88,7 @@ function OneCompanyDashboard() {
           <PageTitle
             Icon={Landmark}
             title="New Fire Media"
-            description="Create a new company to manage candidates and employees."
+            description="Company management dashboard to help you manage candidates and employees."
           />
 
           <Button variant="outline">
