@@ -4,6 +4,7 @@ import AppNotifications from "@/components/built/app-notifications";
 import CustomButton from "@/components/built/button/custom-button";
 import { renderFormField } from "@/components/built/form/generator";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import React, { Fragment } from "react";
 import { useForm } from "react-hook-form";
@@ -45,6 +46,7 @@ function RegistrationForm() {
     formState: { errors },
   } = useForm();
   const { isPending, isSuccess, run, error } = useRegistrationHandler();
+  const router = useRouter();
 
   const handleRegistration = (data: any) => {
     run(
@@ -52,8 +54,10 @@ function RegistrationForm() {
       {
         onSuccess: (data) => {
           // Handle successful registration, e.g., redirect to login
+
           console.log("Registration successful", data);
-        
+
+          if (data?.success) router.push("/auth/login");
         },
       }
     );
@@ -101,7 +105,7 @@ function RegistrationForm() {
         <AppNotifications.Success
           message={
             isSuccess
-              ? "Your account has been created, you will be redirected to login soon!"
+              ? "Your account has been created, you will be redirected to login in a few seconds..."
               : ""
           }
         />

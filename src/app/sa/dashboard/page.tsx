@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { LoaderCircle, Plus } from "lucide-react";
 import { GenericTable } from "@/components/built/table/data-table";
 import { companyColumns } from "./company-table-structure";
 import { Company, companyData } from "@/app/seed/companies";
@@ -23,15 +23,33 @@ import { useAuthenticatedUser } from "@/api/auth/auth";
 
 export default function SadminDashboard() {
   const { ModalPortal, open, close } = useModal();
-  const { data: companyList } = useCompanyList();
+  const { data: companyList, isPending } = useCompanyList();
   const { data: user } = useAuthenticatedUser();
 
-  console.log("User Data: ", user);
   const addNewCompany = () => {
     open(<CompanyForm close={close} />, "Add a new company");
   };
 
-  console.log("Companies Data: ", companyList);
+  const renderCompanies = () => {
+    if (isPending)
+      return (
+        <div className="flex items-center font-medium">
+          <LoaderCircle className="animate-spin text-primary mr-2" /> Loading
+          companies...
+        </div>
+      );
+
+    return (
+      <GenericTable<Company, any>
+        pageSize={6}
+        name="Companies"
+        columns={companyColumns}
+        // data={companyData}
+        noRecordsText="No companies found"
+        data={companyList || []}
+      />
+    );
+  };
   return (
     <div>
       <ModalPortal />
@@ -86,16 +104,7 @@ export default function SadminDashboard() {
         </div>
         <div className="mt-6">
           <Card className="shadow-none bg-white">
-            <CardContent>
-              <GenericTable<Company, any>
-                pageSize={6}
-                name="Companies"
-                columns={companyColumns}
-                // data={companyData}
-                noRecordsText="No companies found"
-                data={companyList || []}
-              />
-            </CardContent>
+            <CardContent>{renderCompanies()}</CardContent>
           </Card>
         </div>
       </SadminSpace>
