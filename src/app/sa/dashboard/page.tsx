@@ -10,58 +10,36 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Users, UserCheck, Building2, User } from "lucide-react";
+import { Users, UserCheck, Building2, User, Plus } from "lucide-react";
 import { GenericTable } from "@/components/built/table/data-table";
 import { companyColumns } from "./company-table-structure";
 import { Company, companyData } from "@/app/seed/companies";
+import { Button } from "@/components/ui/button";
+import { dashboardCards } from "./values";
+import useModal from "@/components/built/modal/useModal";
+import CompanyForm from "@/app/shared/forms/company-form";
 
 export default function SadminDashboard() {
-  const cards = [
-    {
-      title: "Candidates Invited",
-      description: "Total number of candidates invited for all companies",
-      value: 120,
-      icon: Users,
-      iconBg: "bg-white/70 text-blue-700",
-      cardBg:
-        "bg-gradient-to-br from-purple-100 via-purple-50 to-white dark:from-purple-900 dark:via-purple-800 dark:to-gray-900",
-    },
-    {
-      title: "Candidates Responded",
-      description: "Candidates who have responded from all companies",
-      value: 85,
-      icon: UserCheck,
-      iconBg: "bg-white/70 text-green-700",
-      cardBg:
-        "bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-green-900 dark:via-green-800 dark:to-gray-900",
-    },
-    {
-      title: "Companies",
-      description: "Companies that you manage on this platform",
-      value: 12,
-      icon: Building2,
-      iconBg: "bg-white/70 text-purple-700",
-      cardBg:
-        "bg-gradient-to-br from-blue-100 via-blue-50 to-white dark:from-blue-900 dark:via-blue-800 dark:to-gray-900",
-    },
-    {
-      title: "Employees",
-      description: "Total candidates/employees in all companies",
-      value: 340,
-      icon: User,
-      iconBg: "bg-white/70 text-yellow-700",
-      cardBg:
-        "bg-gradient-to-br from-yellow-100 via-yellow-50 to-white dark:from-yellow-900 dark:via-yellow-800 dark:to-gray-900",
-    },
-  ];
+  const { ModalPortal, open, close } = useModal();
+  const addNewCompany = () => {
+    open(<CompanyForm close={close} />, "Add a new company");
+  };
   return (
     <SuperAdminRoot>
+      <ModalPortal />
       <SadminSpace>
-        <PageTitle
-          // Icon={Smile}
-          title="Welcome, Mr Admin"
-          description="You are a super admin, manage all the companies and candidates from here!"
-        />
+        <div className="flex flex-row items-center justify-between">
+          <PageTitle
+            // Icon={Smile}
+            title="Welcome, Mr Admin"
+            description="You are a super admin, manage all the companies and candidates from here!"
+          />
+
+          <Button onClick={addNewCompany} variant="outline" className="mt-4">
+            <Plus className="" />
+            Add New Company
+          </Button>
+        </div>
 
         <div className="mt-6">
           {/*
@@ -69,7 +47,7 @@ export default function SadminDashboard() {
             */}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cards.map((card) => (
+            {dashboardCards.map((card) => (
               <Card
                 key={card.title}
                 className={`border-none shadow-lg hover:shadow-xl transition-shadow duration-200 ${card.cardBg}`}
