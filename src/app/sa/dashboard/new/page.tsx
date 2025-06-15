@@ -36,7 +36,7 @@ export default function NewCandidate() {
       console.error(err);
       setMessage('⚠️ Something went wrong.');
     }
-  };
+  }; 
 
   return (
     <div>

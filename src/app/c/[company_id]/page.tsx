@@ -22,49 +22,13 @@ import {
 } from "@/app/seed/candidates";
 import { DOption } from "@/components/built/dropdown/custom-dropdown";
 import { useRouter, useParams } from "next/navigation";
+import { companyDashboardCards } from "./values";
+import useModal from "@/components/built/modal/useModal";
+import CandidateForm from "@/app/shared/forms/candidate-form";
 
 function OneCompanyDashboard() {
   const router = useRouter();
   const params = useParams();
-
-  const cards = [
-    {
-      title: "Total Invites",
-      value: 42,
-      description: "Total candidates invited to this company",
-      icon: <Mail className="w-7 h-7 text-blue-600" />,
-      gradient:
-        "from-blue-100 via-blue-50 to-white dark:from-blue-900 dark:via-blue-800 dark:to-gray-900",
-      ring: "ring-2 ring-blue-400/30",
-    },
-    {
-      title: "Accepted Invites",
-      value: 18,
-      description: "Candidates who have accepted the invitation",
-      icon: <Handshake className="w-7 h-7 text-green-600" />,
-      gradient:
-        "from-green-100 via-green-50 to-white dark:from-green-900 dark:via-green-800 dark:to-gray-900",
-      ring: "ring-2 ring-green-400/30",
-    },
-    {
-      title: "Pending Invites",
-      value: 7,
-      description: "Invitations awaiting response",
-      icon: <Plus className="w-7 h-7 text-yellow-600" />,
-      gradient:
-        "from-yellow-100 via-yellow-50 to-white dark:from-yellow-900 dark:via-yellow-800 dark:to-gray-900",
-      ring: "ring-2 ring-yellow-400/30",
-    },
-    {
-      title: "Employees",
-      value: 3,
-      description: "Active employees in this company",
-      icon: <PersonStanding className="w-7 h-7 text-purple-600" />,
-      gradient:
-        "from-purple-100 via-purple-50 to-white dark:from-purple-900 dark:via-purple-800 dark:to-gray-900",
-      ring: "ring-2 ring-purple-400/30",
-    },
-  ];
 
   const companyId = params.company_id as string;
   const makeActions = (row: CandidateInvitation): DOption[] => {
@@ -81,8 +45,15 @@ function OneCompanyDashboard() {
     ];
   };
 
+  const { ModalPortal, open, close } = useModal();
+
+  const openCandidateForm = () => {
+    open(<CandidateForm close={close} />, "Add a new candidate");
+  };
+
   return (
     <SuperAdminRoot>
+      <ModalPortal />
       <SadminSpace>
         <div className="flex items-center justify-between mb-6">
           <PageTitle
@@ -91,13 +62,13 @@ function OneCompanyDashboard() {
             description="Company management dashboard to help you manage candidates and employees."
           />
 
-          <Button variant="outline">
+          <Button onClick={openCandidateForm} variant="outline">
             <Plus /> New Candidate
           </Button>
         </div>
         <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cards.map((card) => (
+            {companyDashboardCards.map((card) => (
               <div
                 key={card.title}
                 className={`relative overflow-hidden rounded-2xl shadow-md p-6 bg-gradient-to-br ${card.gradient} ${card.ring} transition-transform hover:scale-[1.03]`}
