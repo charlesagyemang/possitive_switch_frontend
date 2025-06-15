@@ -4,13 +4,40 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RectangleGoggles } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Fragment } from "react";
+import { renderFormField } from "./built/form/generator";
 
+const FORM_FIELDS = [
+  {
+    type: "email",
+    name: "email",
+    label: "Email",
+    placeholder: "m@example.com",
+    required: true,
+  },
+  {
+    type: "password",
+    name: "password",
+    label: "Password",
+    placeholder: "Enter your password",
+    required: true,
+  },
+];
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   return (
-    <form className="p-6 md:p-8">
+    <form
+      className="p-6 md:p-8"
+      onSubmit={handleSubmit((data) => console.log(data))}
+    >
       <div className="flex flex-col gap-6 ">
         <div className="flex flex-col items-center text-center">
           <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -18,22 +45,27 @@ export function LoginForm({
             Login to your D-Onboarding Account
           </p>
         </div>
-        <div className="grid gap-3">
+        <div>
+          {FORM_FIELDS.map((field, index) => {
+            return (
+              <Fragment key={index}>
+                {renderFormField(field, control, errors)}
+              </Fragment>
+            );
+          })}
+        </div>
+
+        {/* <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="m@example.com" required />
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Password</Label>
-            {/* <a
-              href="#"
-              className="ml-auto text-sm underline-offset-2 hover:underline"
-            >
-              Forgot your password?
-            </a> */}
+           
           </div>
           <Input id="password" type="password" required />
-        </div>
+        </div> */}
         <Button type="submit" className="w-full">
           Login
         </Button>
