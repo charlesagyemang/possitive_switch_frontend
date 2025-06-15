@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { useAuthenticatedUser } from "@/api/auth/auth";
+import { logout, useAuthenticatedUser } from "@/api/auth/auth";
 
 function NavigationLayout() {
   const { data: user } = useAuthenticatedUser();
@@ -85,6 +85,7 @@ function NavigationLayout() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
+                onClick={() => logout()}
                 variant="destructive"
                 className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition"
               >

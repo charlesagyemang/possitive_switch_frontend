@@ -1,4 +1,5 @@
-import { apiCall, createForm } from "../api-utils";
+import { apiCall, clientSetCookie, createForm } from "../api-utils";
+import { PUI_TOKEN } from "../constants";
 import { useGenericMutation, useGenericQuery } from "../query";
 import {
   M_LOGIN_USER,
@@ -28,4 +29,10 @@ const fetchAuthUser = () => {
 };
 export const useAuthenticatedUser = () => {
   return useGenericQuery([Q_AUTHENTICATED_USER], fetchAuthUser);
+};
+
+export const logout = () => {
+  localStorage.setItem(PUI_TOKEN, "");
+  clientSetCookie(PUI_TOKEN, "");
+  window.location.href = "/auth/login";
 };
