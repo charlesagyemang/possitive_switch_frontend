@@ -7,6 +7,9 @@ import { RectangleGoggles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Fragment } from "react";
 import { renderFormField } from "./built/form/generator";
+import { useLoginHandler } from "@/api/auth/auth";
+import AppNotifications from "./built/app-notifications";
+import CustomButton from "./built/button/custom-button";
 
 const FORM_FIELDS = [
   {
@@ -33,11 +36,13 @@ export function LoginForm({
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const { isPending, isSuccess, error, run } = useLoginHandler();
+
+  const handleLogin = (data: any) => {
+    run(data);
+  };
   return (
-    <form
-      className="p-6 md:p-8"
-      onSubmit={handleSubmit((data) => console.log(data))}
-    >
+    <form className="p-6 md:p-8" onSubmit={handleSubmit(handleLogin)}>
       <div className="flex flex-col gap-6 ">
         <div className="flex flex-col items-center text-center">
           <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -66,9 +71,10 @@ export function LoginForm({
           </div>
           <Input id="password" type="password" required />
         </div> */}
-        <Button type="submit" className="w-full">
+        <CustomButton type="submit" className="w-full">
           Login
-        </Button>
+        </CustomButton>
+        <AppNotifications.Error message={error?.message} />
         {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-card text-muted-foreground relative z-10 px-2">
             Or continue with

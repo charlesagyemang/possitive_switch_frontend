@@ -2,12 +2,16 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { BreadCrumbProvider } from "@/hooks/context/bread-crumb-context";
 import React from "react";
+import QueryClientWrapper from "./query-client";
 
 function SadminProviders({ children }: { children: React.ReactNode }) {
+
   return (
-    <BreadCrumbProvider>
-      <SidebarProvider>{children}</SidebarProvider>
-    </BreadCrumbProvider>
+    <QueryClientWrapper >
+      <BreadCrumbProvider>
+        <SidebarProvider>{children}</SidebarProvider>
+      </BreadCrumbProvider>
+    </QueryClientWrapper>
   );
 }
 
