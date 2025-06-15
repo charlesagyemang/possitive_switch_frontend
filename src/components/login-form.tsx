@@ -4,6 +4,8 @@ import { renderFormField } from "./built/form/generator";
 import { useLoginHandler } from "@/api/auth/auth";
 import AppNotifications from "./built/app-notifications";
 import CustomButton from "./built/button/custom-button";
+import { clientSetCookie } from "@/api/api-utils";
+import { PUI_TOKEN } from "@/api/constants";
 
 const FORM_FIELDS = [
   {
@@ -37,7 +39,10 @@ export function LoginForm({
       { user: data },
       {
         onSuccess: (data) => {
+          const { token, success } = data;
           // Handle successful login, e.g., redirect to dashboard
+          if (success) clientSetCookie(PUI_TOKEN, token);
+
           console.log("Login successful", data);
         },
       }

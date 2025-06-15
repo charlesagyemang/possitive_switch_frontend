@@ -103,3 +103,20 @@ export const replaceUndefinedWithNull = (object: {}) => {
 export const encodeForUrl = (str: string): string => {
   return encodeURIComponent(str);
 };
+
+export const clientSetCookie = (
+  name: string,
+  value: string,
+  days: number = 1,
+  path: string = "/"
+) => {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(
+    value
+  )}${expires}; path=${path}`;
+};
