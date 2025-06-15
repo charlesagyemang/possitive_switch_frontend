@@ -5,6 +5,8 @@ export type Company = {
   employees: number; // later will be a list
   created_at: string;
   updated_at: string;
+  email : string; 
+  phone_number : string;
 };
 
 export const companyData: Company[] = [
@@ -15,6 +17,8 @@ export const companyData: Company[] = [
     employees: 20,
     created_at: "2023-01-10T09:00:00Z",
     updated_at: "2023-01-10T09:00:00Z",
+    email: "info@technova.com",
+    phone_number: "+1234567890",
   },
   {
     id: "2",
@@ -23,6 +27,8 @@ export const companyData: Company[] = [
     employees: 15,
     created_at: "2023-02-15T10:30:00Z",
     updated_at: "2023-02-15T10:30:00Z",
+    email: "contact@greenleaf.com",
+    phone_number: "+1987654321",
   },
   {
     id: "3",
@@ -31,6 +37,8 @@ export const companyData: Company[] = [
     employees: 12,
     created_at: "2023-03-20T11:45:00Z",
     updated_at: "2023-03-20T11:45:00Z",
+    email: "info@bluepeakanalytics.com",
+    phone_number: "+1000000003",
   },
   {
     id: "4",
@@ -39,6 +47,8 @@ export const companyData: Company[] = [
     employees: 18,
     created_at: "2023-04-05T08:20:00Z",
     updated_at: "2023-04-05T08:20:00Z",
+    email: "info@urbanedgemedia.com",
+    phone_number: "+1000000004",
   },
   {
     id: "5",
@@ -47,6 +57,8 @@ export const companyData: Company[] = [
     employees: 25,
     created_at: "2023-05-12T14:10:00Z",
     updated_at: "2023-05-12T14:10:00Z",
+    email: "info@solarishealth.com",
+    phone_number: "+1000000005",
   },
   {
     id: "6",
@@ -55,6 +67,8 @@ export const companyData: Company[] = [
     employees: 10,
     created_at: "2023-06-18T16:00:00Z",
     updated_at: "2023-06-18T16:00:00Z",
+    email: "info@quantumretail.com",
+    phone_number: "+1000000006",
   },
   {
     id: "7",
@@ -63,6 +77,8 @@ export const companyData: Company[] = [
     employees: 14,
     created_at: "2023-07-22T12:30:00Z",
     updated_at: "2023-07-22T12:30:00Z",
+    email: "info@brightpathlogistics.com",
+    phone_number: "+1000000007",
   },
   {
     id: "8",
@@ -71,6 +87,8 @@ export const companyData: Company[] = [
     employees: 8,
     created_at: "2023-10-01T11:00:00Z",
     updated_at: "2023-10-01T11:00:00Z",
+    email: "info@crestviewconsulting.com",
+    phone_number: "+1000000008",
   },
   {
     id: "11",
@@ -79,6 +97,8 @@ export const companyData: Company[] = [
     employees: 22,
     created_at: "2023-10-15T15:25:00Z",
     updated_at: "2023-10-15T15:25:00Z",
+    email: "info@pioneerfoods.com",
+    phone_number: "+1000000011",
   },
   {
     id: "12",
@@ -87,6 +107,8 @@ export const companyData: Company[] = [
     employees: 19,
     created_at: "2023-11-05T10:50:00Z",
     updated_at: "2023-11-05T10:50:00Z",
+    email: "info@vertexenergy.com",
+    phone_number: "+1000000012",
   },
   {
     id: "13",
@@ -95,6 +117,8 @@ export const companyData: Company[] = [
     employees: 13,
     created_at: "2023-11-20T14:35:00Z",
     updated_at: "2023-11-20T14:35:00Z",
+    email: "info@summitdigital.com",
+    phone_number: "+1000000013",
   },
   {
     id: "14",
@@ -103,6 +127,8 @@ export const companyData: Company[] = [
     employees: 16,
     created_at: "2023-12-02T08:10:00Z",
     updated_at: "2023-12-02T08:10:00Z",
+    email: "info@harmonyeducation.com",
+    phone_number: "+1000000014",
   },
   {
     id: "15",
@@ -111,5 +137,7 @@ export const companyData: Company[] = [
     employees: 11,
     created_at: "2023-12-18T17:45:00Z",
     updated_at: "2023-12-18T17:45:00Z",
+    email: "info@atlasconstruction.com",
+    phone_number: "+1000000015",
   },
 ];

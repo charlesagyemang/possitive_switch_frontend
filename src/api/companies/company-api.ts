@@ -12,7 +12,7 @@ import {
 import { useGenericMutation, useGenericQuery } from "../query";
 
 const tempCookie = () => {
-  return `_session_id=dCRPebZsWjZdWwMWm1aBs6X9YUyZrPTnN3ogGK97KkM1GYewDyCBhOG%2BHcfnVVR3VQydLx1wF3KXzWaBvWSkyboAsbjlDr6U8sbEDxeiqQVQaN5IJleWZ1kfB%2FvHWAyGtB5%2Frfe7fLcQmhpML9hUics7r9yW7xHkiq82K2XGJ5pbnlAmowZkN845QQxOfz3nrwQKoxxZL%2FfURN2r2yLqwE62r143gTVg6okMxXHac%2BV2bgnPPToydq4Ivi%2Bou5UWRBYsII5YWNEGc%2BlVBWRGTvTfbzXym%2BUoTonx0SiFM7BuBYmZa9OmQ091ORB6yO6bkchy%2FMjn6niKCmTlSXkALhoLgg%3D%3D--bkBEGCbhmmfcmKKF--zwGWfYdTJ6mRTyztA0AfLg%3D%3D; Path=/; Secure; HttpOnly; jwt=eyJfcmFpbHMiOnsibWVzc2FnZSI6IkltVjVTbWhpUjJOcFQybEtTVlY2U1RGT2FVbzVMbVY1U25wa1YwbHBUMmxKTTAweVRteGFWR014VFhrd05FMTZaR2hNVkZGNFQwUkZkRmxxV1hwTmFUQjNXa1JuTUZsdFZteE5iVTVyVDBkUmFVeERTbnBaTTBGcFQybEtNV015Vm5sSmFYZHBXVmhXYTBscWNIVmtWM2h6VEVOS2NGbFlVV2xQYWtVelRsUkJkMDFFUlhwT1JFRnpTVzFXTkdORFNUWk5WR014VFVSQk5FNTZZekJOUTNkcFlXNVNjRWxxYjJsT2JWcG9UbnBuTUUxdFZYUk5lbEYzV1drd01FNHlTVE5NVjBwc1RtcEZkRTlFVm0xYVJFbDZXa2RWTVZwdFZUUkpiakF1VmxrMVRGWmphbFpYZFUxelYzUkNSa05NU25aQlRreFZiWFJ0YW5BMU9XOHpOM1ppUkVaV1NEUlZSU0k9IiwiZXhwIjoiMjAyNS0wNi0xNlQxNToyOTowMC4xNjdaIiwicHVyIjoiY29va2llLmp3dCJ9fQ%3D%3D--2e3fb8c7d1f78c505491b8d6654135057c06fb56; Path=/; Secure; HttpOnly; Expires=Mon, 16 Jun 2025 15:29:00 GMT;`;
+  return `_session_id=gxHDD1DH8FxXnx%2Bmw0nyVTuqzSjLsTZsoeOGc%2FDLLFzXvpN%2FbprCI0%2BIwhPCJSwTDv5x8LZdjzL2ofpqHzF%2FC3gF%2BV5DUVC0g2FzERDzPUygclAcS%2B18jAl%2FYNqshYlmuLVpK10xc7q4%2BfgU7LFFJLp%2BJioDxXMkg7mtCa8etTmHoTGnfRwdyfJpPyqCjrv7BQUFFx%2B8tiXDRvh0rmiKZHz0gNqf%2BGall2hgbSwab2Dfepgx9MAv%2BF8JBhQy3oE6TnxjWrbPHqeBhZmBlrSWwtataeygh8xA2We84Bf2pN2xH3IstW9v1T6b3luwv0knasic89Tnt%2FsB9qlSit594LHPag%3D%3D--xN7lVdaV1gs2Hs1U--ayEk8FRzX75Epx5M%2BU1D4w%3D%3D; Path=/; Secure; HttpOnly;jwt=eyJfcmFpbHMiOnsibWVzc2FnZSI6IkltVjVTbWhpUjJOcFQybEtTVlY2U1RGT2FVbzVMbVY1U25wa1YwbHBUMmxKTTAweVRteGFWR014VFhrd05FMTZaR2hNVkZGNFQwUkZkRmxxV1hwTmFUQjNXa1JuTUZsdFZteE5iVTVyVDBkUmFVeERTbnBaTTBGcFQybEtNV015Vm5sSmFYZHBXVmhXYTBscWNIVmtWM2h6VEVOS2NGbFlVV2xQYWtVelRsUkJkMDFFVlRWTlZHdHpTVzFXTkdORFNUWk5WR014VFVSQk5VMXFUWGhQVTNkcFlXNVNjRWxxYjJsWmFrWnJUVzFHYWs0eVVYUmFSRWwzV1drd01GcEVUVEJNVkdodFRWUlpkRTVFWXpCT2VrMTVUMWRHYVZsdFVtdEpiakF1VVhKMllqRlNTR0paTlZkeE1EbFRiamRKZGkwNVR6ZHJiamxSTFRNMmNuTnJkVzB6TnpkVU1XUnJjeUk9IiwiZXhwIjoiMjAyNS0wNi0xNlQxNjo0NToxOS4wMzFaIiwicHVyIjoiY29va2llLmp3dCJ9fQ%3D%3D--61bc13a4d88f51faaae39c35543db0f3db90f4b9; Path=/; Secure; HttpOnly; Expires=Mon, 16 Jun 2025 16:45:19 GMT;`;
 };
 const createCompany = (body: unknown) => {
   return apiCall(API_CREATE_NEW_COMPANY, body, {
@@ -33,10 +33,14 @@ export const useCreateCandidateHandler = () => {
     createCandidate(body)
   );
 };
-const listCompanies = () => {
-  return apiCall(API_LIST_ALL_COMPANIES, null, { method: "GET" });
+const listCompanies = async () => {
+  const obj = await apiCall(API_LIST_ALL_COMPANIES, null, {
+    method: "GET",
+    headers: { Cookie: tempCookie() },
+  });
+  return obj?.data?.companies
 };
 
-export const useListCompaniesHandler = () => {
+export const useCompanyList = () => {
   return useGenericQuery([Q_LIST_COMPANIES], listCompanies);
 };

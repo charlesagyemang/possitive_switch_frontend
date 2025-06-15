@@ -7,7 +7,7 @@ import QueryClientWrapper from "./query-client";
 function SadminProviders({ children }: { children: React.ReactNode }) {
 
   return (
-    <QueryClientWrapper >
+    <QueryClientWrapper>
       <BreadCrumbProvider>
         <SidebarProvider>{children}</SidebarProvider>
       </BreadCrumbProvider>

@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Users, UserCheck, Building2, User, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { GenericTable } from "@/components/built/table/data-table";
 import { companyColumns } from "./company-table-structure";
 import { Company, companyData } from "@/app/seed/companies";
@@ -18,14 +18,18 @@ import { Button } from "@/components/ui/button";
 import { dashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CompanyForm from "@/app/shared/forms/company-form";
+import { useCompanyList } from "@/api/companies/company-api";
 
 export default function SadminDashboard() {
   const { ModalPortal, open, close } = useModal();
+  const { data: companyList } = useCompanyList();
   const addNewCompany = () => {
     open(<CompanyForm close={close} />, "Add a new company");
   };
+
+  console.log("Companies Data: ", companyList);
   return (
-    <SuperAdminRoot>
+    <div>
       <ModalPortal />
       <SadminSpace>
         <div className="flex flex-row items-center justify-between">
@@ -85,12 +89,12 @@ export default function SadminDashboard() {
                 columns={companyColumns}
                 // data={companyData}
                 noRecordsText="No companies found"
-                data={[]}
+                data={companyList || []}
               />
             </CardContent>
           </Card>
         </div>
       </SadminSpace>
-    </SuperAdminRoot>
+    </div>
   );
 }

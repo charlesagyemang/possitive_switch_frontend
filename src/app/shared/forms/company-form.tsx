@@ -1,7 +1,9 @@
+import { Q_LIST_COMPANIES } from "@/api/auth/constants";
 import { useCreateCompanyHandler } from "@/api/companies/company-api";
 import CustomButton from "@/components/built/button/custom-button";
 import { renderFormField } from "@/components/built/form/generator";
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { Fragment } from "react";
 import { useForm } from "react-hook-form";
 
@@ -36,7 +38,8 @@ const FORM_FIELDS = [
   },
 ];
 function CompanyForm({ close }: { close?: () => void }) {
-  const { isPending, error, run, isSuccess } = useCreateCompanyHandler();
+  const { isPending, run, isSuccess } = useCreateCompanyHandler();
+  const client = useQueryClient();
 
   const handleCompanyCreation = (data: any) => {
     run(
@@ -45,6 +48,9 @@ function CompanyForm({ close }: { close?: () => void }) {
         onSuccess: (data) => {
           // Handle successful company creation, e.g., redirect or show a success message
           console.log("Company created successfully", data);
+          client.refetchQueries({
+            queryKey: [Q_LIST_COMPANIES],
+          });
           // if (close) {
           //   close();
           // }
