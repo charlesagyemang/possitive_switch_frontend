@@ -1,11 +1,18 @@
 import { Company } from "@/app/seed/companies";
-import { AsDropdownMenu } from "@/components/built/dropdown/custom-dropdown";
+import {
+  AsDropdownMenu,
+  DOption,
+} from "@/components/built/dropdown/custom-dropdown";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Building2, Ellipsis, Mail } from "lucide-react";
 
 const companyColumnHelper = createColumnHelper<Company>();
-export const companyColumns = [
+export const companyColumns = ({
+  actions,
+}: {
+  actions: (row: Company) => DOption[];
+}) => [
   companyColumnHelper.accessor("name", {
     id: "name",
 
@@ -72,34 +79,19 @@ export const companyColumns = [
   companyColumnHelper.accessor((row) => row.id, {
     id: "actions",
 
-    cell: (info) => (
-      <AsDropdownMenu
-        options={[
-          {
-            label: "View Details",
-            value: "view-details",
+    cell: (info) => {
+      const options = actions(info.row.original);
 
-            onClick: () => {
-              // Handle view details action
-              console.log("View Details for company ID:", info.getValue());
-            },
-          },
-          {
-            label: "Add Employee",
-            value: "add-employee",
-
-            onClick: () => {
-              // Handle add employee action
-              console.log("Add Employee for company ID:", info.getValue());
-            },
-          },
-        ]}
-        className="text-xs font-medium text-gray-600 hover:text-gray-900"
-      >
-        <Button variant="ghost" size="sm" className="p-2">
-          <Ellipsis className="size-4" />
-        </Button>
-      </AsDropdownMenu>
-    ),
+      return (
+        <AsDropdownMenu
+          options={options}
+          className="text-xs font-medium text-gray-600 hover:text-gray-900"
+        >
+          <Button variant="ghost" size="sm" className="p-2">
+            <Ellipsis className="size-4" />
+          </Button>
+        </AsDropdownMenu>
+      );
+    },
   }),
 ];

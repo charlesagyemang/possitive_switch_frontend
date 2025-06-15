@@ -45,16 +45,19 @@ const forcedToken = () => {
 };
 const makeHeaders = (
   headers: Record<string, string> | undefined,
-  body: any
+  body: any,
+  options?: Record<string, any>
 ): Record<string, string> => {
   const isFormData = body instanceof FormData;
+  const { server } = options || {};
 
+  const fToken = server ? {} : forcedToken();
   if (isFormData) {
-    return { ...forcedToken, ...(headers || {}) };
+    return { ...fToken, ...(headers || {}) };
   }
   return {
     "Content-Type": "application/json",
-    ...forcedToken,
+    ...fToken,
     ...(headers || {}),
   };
 };
@@ -74,7 +77,7 @@ export const apiCall = (
 
   const requestOptions: RequestInit = {
     method,
-    headers: makeHeaders(headers, body),
+    headers: makeHeaders(headers, body, { server }),
     body: makeBody(method, body),
     credentials: "include",
   };

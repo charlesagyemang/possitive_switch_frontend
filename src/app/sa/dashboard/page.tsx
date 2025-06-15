@@ -26,8 +26,32 @@ export default function SadminDashboard() {
   const { data: companyList, isPending } = useCompanyList();
   const { data: user } = useAuthenticatedUser();
 
-  const addNewCompany = () => {
-    open(<CompanyForm close={close} />, "Add a new company");
+  const addNewCompany = (data?: Company) => {
+    open(<CompanyForm data={data} close={close} />, "Add a new company");
+  };
+
+  const makeDropdownActions = (row: Company) => {
+    return [
+      {
+        label: "Edit",
+        value: "edit",
+
+        onClick: () => {
+          // Handle view details action
+          console.log("Edit company:", row);
+          addNewCompany(row);
+        },
+      },
+      {
+        label: "View Details",
+        value: "view-details",
+
+        onClick: () => {
+          // Handle add employee action
+          console.log("View Details for company ID:", row);
+        },
+      },
+    ];
   };
 
   const renderCompanies = () => {
@@ -43,7 +67,7 @@ export default function SadminDashboard() {
       <GenericTable<Company, any>
         pageSize={6}
         name="Companies"
-        columns={companyColumns}
+        columns={companyColumns({ actions: makeDropdownActions })}
         // data={companyData}
         noRecordsText="No companies found"
         data={companyList || []}
@@ -61,7 +85,11 @@ export default function SadminDashboard() {
             description="You are a super admin, manage all the companies and candidates from here!"
           />
 
-          <Button onClick={addNewCompany} variant="outline" className="mt-4">
+          <Button
+            onClick={() => addNewCompany()}
+            variant="outline"
+            className="mt-4"
+          >
             <Plus className="" />
             Add New Company
           </Button>
