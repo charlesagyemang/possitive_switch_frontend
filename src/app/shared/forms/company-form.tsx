@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 const FORM_FIELDS = [
   {
     type: "text",
-    name: "companyName",
+    name: "name",
     label: "Company Name",
     placeholder: "Enter your company name",
     required: true,

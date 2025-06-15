@@ -53,8 +53,7 @@ function RegistrationForm() {
         onSuccess: (data) => {
           // Handle successful registration, e.g., redirect to login
           console.log("Registration successful", data);
-          // Optionally, you can redirect to the login page or show a success message
-          // window.location.href = "/auth/login";
+        
         },
       }
     );
@@ -99,7 +98,7 @@ function RegistrationForm() {
           Register
         </CustomButton>
         <AppNotifications.Error message={error?.message} />
-        <AppNotifications.Error
+        <AppNotifications.Success
           message={
             isSuccess
               ? "Your account has been created, you will be redirected to login soon!"

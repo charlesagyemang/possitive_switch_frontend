@@ -34,7 +34,7 @@ export function AuthLayout({
             )}
             {...props}
           >
-            <Card className="overflow-hidden shadow-lg border-none p-0 h-[500px]">
+            <Card className="overflow-hidden shadow-lg border-none p-0 h-[550px]">
               <CardContent className="grid p-0 md:grid-cols-2 h-full">
                 <div className="flex flex-col justify-center">{children}</div>
                 <div className="hidden md:flex relative items-center justify-center bg-gradient-to-br to-amber-200/40 via-purple-100 from-primary/10">
