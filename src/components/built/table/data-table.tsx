@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/pagination";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,6 +36,7 @@ interface DataTableProps<TData, TValue> {
   name?: string;
   showPagination?: boolean;
   pageSize?: number; // Allow pageSize to be passed as a prop
+  noRecordsText?: string; // Optional prop for no records text
 }
 
 export function GenericTable<TData, TValue>({
@@ -43,6 +45,7 @@ export function GenericTable<TData, TValue>({
   name,
   showPagination = true,
   pageSize = 10, // Allow pageSize to be passed as a prop
+  noRecordsText = "No records found", // Optional prop for no records text
 }: DataTableProps<TData, TValue>) {
   const [pageIndex, setPageIndex] = useState(0);
   //   const pageSize = 10; // Set a default page size
@@ -131,9 +134,16 @@ export function GenericTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center text-gray-400"
+                  className="h-24 text-center p-4 text-gray-400"
                 >
-                  No results.
+                  <Image
+                    width={100}
+                    height={100}
+                    src="/empty.svg"
+                    alt="No data"
+                    className="mx-auto mb-2"
+                  />
+                  <p className="text-sm">{noRecordsText}</p>
                 </TableCell>
               </TableRow>
             )}

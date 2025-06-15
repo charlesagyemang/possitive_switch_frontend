@@ -83,7 +83,9 @@ export default function SadminDashboard() {
                 pageSize={6}
                 name="Companies"
                 columns={companyColumns}
-                data={companyData}
+                // data={companyData}
+                noRecordsText="No companies found"
+                data={[]}
               />
             </CardContent>
           </Card>
