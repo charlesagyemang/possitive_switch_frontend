@@ -12,7 +12,7 @@ import {
 import { useGenericMutation, useGenericQuery } from "../query";
 
 const createCompany = (body: unknown) => {
-  return apiCall(API_CREATE_NEW_COMPANY, createForm(body));
+  return apiCall(API_CREATE_NEW_COMPANY, body);
 };
 
 export const useCreateCompanyHandler = () => {

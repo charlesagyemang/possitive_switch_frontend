@@ -3,10 +3,6 @@ import { useRegistrationHandler } from "@/api/auth/auth";
 import AppNotifications from "@/components/built/app-notifications";
 import CustomButton from "@/components/built/button/custom-button";
 import { renderFormField } from "@/components/built/form/generator";
-import { Textbox } from "@/components/built/input/input";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
 import React, { Fragment } from "react";

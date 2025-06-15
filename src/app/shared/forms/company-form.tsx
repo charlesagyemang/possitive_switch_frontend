@@ -1,3 +1,5 @@
+import { useCreateCompanyHandler } from "@/api/companies/company-api";
+import CustomButton from "@/components/built/button/custom-button";
 import { renderFormField } from "@/components/built/form/generator";
 import { Button } from "@/components/ui/button";
 import React, { Fragment } from "react";
@@ -34,13 +36,30 @@ const FORM_FIELDS = [
   },
 ];
 function CompanyForm({ close }: { close?: () => void }) {
+  const { isPending, error, run, isSuccess } = useCreateCompanyHandler();
+
+  const handleCompanyCreation = (data: any) => {
+    run(
+      { company: data },
+      {
+        onSuccess: (data) => {
+          // Handle successful company creation, e.g., redirect or show a success message
+          console.log("Company created successfully", data);
+          // if (close) {
+          //   close();
+          // }
+        },
+      }
+    );
+  };
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
   return (
-    <form onSubmit={handleSubmit((data) => console.log(data))} className="">
+    <form onSubmit={handleSubmit(handleCompanyCreation)} className="">
       {FORM_FIELDS.map((field, index) => {
         return (
           <Fragment key={index}>
@@ -53,7 +72,7 @@ function CompanyForm({ close }: { close?: () => void }) {
           <Button onClick={() => close && close()} variant="outline">
             Cancel
           </Button>
-          <Button>Submit</Button>
+          <CustomButton loading={isPending}>Submit</CustomButton>
         </div>
       </div>
     </form>
