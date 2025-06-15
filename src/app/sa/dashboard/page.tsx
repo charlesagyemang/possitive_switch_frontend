@@ -19,10 +19,14 @@ import { dashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CompanyForm from "@/app/shared/forms/company-form";
 import { useCompanyList } from "@/api/companies/company-api";
+import { useAuthenticatedUser } from "@/api/auth/auth";
 
 export default function SadminDashboard() {
   const { ModalPortal, open, close } = useModal();
   const { data: companyList } = useCompanyList();
+  const { data: user } = useAuthenticatedUser();
+
+  console.log("User Data: ", user);
   const addNewCompany = () => {
     open(<CompanyForm close={close} />, "Add a new company");
   };

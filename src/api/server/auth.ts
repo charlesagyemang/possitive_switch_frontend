@@ -3,6 +3,8 @@ import { apiCall } from "../api-utils";
 import { API_WHO_AM_I } from "../auth/routes";
 import { PUI_TOKEN } from "../constants";
 import { redirect } from "next/navigation";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
+import { Q_AUTHENTICATED_USER } from "../auth/constants";
 
 const JWT_KEY = "jwt";
 const SESSION_KEY = "_session_id";
@@ -28,4 +30,16 @@ export const requireAuthUser = async () => {
   } catch (e) {
     console.log("lets see e", e?.toString());
   }
+};
+
+export const prepareToPassUserToClient = async (
+  authObject: unknown | undefined
+) => {
+  const client = new QueryClient();
+  await client.prefetchQuery({
+    queryKey: [Q_AUTHENTICATED_USER],
+    queryFn: () => authObject || null,
+  });
+  const state = dehydrate(client);
+  return { state, client };
 };
