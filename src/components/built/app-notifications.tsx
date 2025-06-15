@@ -1,10 +1,18 @@
 import React from "react";
 
-function ErrorMessage({ message }: { message?: string | null | undefined }) {
+function ErrorMessage({
+  message,
+  lite,
+}: {
+  message?: string | null;
+  lite?: boolean;
+}) {
   if (!message) return null;
+
+  const classes = lite ? "" : "px-4 bg-red-50";
   return (
     <div
-      className="my-2 px-4 py-3 rounded-md  bg-red-50 text-red-800 transition-opacity duration-400"
+      className={`my-2 py-3 rounded-md text-sm ${classes} text-red-800 transition-opacity duration-400`}
       role="alert"
       style={{ opacity: message ? 1 : 0 }}
     >
@@ -13,11 +21,19 @@ function ErrorMessage({ message }: { message?: string | null | undefined }) {
   );
 }
 
-export const SuccessMessage = ({ message }: { message?: string }) => {
+export const SuccessMessage = ({
+  message,
+  lite,
+}: {
+  message?: string | null;
+  lite?: boolean;
+}) => {
   if (!message) return null;
+
+  const classes = lite ? "" : "px-4 bg-green-50";
   return (
     <div
-      className="my-2 px-4 py-3 rounded-md  bg-green-50 text-green-800 transition-opacity duration-400"
+      className={`my-2 py-3 ${classes} text-sm rounded-md text-green-800 transition-opacity duration-400`}
       role="alert"
       style={{ opacity: message ? 1 : 0 }}
     >

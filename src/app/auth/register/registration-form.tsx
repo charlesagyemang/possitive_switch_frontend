@@ -1,3 +1,4 @@
+import AppNotifications from "@/components/built/app-notifications";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,6 +47,10 @@ function RegistrationForm() {
         <Button type="submit" className="w-full">
           Register
         </Button>
+        {/* <AppNotifications.Error
+          lite
+          message="Understanding the error message is crucial for debugging. and more and more and more and moer"
+        /> */}
         {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-card text-muted-foreground relative z-10 px-2">
             Or continue with

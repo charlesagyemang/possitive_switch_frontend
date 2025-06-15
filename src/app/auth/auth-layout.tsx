@@ -29,7 +29,13 @@ export function AuthLayout({
     <AnimatedBackground>
       <div className="flex min-h-svh flex-col items-center justify-center">
         <div className="w-full max-w-sm md:max-w-3xl"></div>
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <div
+          className={cn(
+            "flex flex-col gap-6 md:max-w-3xl md:min-w-3xl",
+            className
+          )}
+          {...props}
+        >
           <Card className="overflow-hidden shadow-lg border-none p-0">
             <CardContent className="grid p-0 md:grid-cols-2">
               <div>{children}</div>
@@ -38,6 +44,9 @@ export function AuthLayout({
                 <span className="relative z-10 text-3xl font-bold flex flex-col items-center gap-3 text-primary drop-shadow-none">
                   <RectangleGoggles className="inline-block mr-2 size-12 text-primary/30" />
                   Digital Onboarding
+                  <span className="text-xs text-primary/80 uppercase">
+                    Admin Portal
+                  </span>
                 </span>
               </div>
             </CardContent>
