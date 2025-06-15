@@ -1,5 +1,7 @@
 "use client";
+import { useRegistrationHandler } from "@/api/auth/auth";
 import AppNotifications from "@/components/built/app-notifications";
+import CustomButton from "@/components/built/button/custom-button";
 import { renderFormField } from "@/components/built/form/generator";
 import { Textbox } from "@/components/built/input/input";
 import { Button } from "@/components/ui/button";
@@ -39,11 +41,23 @@ function RegistrationForm() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const { isPending, isSuccess, run, error } = useRegistrationHandler();
+
+  const handleRegistration = (data: any) => {
+    run(
+      { user: data },
+      {
+        onSuccess: (data) => {
+          // Handle successful registration, e.g., redirect to login
+          console.log("Registration successful", data);
+          // Optionally, you can redirect to the login page or show a success message
+          // window.location.href = "/auth/login";
+        },
+      }
+    );
+  };
   return (
-    <form
-      className="p-6 md:p-8"
-      onSubmit={handleSubmit((data) => console.log(data))}
-    >
+    <form className="p-6 md:p-8" onSubmit={handleSubmit(handleRegistration)}>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center text-center">
           <h1 className="text-2xl font-bold">Getting Started</h1>
@@ -78,9 +92,18 @@ function RegistrationForm() {
           </div>
           <Input id="confirm_password" type="password" required />
         </div> */}
-        <Button type="submit" className="w-full">
+        <CustomButton loading={isPending} type="submit" className="w-full">
           Register
-        </Button>
+        </CustomButton>
+        <AppNotifications.Error message={error?.message} lite />
+        <AppNotifications.Error
+          message={
+            isSuccess
+              ? "Your account has been created, you will be redirected to login soon!"
+              : ""
+          }
+          lite
+        />
         {/* <AppNotifications.Error
           lite
           message="Understanding the error message is crucial for debugging. and more and more and more and moer"

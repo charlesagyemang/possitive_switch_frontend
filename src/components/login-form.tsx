@@ -1,9 +1,3 @@
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RectangleGoggles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Fragment } from "react";
 import { renderFormField } from "./built/form/generator";
@@ -39,7 +33,15 @@ export function LoginForm({
   const { isPending, isSuccess, error, run } = useLoginHandler();
 
   const handleLogin = (data: any) => {
-    run(data);
+    run(
+      { user: data },
+      {
+        onSuccess: (data) => {
+          // Handle successful login, e.g., redirect to dashboard
+          console.log("Login successful", data);
+        },
+      }
+    );
   };
   return (
     <form className="p-6 md:p-8" onSubmit={handleSubmit(handleLogin)}>
@@ -71,7 +73,7 @@ export function LoginForm({
           </div>
           <Input id="password" type="password" required />
         </div> */}
-        <CustomButton type="submit" className="w-full">
+        <CustomButton loading={isPending} type="submit" className="w-full">
           Login
         </CustomButton>
         <AppNotifications.Error message={error?.message} />

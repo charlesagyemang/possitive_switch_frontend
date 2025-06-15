@@ -12,7 +12,7 @@ function ErrorMessage({
   const classes = lite ? "" : "px-4 bg-red-50";
   return (
     <div
-      className={`my-2 py-3 rounded-md text-sm ${classes} text-red-800 transition-opacity duration-400`}
+      className={`py-3 rounded-md text-sm ${classes} text-red-800 transition-opacity duration-400`}
       role="alert"
       style={{ opacity: message ? 1 : 0 }}
     >
@@ -33,7 +33,7 @@ export const SuccessMessage = ({
   const classes = lite ? "" : "px-4 bg-green-50";
   return (
     <div
-      className={`my-2 py-3 ${classes} text-sm rounded-md text-green-800 transition-opacity duration-400`}
+      className={`py-3 ${classes} text-sm rounded-md text-green-800 transition-opacity duration-400`}
       role="alert"
       style={{ opacity: message ? 1 : 0 }}
     >

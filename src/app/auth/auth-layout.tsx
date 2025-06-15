@@ -1,11 +1,7 @@
 "use client";
-import { LoginForm } from "@/components/login-form";
 import AnimatedBackground from "../shared/wrappers/animated-background";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RectangleGoggles } from "lucide-react";
 import QueryClientWrapper from "../shared/wrappers/query-client";
 
