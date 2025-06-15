@@ -15,6 +15,13 @@ const FORM_FIELDS = [
     label: "Email",
     placeholder: "e@example.com",
     required: true,
+    rules: {
+      required: "Email is required",
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Enter a valid email address",
+      },
+    },
   },
   {
     type: "password",
@@ -91,14 +98,13 @@ function RegistrationForm() {
         <CustomButton loading={isPending} type="submit" className="w-full">
           Register
         </CustomButton>
-        <AppNotifications.Error message={error?.message} lite />
+        <AppNotifications.Error message={error?.message} />
         <AppNotifications.Error
           message={
             isSuccess
               ? "Your account has been created, you will be redirected to login soon!"
               : ""
           }
-          lite
         />
         {/* <AppNotifications.Error
           lite
