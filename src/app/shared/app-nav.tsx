@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,8 +12,10 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { useAuthenticatedUser } from "@/api/auth/auth";
 
 function NavigationLayout() {
+  const { data: user } = useAuthenticatedUser();
   return (
     <div className="w-full bg-gradient-to-r from-primary/15 via-white to-pink-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       <div className="w-full flex items-center shadow-sm gap-6 px-6 py-4  bg-opacity-90 border-none border-gray-200 dark:border-gray-800 backdrop-blur-md">
@@ -51,8 +54,10 @@ function NavigationLayout() {
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 px-3  rounded-full bg-gradient-to-r from-indigo-100 to-pink-100 dark:from-gray-800 dark:to-gray-900  hover:scale-105 transition-all duration-200">
                 <Avatar className="ring-2 ring-indigo-400 dark:ring-pink-400">
-                  <AvatarImage src="/avatar.jpg" alt="User" />
-                  <AvatarFallback>MA</AvatarFallback>
+                  {/* <AvatarImage src="/avatar.jpg" alt="User" /> */}
+                  <AvatarFallback>
+                    {user?.name?.slice(0, 2)?.toUpperCase() || "AF"}
+                  </AvatarFallback>
                 </Avatar>
                 {/* <div className="hidden sm:flex flex-col items-start">
                   <span className="font-semibold text-indigo-700 dark:text-pink-300 text-sm tracking-wide">

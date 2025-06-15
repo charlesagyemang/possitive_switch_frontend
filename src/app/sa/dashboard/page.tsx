@@ -39,7 +39,7 @@ export default function SadminDashboard() {
         <div className="flex flex-row items-center justify-between">
           <PageTitle
             // Icon={Smile}
-            title="Welcome, Mr Admin"
+            title={`Welcome ${user?.name || "Super Admin"}`}
             description="You are a super admin, manage all the companies and candidates from here!"
           />
 

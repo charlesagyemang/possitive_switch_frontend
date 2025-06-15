@@ -19,6 +19,7 @@ import {
 import { CustomNavMain } from "./main-nav-options";
 import { CustomNavProject } from "./nav-projects";
 import { NavCompanies } from "./nav-companies";
+import { useAuthenticatedUser } from "@/api/auth/auth";
 
 // This is sample data.
 const data = {
@@ -83,6 +84,7 @@ const data = {
 export function SuperAdminSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: user } = useAuthenticatedUser();
   return (
     <Sidebar
       className="shadow-xs shadow-violet-200"
@@ -95,7 +97,7 @@ export function SuperAdminSidebar({
             <GalleryVerticalEnd className="size-4" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-bold">Microsoft Inc</span>
+            <span className="truncate font-bold">Default Company</span>
             <span className="truncate text-xs">Super Admin</span>
           </div>
         </div>
@@ -107,7 +109,7 @@ export function SuperAdminSidebar({
         <CustomNavProject projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

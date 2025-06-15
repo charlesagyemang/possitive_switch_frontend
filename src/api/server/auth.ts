@@ -15,7 +15,8 @@ export const requireAuthUser = async () => {
   // const sessionId = cookieStore.get(SESSION_KEY)?.value;
   // const sbs = cookieStore.get(SIDEBAR_STATE)?.value;
   const token = cookieStore.get(PUI_TOKEN)?.value;
-  if (!token) return redirect("/auth/login");
+  const link = "/auth/login";
+  if (!token) return redirect(link);
   try {
     const obj = await apiCall(API_WHO_AM_I, null, {
       server: true,
@@ -26,7 +27,10 @@ export const requireAuthUser = async () => {
       },
     });
     // console.log("See JWT, SESSION, SBS", jwt, sessionId, sbs);
-    return obj?.data?.user;
+    const user = obj?.data?.user;
+
+    if (!user) return redirect(link);
+    return { ...(user || {}), name: user?.email?.split("@")[0] };
   } catch (e) {
     console.log("lets see e", e?.toString());
   }
