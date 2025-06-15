@@ -57,6 +57,7 @@ export const renderFormField = (
     case "number":
     case "email":
     case "date":
+    case "password":
       return (
         <div key={field.name} className="mb-2">
           {renderLabel(field)}

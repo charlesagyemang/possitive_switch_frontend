@@ -1,14 +1,49 @@
+"use client";
 import AppNotifications from "@/components/built/app-notifications";
+import { renderFormField } from "@/components/built/form/generator";
+import { Textbox } from "@/components/built/input/input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-import React from "react";
+import React, { Fragment } from "react";
+import { useForm } from "react-hook-form";
 
+const FORM_FIELDS = [
+  {
+    type: "email",
+    name: "email",
+    label: "Email",
+    placeholder: "e@example.com",
+    required: true,
+  },
+  {
+    type: "password",
+    name: "password",
+    label: "Password",
+    placeholder: "Enter your password",
+    required: true,
+  },
+  {
+    type: "password",
+    name: "confirm_password",
+    label: "Confirm Password",
+    placeholder: "Re-enter your password",
+    required: true,
+  },
+];
 function RegistrationForm() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   return (
-    <form className="p-6 md:p-8">
+    <form
+      className="p-6 md:p-8"
+      onSubmit={handleSubmit((data) => console.log(data))}
+    >
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center text-center">
           <h1 className="text-2xl font-bold">Getting Started</h1>
@@ -16,34 +51,33 @@ function RegistrationForm() {
             Create a New D-Onboarding Account
           </p>
         </div>
-        <div className="grid gap-3">
+
+        <div>
+          {FORM_FIELDS.map((field, index) => {
+            return (
+              <Fragment key={index}>
+                {renderFormField(field, control, errors)}
+              </Fragment>
+            );
+          })}
+        </div>
+        {/* <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
+
           <Input id="email" type="email" placeholder="m@example.com" required />
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Password</Label>
-            {/* <a
-          href="#"
-          className="ml-auto text-sm underline-offset-2 hover:underline"
-        >
-          Forgot your password?
-        </a> */}
           </div>
           <Input id="password" type="password" required />
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Confirm Password</Label>
-            {/* <a
-          href="#"
-          className="ml-auto text-sm underline-offset-2 hover:underline"
-        >
-          Forgot your password?
-        </a> */}
           </div>
           <Input id="confirm_password" type="password" required />
-        </div>
+        </div> */}
         <Button type="submit" className="w-full">
           Register
         </Button>
