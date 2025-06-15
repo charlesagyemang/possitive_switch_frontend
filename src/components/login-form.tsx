@@ -6,6 +6,7 @@ import AppNotifications from "./built/app-notifications";
 import CustomButton from "./built/button/custom-button";
 import { clientSetCookie } from "@/api/api-utils";
 import { PUI_TOKEN } from "@/api/constants";
+import { useRouter } from "next/navigation";
 
 const FORM_FIELDS = [
   {
@@ -33,6 +34,7 @@ export function LoginForm({
     formState: { errors },
   } = useForm();
   const { isPending, isSuccess, error, run } = useLoginHandler();
+  const router = useRouter();
 
   const handleLogin = (data: any) => {
     run(
@@ -41,7 +43,11 @@ export function LoginForm({
         onSuccess: (data) => {
           const { token, success } = data;
           // Handle successful login, e.g., redirect to dashboard
-          if (success) clientSetCookie(PUI_TOKEN, token);
+          if (success) {
+            clientSetCookie(PUI_TOKEN, token);
+            localStorage.setItem(PUI_TOKEN, token);
+            router.push("/sa/dashboard");
+          }
 
           console.log("Login successful", data);
         },
@@ -82,6 +88,13 @@ export function LoginForm({
           Login
         </CustomButton>
         <AppNotifications.Error message={error?.message} />
+        <AppNotifications.Success
+          message={
+            isSuccess
+              ? "Your credentials are valid, you will be redirected in a few seconds..."
+              : ""
+          }
+        />
         {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-card text-muted-foreground relative z-10 px-2">
             Or continue with

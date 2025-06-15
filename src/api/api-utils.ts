@@ -1,3 +1,5 @@
+import { PUI_TOKEN } from "./constants";
+
 interface ApiOptions {
   method?: string;
   headers?: Record<string, string>;
@@ -38,15 +40,23 @@ const makeBody = (method: string, body: any) => {
   return JSON.stringify(body) || null;
 };
 
+const forcedToken = () => {
+  return { Authorization: `Bearer ${localStorage.getItem(PUI_TOKEN)}` };
+};
 const makeHeaders = (
   headers: Record<string, string> | undefined,
   body: any
 ): Record<string, string> => {
   const isFormData = body instanceof FormData;
+
   if (isFormData) {
-    return { ...(headers || {}) };
+    return { ...forcedToken, ...(headers || {}) };
   }
-  return { "Content-Type": "application/json", ...(headers || {}) };
+  return {
+    "Content-Type": "application/json",
+    ...forcedToken,
+    ...(headers || {}),
+  };
 };
 
 export const apiCall = (
