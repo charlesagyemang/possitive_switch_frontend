@@ -18,16 +18,49 @@ import { Button } from "@/components/ui/button";
 import { dashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CompanyForm from "@/app/shared/forms/company-form";
-import { useCompanyList } from "@/api/companies/company-api";
+import {
+  useCompanyDeleteHandler,
+  useCompanyList,
+} from "@/api/companies/company-api";
 import { useAuthenticatedUser } from "@/api/auth/auth";
+import DeleteConfirmation from "@/components/built/dialogs/delete-confirmation";
+import { useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Q_LIST_COMPANIES } from "@/api/auth/constants";
 
 export default function SadminDashboard() {
   const { ModalPortal, open, close } = useModal();
   const { data: companyList, isPending } = useCompanyList();
   const { data: user } = useAuthenticatedUser();
+  const { run, isPending: isDeleting } = useCompanyDeleteHandler();
+  const client = useQueryClient();
 
-  const addNewCompany = (data?: Company) => {
-    open(<CompanyForm data={data} close={close} />, "Add a new company");
+  const addNewCompany = useCallback(
+    (data?: Company) => {
+      open(<CompanyForm data={data} close={close} />, "Add a new company");
+    },
+    [close]
+  );
+
+  const doApiDelete = (data?: Company) => {
+    run(data?.id, {
+      onSuccess: () => {
+        console.log("Company created successfully", data);
+        client.refetchQueries({
+          queryKey: [Q_LIST_COMPANIES],
+        });
+      },
+    });
+  };
+
+  const deleteConfirmation = (data?: Company) => {
+    open(
+      <DeleteConfirmation
+        cancel={{ onClick: close }}
+        confirm={{ loading: isDeleting, onClick: () => doApiDelete(data) }}
+      />,
+      `Delete '${data?.name || "Company"}'` // Use company name or default text
+    );
   };
 
   const makeDropdownActions = (row: Company) => {
@@ -54,8 +87,7 @@ export default function SadminDashboard() {
         value: "delete",
 
         onClick: () => {
-          // Handle add employee action
-          console.log("Delete Company for company ID:", row);
+          deleteConfirmation(row);
         },
       },
     ];

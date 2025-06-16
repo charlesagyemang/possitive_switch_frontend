@@ -45,7 +45,6 @@ const FORM_FIELDS = [
 function CompanyForm({ close, data }: { close?: () => void; data?: Company }) {
   const { isPending, run } = useCreateCompanyHandler();
   const { isPending: isUpdating, run: runUpdate } = useUpdateCompanyHandler();
-  const { isPending: isDeleting, run: runDelete } = useCompanyDeleteHandler();
 
   const client = useQueryClient();
 

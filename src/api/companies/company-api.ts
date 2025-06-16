@@ -39,7 +39,7 @@ const updateCompany = (body: any) => {
     `${API_CREATE_NEW_COMPANY}/${id}`,
     { company: rest },
     {
-      method: "PUT",
+      method: "PATCH",
     }
   );
 };

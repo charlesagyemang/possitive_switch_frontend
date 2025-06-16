@@ -1,10 +1,15 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { VariantProps } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
 import React from "react";
 type addons = {
   loading?: boolean;
 };
-function CustomButton(props: React.ComponentProps<"button"> & addons) {
+function CustomButton(
+  props: React.ComponentProps<"button"> &
+    VariantProps<typeof buttonVariants> &
+    addons
+) {
   const { loading, children, className, ...rest } = props;
   return (
     <Button className={`flex items-center ${className || ""}`} {...rest}>
