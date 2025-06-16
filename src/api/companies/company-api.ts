@@ -2,9 +2,12 @@ import { apiCall, createForm } from "../api-utils";
 import {
   M_CREATE_CANDIDATE,
   M_CREATE_COMPANY,
+  M_DELETE_COMPANY,
+  M_UPDATE_COMPANY,
   Q_LIST_COMPANIES,
 } from "../auth/constants";
 import {
+  API_COMPANIES,
   API_CREATE_NEW_CANDIDATE,
   API_CREATE_NEW_COMPANY,
   API_LIST_ALL_COMPANIES,
@@ -23,13 +26,35 @@ import { useGenericMutation, useGenericQuery } from "../query";
 //   };
 // };
 
-
 const createCompany = (body: unknown) => {
   return apiCall(API_CREATE_NEW_COMPANY, body);
 };
 
 export const useCreateCompanyHandler = () => {
   return useGenericMutation([M_CREATE_COMPANY], (body) => createCompany(body));
+};
+const updateCompany = (body: any) => {
+  const { id, ...rest } = body?.company || {};
+  return apiCall(
+    `${API_CREATE_NEW_COMPANY}/${id}`,
+    { company: rest },
+    {
+      method: "PUT",
+    }
+  );
+};
+
+export const useUpdateCompanyHandler = () => {
+  return useGenericMutation([M_UPDATE_COMPANY], (body) => updateCompany(body));
+};
+const deleteCompany = (id: string) => {
+  return apiCall(`${API_COMPANIES}/${id}`, null, {
+    method: "DELETE",
+  });
+};
+
+export const useCompanyDeleteHandler = () => {
+  return useGenericMutation([M_DELETE_COMPANY], (body) => deleteCompany(body));
 };
 
 const createCandidate = (body: unknown) => {

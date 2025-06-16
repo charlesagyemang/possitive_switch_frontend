@@ -37,8 +37,6 @@ export default function SadminDashboard() {
         value: "edit",
 
         onClick: () => {
-          // Handle view details action
-          console.log("Edit company:", row);
           addNewCompany(row);
         },
       },
@@ -49,6 +47,15 @@ export default function SadminDashboard() {
         onClick: () => {
           // Handle add employee action
           console.log("View Details for company ID:", row);
+        },
+      },
+      {
+        label: "Delete",
+        value: "delete",
+
+        onClick: () => {
+          // Handle add employee action
+          console.log("Delete Company for company ID:", row);
         },
       },
     ];

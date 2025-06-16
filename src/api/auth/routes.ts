@@ -3,6 +3,7 @@ export const API_REGISTER_USER =`${API_BASE}/register`
 export const API_LOGIN = `${API_BASE}/login`
 export const API_WHO_AM_I = `${API_BASE}/whoami`
 export const API_CREATE_NEW_COMPANY = `${API_BASE}/companies`
+export const API_COMPANIES = `${API_BASE}/companies`
 export const API_CREATE_NEW_CANDIDATE = `${API_BASE}/whoami`
 export const API_LIST_USERS_COMPANIES = `${API_BASE}/companies`
 export const API_LIST_ALL_COMPANIES = `${API_BASE}/companies`
