@@ -52,7 +52,7 @@ function OneCompanyDashboard() {
   };
 
   return (
-    <SuperAdminRoot>
+    <div>
       <ModalPortal />
       <SadminSpace>
         <div className="flex items-center justify-between mb-6">
@@ -132,7 +132,7 @@ function OneCompanyDashboard() {
           </div>
         </div>
       </SadminSpace>
-    </SuperAdminRoot>
+    </div>
   );
 }
 

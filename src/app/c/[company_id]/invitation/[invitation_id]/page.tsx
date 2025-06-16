@@ -17,7 +17,7 @@ import React, { useMemo } from "react";
 
 function InvitationView() {
   const params = useParams();
-  const {  invitation_id } = params;
+  const { invitation_id } = params;
 
   const invitation: CandidateInvitation | undefined = useMemo(() => {
     return INVITATION_EXAMPLES.find((inv) => inv.id === invitation_id);
@@ -52,7 +52,7 @@ function InvitationView() {
     );
   }, [invitation]);
   return (
-    <SuperAdminRoot>
+    <div>
       <SadminSpace>
         <PageTitle
           title={`${invitation?.first_name} ${invitation?.last_name} - Invitation`}
@@ -69,7 +69,7 @@ function InvitationView() {
           headers={headers}
         />
       </div>
-    </SuperAdminRoot>
+    </div>
   );
 }
 

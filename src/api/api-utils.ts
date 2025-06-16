@@ -79,7 +79,7 @@ export const apiCall = (
     method,
     headers: makeHeaders(headers, body, { server }),
     body: makeBody(method, body),
-    credentials: "include",
+    // credentials: "include",
   };
 
   if (params) {
