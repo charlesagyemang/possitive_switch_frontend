@@ -63,7 +63,7 @@ function OneCompanyDashboard() {
       },
       {
         label: "Send Contract",
-        value: "view_details",
+        value: "send_contract",
         Icon: Eye,
         onClick: () => {
           router.push(`/c/${companyId}/invitation/${row.id}`);
