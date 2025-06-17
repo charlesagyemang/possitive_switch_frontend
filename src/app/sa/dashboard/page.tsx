@@ -27,6 +27,7 @@ import DeleteConfirmation from "@/components/built/dialogs/delete-confirmation";
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Q_LIST_COMPANIES } from "@/api/auth/constants";
+import { useRouter } from "next/navigation";
 
 export default function SadminDashboard() {
   const { ModalPortal, open, close } = useModal();
@@ -34,6 +35,8 @@ export default function SadminDashboard() {
   const { data: user } = useAuthenticatedUser();
   const { run, isPending: isDeleting } = useCompanyDeleteHandler();
   const client = useQueryClient();
+
+  const router = useRouter();
 
   const addNewCompany = useCallback(
     (data?: Company) => {
@@ -79,7 +82,8 @@ export default function SadminDashboard() {
 
         onClick: () => {
           // Handle add employee action
-          console.log("View Details for company ID:", row);
+          // console.log("View Details for company ID:", row);
+          router.push(`/c/${row.id}`);
         },
       },
       {

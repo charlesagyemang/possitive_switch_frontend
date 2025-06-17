@@ -5,6 +5,7 @@ import {
   M_DELETE_COMPANY,
   M_UPDATE_COMPANY,
   Q_LIST_COMPANIES,
+  Q_LOAD_ONE_COMPANY,
 } from "../auth/constants";
 import {
   API_COMPANIES,
@@ -47,6 +48,20 @@ const updateCompany = (body: any) => {
 export const useUpdateCompanyHandler = () => {
   return useGenericMutation([M_UPDATE_COMPANY], (body) => updateCompany(body));
 };
+const fetchCompany = async (id: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${id}`, null, {
+    method: "GET",
+  });
+
+  return obj.data?.company || null;
+};
+
+export const useCompanyFetchHandler = (id: string) => {
+  return useGenericQuery([Q_LOAD_ONE_COMPANY], () => fetchCompany(id), {
+    enabled: !!id,
+  });
+};
+
 const deleteCompany = (id: string) => {
   return apiCall(`${API_COMPANIES}/${id}`, null, {
     method: "DELETE",

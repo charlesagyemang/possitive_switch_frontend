@@ -105,7 +105,7 @@ export function SuperAdminSidebar({
       </SidebarHeader>
       <SidebarContent>
         <CustomNavMain items={data.navMain} />
-        <NavCompanies companies={data.companies} />
+        {/* <NavCompanies companies={data.companies} /> */}
         <CustomNavProject projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>

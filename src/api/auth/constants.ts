@@ -12,3 +12,4 @@ export const Q_AUTHENTICATED_USER = "q-authenticated-user";
 export const M_DELETE_CANDIDATE = "m-delete-candidate";
 export const M_EDIT_CANDIDATE = "q-edit-candidate";
 export const Q_LOAD_ONE_CANDIDATE = "q-load-one-candidate";
+export const Q_LOAD_ONE_COMPANY = "q-load-one-company";

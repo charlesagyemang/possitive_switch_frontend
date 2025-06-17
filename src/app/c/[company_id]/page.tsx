@@ -25,12 +25,17 @@ import { useRouter, useParams } from "next/navigation";
 import { companyDashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CandidateForm from "@/app/shared/forms/candidate-form";
+import { useCandidateFetchHandler } from "@/api/candidates/candidates-api";
+import { useCompanyFetchHandler } from "@/api/companies/company-api";
 
 function OneCompanyDashboard() {
   const router = useRouter();
   const params = useParams();
 
   const companyId = params.company_id as string;
+  const { data: company } = useCompanyFetchHandler(companyId);
+
+  console.log("Company Data:", company);
   const makeActions = (row: CandidateInvitation): DOption[] => {
     return [
       {
@@ -58,7 +63,7 @@ function OneCompanyDashboard() {
         <div className="flex items-center justify-between mb-6">
           <PageTitle
             Icon={Landmark}
-            title="New Fire Media"
+            title={company?.name || "..."}
             description="Company management dashboard to help you manage candidates and employees."
           />
 
@@ -105,7 +110,9 @@ function OneCompanyDashboard() {
                   pageSize={7}
                   name="Invited Candidates"
                   columns={invitationColumns({ actions: makeActions })}
-                  data={INVITATION_EXAMPLES}
+                  // data={INVITATION_EXAMPLES}
+                  data={[]}
+                  noRecordsText="No candidates invited yet."
                 />
               </CardContent>
             </Card>
