@@ -57,7 +57,7 @@ const fetchCompany = async (id: string) => {
 };
 
 export const useCompanyFetchHandler = (id: string) => {
-  return useGenericQuery([Q_LOAD_ONE_COMPANY], () => fetchCompany(id), {
+  return useGenericQuery([Q_LOAD_ONE_COMPANY, id], () => fetchCompany(id), {
     enabled: !!id,
   });
 };

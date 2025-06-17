@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   AlarmClockCheck,
   GalleryVerticalEnd,
+  Landmark,
   Layout,
   PieChart,
   RectangleGoggles,
@@ -20,6 +21,7 @@ import { CustomNavMain } from "./main-nav-options";
 import { CustomNavProject } from "./nav-projects";
 import { NavCompanies } from "./nav-companies";
 import { useAuthenticatedUser } from "@/api/auth/auth";
+import { useCompanyList } from "@/api/companies/company-api";
 
 // This is sample data.
 const data = {
@@ -85,6 +87,13 @@ export function SuperAdminSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const { data: user } = useAuthenticatedUser();
+  const { data: response } = useCompanyList();
+
+  const companies = (response || []).map((company: any) => ({
+    name:  company.name,
+    url: `/c/${company.id}`,
+    icon: Landmark,
+  }));
   return (
     <Sidebar
       className="shadow-xs shadow-violet-200"
@@ -105,7 +114,7 @@ export function SuperAdminSidebar({
       </SidebarHeader>
       <SidebarContent>
         <CustomNavMain items={data.navMain} />
-        {/* <NavCompanies companies={data.companies} /> */}
+        {!!companies && <NavCompanies companies={companies} />}
         <CustomNavProject projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
