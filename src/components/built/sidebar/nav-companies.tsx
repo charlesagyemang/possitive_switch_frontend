@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useURLOptions } from "@/hooks/use-url-options";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function NavCompanies({
   companies,
@@ -22,7 +23,8 @@ export function NavCompanies({
     locked?: boolean;
   }[];
 }) {
-  const { pathname } = useURLOptions();
+  // const { pathname } = useURLOptions();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -33,7 +35,7 @@ export function NavCompanies({
           return (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton isActive={item.url === pathname} asChild>
-                <a href={item.url}>
+                <Link href={item.url}>
                   {/* <item.icon />  */}
                   <Landmark className="" />
                   <span className="truncate">{item.name}</span>
@@ -41,7 +43,7 @@ export function NavCompanies({
                   {/* {item.locked && (
                   <Lock className="ml-auto text-sidebar-foreground/40" />
                 )} */}
-                </a>
+                </Link>
               </SidebarMenuButton>
               {item.locked && (
                 <Lock className="absolute right-2 top-2 h-4 w-4 text-gray-300" />
