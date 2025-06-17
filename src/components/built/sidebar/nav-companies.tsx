@@ -8,7 +8,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-
 } from "@/components/ui/sidebar";
 import { useURLOptions } from "@/hooks/use-url-options";
 import Link from "next/link";
@@ -23,31 +22,33 @@ export function NavCompanies({
     locked?: boolean;
   }[];
 }) {
-
   const { pathname } = useURLOptions();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel className="">Companies</SidebarGroupLabel>
       <SidebarMenu>
-        {companies.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton isActive={item.url === pathname} asChild>
-              <Link href={item.url}>
-                {/* <item.icon />  */}
-                <Landmark className="" />
-                <span className="truncate">{item.name}</span>
+        {companies.map((item) => {
+          // Check if the item is locked
+          return (
+            <SidebarMenuItem key={item.name}>
+              <SidebarMenuButton isActive={item.url === pathname} asChild>
+                <a href={item.url}>
+                  {/* <item.icon />  */}
+                  <Landmark className="" />
+                  <span className="truncate">{item.name}</span>
 
-                {/* {item.locked && (
+                  {/* {item.locked && (
                   <Lock className="ml-auto text-sidebar-foreground/40" />
                 )} */}
-              </Link>
-            </SidebarMenuButton>
-            {item.locked && (
-              <Lock className="absolute right-2 top-2 h-4 w-4 text-gray-300" />
-            )}
-          </SidebarMenuItem>
-        ))}
+                </a>
+              </SidebarMenuButton>
+              {item.locked && (
+                <Lock className="absolute right-2 top-2 h-4 w-4 text-gray-300" />
+              )}
+            </SidebarMenuItem>
+          );
+        })}
         {/* <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
             <MoreHorizontal className="text-sidebar-foreground/70" />

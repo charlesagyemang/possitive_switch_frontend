@@ -4,6 +4,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -29,6 +30,13 @@ const alias: Record<string, string> = {
 export const BreadCrumbProvider = ({ children }: { children: ReactNode }) => {
   const [crumbs, setCrumbs] = useState<BreadCrumbType[]>([]);
 
+  const getLink = () => {
+    if (typeof window === "undefined") return "";
+    return window.location.pathname;
+  };
+  const link = getLink();
+  const memoizedLink = useMemo(() => link, [link]);
+
   useEffect(() => {
     const c = getBreadcrumbs(window?.location.pathname);
     const objs = c.map((crumb, index) => {
@@ -41,7 +49,7 @@ export const BreadCrumbProvider = ({ children }: { children: ReactNode }) => {
       };
     });
     setCrumbs(objs);
-  }, []);
+  }, [memoizedLink]);
 
   return (
     <BreadCrumbContext.Provider value={{ crumbs }}>

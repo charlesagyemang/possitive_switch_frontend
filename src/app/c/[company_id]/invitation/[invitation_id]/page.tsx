@@ -62,12 +62,12 @@ function InvitationView() {
       </SadminSpace>
 
       <div className="w-full mx-auto p-6">
-        <CustomStepper
+        {/* <CustomStepper
           navigation={false}
           initialStep={initialStep}
           steps={steps}
           headers={headers}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useBreadCrumbs } from "@/hooks/context/bread-crumb-context";
 import NavigationLayout from "./app-nav";
+import Link from "next/link";
 
 function SuperAdminFrame({ children }: { children: React.ReactNode }) {
   const { crumbs } = useBreadCrumbs();
@@ -27,13 +28,13 @@ function SuperAdminFrame({ children }: { children: React.ReactNode }) {
               return (
                 <Fragment key={crumb.key}>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink
+                    <Link
                       key={crumb.key}
                       href={crumb.url}
                       className="text-gray-400 font-medium cursor-pointer hover:underline capitalize hover:text-gray-900"
                     >
                       {crumb.name}
-                    </BreadcrumbLink>
+                    </Link>
                   </BreadcrumbItem>
                   {index !== crumbs.length - 1 ? (
                     <BreadcrumbSeparator className="hidden md:block text-gray-400 " />
