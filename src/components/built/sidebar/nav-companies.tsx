@@ -11,6 +11,7 @@ import {
 
 } from "@/components/ui/sidebar";
 import { useURLOptions } from "@/hooks/use-url-options";
+import Link from "next/link";
 
 export function NavCompanies({
   companies,
@@ -32,7 +33,7 @@ export function NavCompanies({
         {companies.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton isActive={item.url === pathname} asChild>
-              <a href={item.url}>
+              <Link href={item.url}>
                 {/* <item.icon />  */}
                 <Landmark className="" />
                 <span className="truncate">{item.name}</span>
@@ -40,7 +41,7 @@ export function NavCompanies({
                 {/* {item.locked && (
                   <Lock className="ml-auto text-sidebar-foreground/40" />
                 )} */}
-              </a>
+              </Link>
             </SidebarMenuButton>
             {item.locked && (
               <Lock className="absolute right-2 top-2 h-4 w-4 text-gray-300" />
