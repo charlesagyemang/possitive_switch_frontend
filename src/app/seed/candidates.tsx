@@ -20,6 +20,13 @@ export type Candidate = {
   updated_at: string;
 };
 
+
+export type ApiCandidate = { 
+  id: string;
+  email: string;
+  job_title: string;
+  name: string;
+}
 export type CandidateInvitation = {
   id: string;
   email: string;

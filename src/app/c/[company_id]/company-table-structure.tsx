@@ -1,4 +1,4 @@
-import { CandidateInvitation } from "@/app/seed/candidates";
+import { ApiCandidate, CandidateInvitation } from "@/app/seed/candidates";
 import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
 import {
@@ -8,7 +8,7 @@ import {
 import { MoreVertical } from "lucide-react";
 import { format } from "date-fns";
 
-const candidateColumnHelper = createColumnHelper<CandidateInvitation>();
+const candidateColumnHelper = createColumnHelper<ApiCandidate>();
 
 const statusColors: Record<
   string,
@@ -60,34 +60,39 @@ function StatusBadge({ status }: { status: string }) {
 export const invitationColumns = ({
   actions,
 }: {
-  actions: (r: CandidateInvitation) => DOption[];
+  actions: (r: ApiCandidate) => DOption[];
 }) => [
+  candidateColumnHelper.accessor((row) => row.name, {
+    header: "First Name",
+    cell: (info) => info.getValue(),
+  }),
   candidateColumnHelper.accessor("email", {
     header: "Email",
     cell: (info) => <b>{info.getValue()}</b>,
   }),
-  candidateColumnHelper.accessor("first_name", {
-    header: "First Name",
-    cell: (info) => info.getValue(),
+  candidateColumnHelper.accessor("job_title", {
+    header: "Job Title",
+    cell: (info) => <>{info.getValue()}</>,
   }),
-  candidateColumnHelper.accessor("last_name", {
-    header: "Last Name",
-    cell: (info) => info.getValue(),
-  }),
-  candidateColumnHelper.accessor("deadline", {
-    header: "Deadline",
-    cell: (info) => {
-      const value = info.getValue();
-      if (!value) return "-";
-      const date = new Date(value);
-      if (isNaN(date.getTime())) return value;
-      return format(date, "P"); // Shorter date format
-    },
-  }),
-  candidateColumnHelper.accessor((row) => String(row.status), {
-    header: "Status",
-    cell: (info) => <StatusBadge status={info.getValue()} />,
-  }),
+
+  // candidateColumnHelper.accessor("last_name", {
+  //   header: "Last Name",
+  //   cell: (info) => info.getValue(),
+  // }),
+  // candidateColumnHelper.accessor("deadline", {
+  //   header: "Deadline",
+  //   cell: (info) => {
+  //     const value = info.getValue();
+  //     if (!value) return "-";
+  //     const date = new Date(value);
+  //     if (isNaN(date.getTime())) return value;
+  //     return format(date, "P"); // Shorter date format
+  //   },
+  // }),
+  // candidateColumnHelper.accessor((row) => String(row.status), {
+  //   header: "Status",
+  //   cell: (info) => <StatusBadge status={info.getValue()} />,
+  // }),
   candidateColumnHelper.accessor((row) => row.id, {
     id: "id",
     header: "",

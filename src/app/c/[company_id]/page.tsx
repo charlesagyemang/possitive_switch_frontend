@@ -18,6 +18,7 @@ import {
 import React from "react";
 import { invitationColumns } from "./company-table-structure";
 import {
+  ApiCandidate,
   CandidateInvitation,
   INVITATION_EXAMPLES,
 } from "@/app/seed/candidates";
@@ -49,13 +50,19 @@ function OneCompanyDashboard() {
     // isFetched: candidateListIsFetched,
   } = useCandidateList(companyId);
 
-  console.log("Candidates Data:", candidates);
-
-  console.log("Company Data:", company);
-  const makeActions = (row: CandidateInvitation): DOption[] => {
+  const makeActions = (row: ApiCandidate): DOption[] => {
     return [
       {
         label: "View Details",
+        value: "view_details",
+        Icon: Eye,
+        onClick: () => {
+          router.push(`/c/${companyId}/invitation/${row.id}`);
+          // handle view details
+        },
+      },
+      {
+        label: "Send Contract",
         value: "view_details",
         Icon: Eye,
         onClick: () => {
@@ -69,7 +76,10 @@ function OneCompanyDashboard() {
   const { ModalPortal, open, close } = useModal();
 
   const openCandidateForm = () => {
-    open(<CandidateForm close={close} />, "Add a new candidate");
+    open(
+      <CandidateForm companyId={companyId} close={close} />,
+      "Add a new candidate"
+    );
   };
 
   if (isPending)
@@ -90,12 +100,12 @@ function OneCompanyDashboard() {
       );
 
     return (
-      <GenericTable
+      <GenericTable<ApiCandidate, any>
         pageSize={7}
         name="Invited Candidates"
         columns={invitationColumns({ actions: makeActions })}
         // data={INVITATION_EXAMPLES}
-        data={[]}
+        data={candidates || []}
         noRecordsText="No candidates invited yet."
       />
     );
