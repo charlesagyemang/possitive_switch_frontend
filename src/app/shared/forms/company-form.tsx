@@ -65,8 +65,7 @@ function CompanyForm({ close, data }: { close?: () => void; data?: Company }) {
   };
 
   const onSuccess = (data: any) => {
-    console.log("Company created successfully", data);
-
+    
     client.refetchQueries({
       queryKey: [Q_LIST_COMPANIES],
     });

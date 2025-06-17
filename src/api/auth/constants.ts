@@ -1,10 +1,14 @@
-export const M_REGISTER_USER = "m-register-user" 
-export const M_LOGIN_USER = "m-login-user" 
-export const Q_WHO_AM_I = "m-who-ami"
-export const M_CREATE_COMPANY = "m-create-company"
-export const M_UPDATE_COMPANY = "m-update-company"
-export const M_DELETE_COMPANY = "m-update-company"
-export const M_CREATE_CANDIDATE = "m-create-candidate"
-export const Q_LIST_COMPANIES = "q-list-companies"
-export const Q_LIST_CANDIDATES = "q-list-candidates"
-export const Q_AUTHENTICATED_USER = "q-authenticated-user"
+export const M_REGISTER_USER = "m-register-user";
+export const M_LOGIN_USER = "m-login-user";
+export const Q_WHO_AM_I = "m-who-ami";
+export const M_CREATE_COMPANY = "m-create-company";
+export const M_UPDATE_COMPANY = "m-update-company";
+export const M_DELETE_COMPANY = "m-update-company";
+export const M_CREATE_CANDIDATE = "m-create-candidate";
+export const Q_LIST_COMPANIES = "q-list-companies";
+export const Q_LIST_CANDIDATES = "q-list-candidates";
+export const Q_AUTHENTICATED_USER = "q-authenticated-user";
+
+export const M_DELETE_CANDIDATE = "m-delete-candidate";
+export const M_EDIT_CANDIDATE = "q-edit-candidate";
+export const Q_LOAD_ONE_CANDIDATE = "q-load-one-candidate";
