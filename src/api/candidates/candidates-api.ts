@@ -4,15 +4,27 @@ import {
   M_EDIT_CANDIDATE,
   Q_LIST_CANDIDATES,
 } from "../auth/constants";
-import { API_CANDIDATES } from "../auth/routes";
-import { useGenericMutation } from "../query";
+import { API_CANDIDATES, API_COMPANIES } from "../auth/routes";
+import { useGenericMutation, useGenericQuery } from "../query";
 
-const listCandidates = (id: string) => {
-  return apiCall(`${API_CANDIDATES}/${id}`, null, { method: "GET" });
+const listCandidates = async (company_id: string) => {
+  const obj = await apiCall(
+    `${API_COMPANIES}/${company_id}/candidates_deep`,
+    null,
+    {
+      method: "GET",
+    }
+  );
+
+  return obj?.data?.company?.candidates || [];
 };
 
-export const useCandidateList = () => {
-  return useGenericMutation([Q_LIST_CANDIDATES], (id) => listCandidates(id));
+export const useCandidateList = (company_id: string) => {
+  return useGenericQuery(
+    [Q_LIST_CANDIDATES, company_id],
+    () => listCandidates(company_id),
+    { enabled: !!company_id }
+  );
 };
 
 const createCandidate = (body: unknown) => {

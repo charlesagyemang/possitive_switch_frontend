@@ -10,6 +10,7 @@ import {
   Eye,
   Handshake,
   Landmark,
+  LoaderCircle,
   Mail,
   PersonStanding,
   Plus,
@@ -25,7 +26,10 @@ import { useRouter, useParams } from "next/navigation";
 import { companyDashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CandidateForm from "@/app/shared/forms/candidate-form";
-import { useCandidateFetchHandler } from "@/api/candidates/candidates-api";
+import {
+  useCandidateFetchHandler,
+  useCandidateList,
+} from "@/api/candidates/candidates-api";
 import { useCompanyFetchHandler } from "@/api/companies/company-api";
 
 function OneCompanyDashboard() {
@@ -33,7 +37,19 @@ function OneCompanyDashboard() {
   const params = useParams();
 
   const companyId = params.company_id as string;
-  const { data: company } = useCompanyFetchHandler(companyId);
+  const {
+    data: company,
+    isPending,
+    error,
+    isFetched,
+  } = useCompanyFetchHandler(companyId);
+  const {
+    data: candidates,
+    isPending: loadingCandidates,
+    // isFetched: candidateListIsFetched,
+  } = useCandidateList(companyId);
+
+  console.log("Candidates Data:", candidates);
 
   console.log("Company Data:", company);
   const makeActions = (row: CandidateInvitation): DOption[] => {
@@ -56,6 +72,36 @@ function OneCompanyDashboard() {
     open(<CandidateForm close={close} />, "Add a new candidate");
   };
 
+  if (isPending)
+    return (
+      <div className="p-6 px-10 flex items-center gap-2">
+        <LoaderCircle className="animate-spin text-primary font-medium" />{" "}
+        Loading company details...
+      </div>
+    );
+
+  const renderCandidates = () => {
+    if (loadingCandidates)
+      return (
+        <div className="flex items-center font-medium">
+          <LoaderCircle className="animate-spin text-primary mr-2" /> Loading
+          candidates...
+        </div>
+      );
+
+    return (
+      <GenericTable
+        pageSize={7}
+        name="Invited Candidates"
+        columns={invitationColumns({ actions: makeActions })}
+        // data={INVITATION_EXAMPLES}
+        data={[]}
+        noRecordsText="No candidates invited yet."
+      />
+    );
+  };
+
+  if (isFetched && error) return <div>Error: {error.message}</div>;
   return (
     <div>
       <ModalPortal />
@@ -105,16 +151,7 @@ function OneCompanyDashboard() {
           <div className="lg:col-span-7">
             {/* Left side content (70%) */}
             <Card className="shadow-none">
-              <CardContent>
-                <GenericTable
-                  pageSize={7}
-                  name="Invited Candidates"
-                  columns={invitationColumns({ actions: makeActions })}
-                  // data={INVITATION_EXAMPLES}
-                  data={[]}
-                  noRecordsText="No candidates invited yet."
-                />
-              </CardContent>
+              <CardContent>{renderCandidates()}</CardContent>
             </Card>
           </div>
           <div className="lg:col-span-3">
