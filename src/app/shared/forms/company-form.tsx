@@ -50,12 +50,13 @@ function CompanyForm({ close, data }: { close?: () => void; data?: Company }) {
 
   const isEditMode = !!data;
 
-  const onSuccess = (data: any) => {
-    console.log("Company created successfully", data);
-    client.refetchQueries({
-      queryKey: [Q_LIST_COMPANIES],
-    });
-  };
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<any>({ defaultValues: data || {} });
+
   const handleCompanyCreation = (data: any) => {
     run({ company: data }, { onSuccess });
   };
@@ -63,11 +64,15 @@ function CompanyForm({ close, data }: { close?: () => void; data?: Company }) {
     runUpdate({ company: data }, { onSuccess });
   };
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<any>({ defaultValues: data || {} });
+  const onSuccess = (data: any) => {
+    console.log("Company created successfully", data);
+
+    client.refetchQueries({
+      queryKey: [Q_LIST_COMPANIES],
+    });
+    reset();
+    close && close();
+  };
   return (
     <form
       onSubmit={handleSubmit(isEditMode ? handleUpdate : handleCompanyCreation)}
