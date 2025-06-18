@@ -18,7 +18,7 @@ function PageTitle({
     return Icon && <Icon className="mr-4 h-14 w-14 text-violet-100" />;
   };
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-2">
       {renderIcon()}
       {/* {Icon && <Icon className="mr-4 h-14 w-14 text-gray-300" />} */}
       <div>
