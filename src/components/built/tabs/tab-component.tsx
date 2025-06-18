@@ -9,7 +9,7 @@ export type CustomTabItem = {
   render: () => ReactNode;
 };
 
-type TabComponentProps = {
+export type TabComponentProps = {
   defaultTab?: string;
   className?: string;
   items: CustomTabItem[];

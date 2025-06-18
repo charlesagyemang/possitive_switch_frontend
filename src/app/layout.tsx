@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Onboarding System",
+  title: "Positive Switch",
   description: "Seamless digital onboarding experience",
 };
 

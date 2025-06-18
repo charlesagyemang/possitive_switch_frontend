@@ -20,7 +20,7 @@ type BreadCrumbContextType = {
 
 const BreadCrumbContext = createContext<BreadCrumbContextType | null>(null);
 
-const exclude = ["sa", "c", "invitation"];
+const exclude = ["sa", "c", "invitation", "candidate"];
 
 const alias: Record<string, string> = {
   sa: "Super Admin",

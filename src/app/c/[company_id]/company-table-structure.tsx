@@ -7,6 +7,7 @@ import {
 } from "@/components/built/dropdown/custom-dropdown";
 import { MoreVertical } from "lucide-react";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 const candidateColumnHelper = createColumnHelper<ApiCandidate>();
 
@@ -59,55 +60,71 @@ function StatusBadge({ status }: { status: string }) {
 
 export const invitationColumns = ({
   actions,
+  companyId,
+  router,
 }: {
   actions: (r: ApiCandidate) => DOption[];
-}) => [
-  candidateColumnHelper.accessor((row) => row.name, {
-    header: "First Name",
-    cell: (info) => info.getValue(),
-  }),
-  candidateColumnHelper.accessor("email", {
-    header: "Email",
-    cell: (info) => <b>{info.getValue()}</b>,
-  }),
-  candidateColumnHelper.accessor("job_title", {
-    header: "Job Title",
-    cell: (info) => <>{info.getValue()}</>,
-  }),
+  companyId?: string;
+  router?: ReturnType<typeof useRouter>;
+}) => {
+  return [
+    candidateColumnHelper.accessor((row) => row, {
+      header: "First Name",
+      cell: (info) => {
+        const row = info.getValue();
+        return (
+          <span
+            onClick={() => router?.push(`/c/${companyId}/candidate/${row.id}`)}
+            className="hover:underline cursor-pointer font-semibold hover:opacity-70"
+          >
+            {row.name}
+          </span>
+        );
+      },
+    }),
+    candidateColumnHelper.accessor("email", {
+      header: "Email",
+      cell: (info) => <b>{info.getValue()}</b>,
+    }),
+    candidateColumnHelper.accessor("job_title", {
+      header: "Job Title",
+      cell: (info) => <>{info.getValue()}</>,
+    }),
 
-  // candidateColumnHelper.accessor("last_name", {
-  //   header: "Last Name",
-  //   cell: (info) => info.getValue(),
-  // }),
-  // candidateColumnHelper.accessor("deadline", {
-  //   header: "Deadline",
-  //   cell: (info) => {
-  //     const value = info.getValue();
-  //     if (!value) return "-";
-  //     const date = new Date(value);
-  //     if (isNaN(date.getTime())) return value;
-  //     return format(date, "P"); // Shorter date format
-  //   },
-  // }),
-  // candidateColumnHelper.accessor((row) => String(row.status), {
-  //   header: "Status",
-  //   cell: (info) => <StatusBadge status={info.getValue()} />,
-  // }),
-  candidateColumnHelper.accessor((row) => row.id, {
-    id: "id",
-    header: "",
-    cell: (info) => {
-      // const options: DOption[] = [
-      //   { label: "View", value: "view", onClick: () => {} },
-      //   { label: "Delete", value: "delete", onClick: () => {} },
-      // ];
-      return (
-        <AsDropdownMenu options={actions(info.row.original)} className="w-8">
-          <button className="p-1 rounded hover:bg-muted">
-            <MoreVertical className="w-4 h-4" />
-          </button>
-        </AsDropdownMenu>
-      );
-    },
-  }),
-];
+    // candidateColumnHelper.accessor("last_name", {
+    //   header: "Last Name",
+    //   cell: (info) => info.getValue(),
+    // }),
+    // candidateColumnHelper.accessor("deadline", {
+    //   header: "Deadline",
+    //   cell: (info) => {
+    //     const value = info.getValue();
+    //     if (!value) return "-";
+    //     const date = new Date(value);
+    //     if (isNaN(date.getTime())) return value;
+    //     return format(date, "P"); // Shorter date format
+    //   },
+    // }),
+    // candidateColumnHelper.accessor((row) => String(row.status), {
+    //   header: "Status",
+    //   cell: (info) => <StatusBadge status={info.getValue()} />,
+    // }),
+    candidateColumnHelper.accessor((row) => row.id, {
+      id: "id",
+      header: "",
+      cell: (info) => {
+        // const options: DOption[] = [
+        //   { label: "View", value: "view", onClick: () => {} },
+        //   { label: "Delete", value: "delete", onClick: () => {} },
+        // ];
+        return (
+          <AsDropdownMenu options={actions(info.row.original)} className="w-8">
+            <button className="p-1 rounded hover:bg-muted">
+              <MoreVertical className="w-4 h-4" />
+            </button>
+          </AsDropdownMenu>
+        );
+      },
+    }),
+  ];
+};

@@ -41,7 +41,7 @@ export function AuthLayout({
                   <div className="absolute inset-0 h-full w-full opacity-80" />
                   <span className="relative z-10 text-3xl font-bold flex flex-col items-center gap-3 text-primary drop-shadow-none">
                     <RectangleGoggles className="inline-block mr-2 size-12 text-primary/30" />
-                    Digital Onboarding
+                    Positive Switch
                     <span className="text-xs text-primary/80 uppercase">
                       Admin Portal
                     </span>

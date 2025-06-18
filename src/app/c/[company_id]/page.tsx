@@ -10,10 +10,12 @@ import {
   Eye,
   Handshake,
   Landmark,
+  LayoutDashboard,
   LoaderCircle,
   Mail,
   PersonStanding,
   Plus,
+  Trash,
 } from "lucide-react";
 import React from "react";
 import { invitationColumns } from "./company-table-structure";
@@ -53,20 +55,20 @@ function OneCompanyDashboard() {
   const makeActions = (row: ApiCandidate): DOption[] => {
     return [
       {
-        label: "View Details",
-        value: "view_details",
-        Icon: Eye,
+        label: "Manage",
+        value: "manage",
+        Icon: LayoutDashboard,
         onClick: () => {
-          router.push(`/c/${companyId}/invitation/${row.id}`);
+          router.push(`/c/${companyId}/candidate/${row.id}`);
           // handle view details
         },
       },
       {
-        label: "Send Contract",
-        value: "send_contract",
-        Icon: Eye,
+        label: "Delete",
+        value: "delete",
+        Icon: Trash,
         onClick: () => {
-          router.push(`/c/${companyId}/invitation/${row.id}`);
+          // router.push(`/c/${companyId}/invitation/${row.id}`);
           // handle view details
         },
       },
@@ -103,7 +105,11 @@ function OneCompanyDashboard() {
       <GenericTable<ApiCandidate, any>
         pageSize={7}
         name="Invited Candidates"
-        columns={invitationColumns({ actions: makeActions })}
+        columns={invitationColumns({
+          actions: makeActions,
+          companyId: companyId,
+          router,
+        })}
         // data={INVITATION_EXAMPLES}
         data={candidates || []}
         noRecordsText="No candidates invited yet."
