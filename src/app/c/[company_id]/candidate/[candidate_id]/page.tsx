@@ -13,7 +13,7 @@ import OnboardingTab from "./onboarding-tab";
 import Configuration from "./configurations";
 import { useCandidate } from "@/api/candidates/candidates-api";
 import { useParams } from "next/navigation";
-import LoadingState from "@/components/loaders/loading-state";
+import LoadingState from "@/components/built/loaders/loading-state";
 import AppNotifications from "@/components/built/app-notifications";
 
 export default function ManageCandidatePage() {
@@ -47,7 +47,7 @@ export default function ManageCandidatePage() {
       name: "Configurations",
       key: "config",
       icon: <UserCog className="h-4 w-4" />,
-      render: () => <Configuration />,
+      render: () => <Configuration candidate={candidate} />,
     },
   ];
   const renderProfilePhoto = () => {
