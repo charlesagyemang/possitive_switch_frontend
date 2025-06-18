@@ -9,6 +9,7 @@ import PageTitle from "@/components/built/text/page-title";
 import { CheckCircle, ListTodo, Signature, UserCog } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import OnboardingTab from "./onboarding-tab";
 
 export default function ManageCandidatePage() {
   const { TabComponent } = useCustomTabs({ defaultTab: "onboarding-tasks" });
@@ -18,7 +19,7 @@ export default function ManageCandidatePage() {
       name: "OnBoarding Tasks",
       key: "onboarding-tasks",
       icon: <CheckCircle className="h-4 w-4" />,
-      render: () => <div>Onboarding Page</div>,
+      render: () => <OnboardingTab />,
     },
     {
       name: "Contracts",
