@@ -42,7 +42,7 @@ export default function ManageCandidatePage() {
       name: "OnBoarding Tasks",
       key: "onboarding-tasks",
       icon: <CheckCircle className="h-4 w-4" />,
-      render: () => <OnboardingTab />,
+      render: () => <OnboardingTab tasks={candidate.onboarding_tasks} />,
     },
     {
       name: "Contracts",
