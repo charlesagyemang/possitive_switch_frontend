@@ -48,8 +48,6 @@ export function LoginForm({
             localStorage.setItem(PUI_TOKEN, token);
             router.push("/sa/dashboard");
           }
-
-          console.log("Login successful", data);
         },
       }
     );

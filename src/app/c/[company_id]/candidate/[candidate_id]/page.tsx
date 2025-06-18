@@ -10,9 +10,25 @@ import { CheckCircle, ListTodo, Signature, UserCog } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import OnboardingTab from "./onboarding-tab";
+import Configuration from "./configurations";
+import { useCandidate } from "@/api/candidates/candidates-api";
+import { useParams } from "next/navigation";
+import LoadingState from "@/components/loaders/loading-state";
+import AppNotifications from "@/components/built/app-notifications";
 
 export default function ManageCandidatePage() {
-  const { TabComponent } = useCustomTabs({ defaultTab: "onboarding-tasks" });
+  const { TabComponent } = useCustomTabs({ defaultTab: "config" });
+
+  const { candidate_id } = useParams();
+
+  const {
+    data: candidate,
+    isPending,
+    error,
+    isFetched,
+  } = useCandidate(candidate_id as string);
+
+  console.log("Candidate Data: ", candidate);
 
   const TABS: CustomTabItem[] = [
     {
@@ -29,9 +45,9 @@ export default function ManageCandidatePage() {
     },
     {
       name: "Configurations",
-      key: "configurations",
+      key: "config",
       icon: <UserCog className="h-4 w-4" />,
-      render: () => <div>Configure candidate contracts & templates</div>,
+      render: () => <Configuration />,
     },
   ];
   const renderProfilePhoto = () => {
@@ -48,12 +64,26 @@ export default function ManageCandidatePage() {
     );
   };
 
+  if (isPending) return <LoadingState>Fetching candidate info...</LoadingState>;
+
+  if (error)
+    return (
+      <AppNotifications.Error
+        message={`Error fetching candidate: ${error.message}`}
+      />
+    );
+
+  if (!candidate && isFetched)
+    return (
+      <p>Sorry, we could not find the candidate you were looking for...</p>
+    );
+
   return (
     <SadminSpace>
       <PageTitle
         customIcon={renderProfilePhoto}
-        title="Stella Opoku Agyemang"
-        description="Candidate Management"
+        title={candidate?.name || "..."}
+        description={candidate?.job_title}
       />
 
       <div className="mt-6">

@@ -3,6 +3,7 @@ import {
   M_CREATE_CANDIDATE,
   M_EDIT_CANDIDATE,
   Q_LIST_CANDIDATES,
+  Q_LOAD_ONE_CANDIDATE,
 } from "../auth/constants";
 import { API_CANDIDATES, API_COMPANIES } from "../auth/routes";
 import { useGenericMutation, useGenericQuery } from "../query";
@@ -43,10 +44,13 @@ const editCandidate = (body: unknown) => {
 export const useEditCandidateHandler = () => {
   return useGenericMutation([M_EDIT_CANDIDATE], (body) => editCandidate(body));
 };
-const fetchCandidate = (id: string) => {
-  return apiCall(`${API_CANDIDATES}/${id}`, null, { method: "GET" });
+const fetchCandidate = async (id: string) => {
+  const obj = await apiCall(`${API_CANDIDATES}/${id}`, null, { method: "GET" });
+  return obj?.data?.candidate;
 };
 
-export const useCandidateFetchHandler = () => {
-  return useGenericMutation([M_EDIT_CANDIDATE], (body) => fetchCandidate(body));
+export const useCandidate = (id: string) => {
+  return useGenericQuery([Q_LOAD_ONE_CANDIDATE, id], () => fetchCandidate(id), {
+    enabled: !!id,
+  });
 };

@@ -21,8 +21,6 @@ import React from "react";
 import { invitationColumns } from "./company-table-structure";
 import {
   ApiCandidate,
-  CandidateInvitation,
-  INVITATION_EXAMPLES,
 } from "@/app/seed/candidates";
 import { DOption } from "@/components/built/dropdown/custom-dropdown";
 import { useRouter, useParams } from "next/navigation";
@@ -30,7 +28,7 @@ import { companyDashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CandidateForm from "@/app/shared/forms/candidate-form";
 import {
-  useCandidateFetchHandler,
+  
   useCandidateList,
 } from "@/api/candidates/candidates-api";
 import { useCompanyFetchHandler } from "@/api/companies/company-api";
