@@ -16,6 +16,7 @@ import { useParams } from "next/navigation";
 import LoadingState from "@/components/built/loaders/loading-state";
 import AppNotifications from "@/components/built/app-notifications";
 import { ApiOnBoardingTask } from "@/app/types";
+import ManageCandidateContracts from "./contract";
 
 export default function ManageCandidatePage() {
   const { TabComponent } = useCustomTabs({ defaultTab: "config" });
@@ -48,7 +49,7 @@ export default function ManageCandidatePage() {
       name: "Contracts",
       key: "contracts",
       icon: <Signature className="h-4 w-4" />,
-      render: () => <div>Create contracts for candidates</div>,
+      render: () => <ManageCandidateContracts />,
     },
     {
       name: "Configurations",
