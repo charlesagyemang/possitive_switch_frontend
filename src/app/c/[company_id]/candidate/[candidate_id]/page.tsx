@@ -8,27 +8,34 @@ import useCustomTabs from "@/components/built/tabs/use-tab-component";
 import PageTitle from "@/components/built/text/page-title";
 import { CheckCircle, ListTodo, Signature, UserCog } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import OnboardingTab from "./onboarding-tab";
 import Configuration from "./configurations";
 import { useCandidate } from "@/api/candidates/candidates-api";
 import { useParams } from "next/navigation";
 import LoadingState from "@/components/built/loaders/loading-state";
 import AppNotifications from "@/components/built/app-notifications";
+import { ApiOnBoardingTask } from "@/app/types";
 
 export default function ManageCandidatePage() {
   const { TabComponent } = useCustomTabs({ defaultTab: "config" });
-
   const { candidate_id } = useParams();
+  const [excluded, setExcluded] = useState<ApiOnBoardingTask[]>([]);
 
+  const excludeATask = (task: ApiOnBoardingTask) => {
+    setExcluded((prev) => {
+      if (prev.some((t) => t.id === task.id)) {
+        return prev.filter((t) => t.id !== task.id);
+      }
+      return [...prev, task];
+    });
+  };
   const {
     data: candidate,
     isPending,
     error,
     isFetched,
   } = useCandidate(candidate_id as string);
-
-  console.log("Candidate Data: ", candidate);
 
   const TABS: CustomTabItem[] = [
     {
@@ -47,7 +54,13 @@ export default function ManageCandidatePage() {
       name: "Configurations",
       key: "config",
       icon: <UserCog className="h-4 w-4" />,
-      render: () => <Configuration candidate={candidate} />,
+      render: () => (
+        <Configuration
+          excluded={excluded}
+          exclude={excludeATask}
+          candidate={candidate}
+        />
+      ),
     },
   ];
   const renderProfilePhoto = () => {
