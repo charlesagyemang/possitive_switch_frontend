@@ -25,11 +25,13 @@ function Configuration({
         <p className="text-gray-600">
           Uncheck all the options that do not apply to {candidate?.name}
         </p>
-        {excluded?.length && (
+        {excluded?.length ? (
           <div className="ml-auto flex items-center gap-2">
             <span className="font-semibold">{excluded.length} excluded</span>
             <CustomButton>Save </CustomButton>
           </div>
+        ) : (
+          <></>
         )}
       </div>
 

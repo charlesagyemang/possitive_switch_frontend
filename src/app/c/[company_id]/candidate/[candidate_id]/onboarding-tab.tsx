@@ -4,7 +4,7 @@ import React from "react";
 
 function OnboardingTab({ tasks }: { tasks?: ApiOnBoardingTask[] }) {
   return (
-    <div className="bg-gradient-to-br rounded-2xl p-10 max-w-xl mt-4 bg-white shadow-lg  mx-auto">
+    <div className="bg-gradient-to-br rounded-2xl p-10 max-w-xl mt-4 bg-white shadow-sm  mx-auto">
       <h2 className="text-3xl flex items-center font-extrabold mb-8 text-primary  tracking-tight ">
         Onboarding Steps <span className="ml-auto opacity-40 font-normal text-xl">4/25</span>
       </h2>

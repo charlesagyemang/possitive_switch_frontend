@@ -11,6 +11,7 @@ type ModalProps = {
   description?: string;
   children?: React.ReactNode;
   isOpen?: boolean;
+  className?: string;
 };
 
 function useModal() {
@@ -20,7 +21,7 @@ function useModal() {
 
   const Modal = useCallback(
     (props: ModalProps) => {
-      const { description } = props;
+      const { description, className } = props;
       if (!isOpen) return null;
       const renderBody = () => {
         if (component) return component;
@@ -33,7 +34,7 @@ function useModal() {
       };
       return (
         <Dialog open={isOpen} onOpenChange={setOpen}>
-          <DialogContent>
+          <DialogContent className={`${className || ""}`}>
             <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
             </DialogHeader>

@@ -10,13 +10,13 @@ import { CheckCircle, ListTodo, Signature, UserCog } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import OnboardingTab from "./onboarding-tab";
-import Configuration from "./configurations";
+import Configuration from "./manage-configurations-tab";
 import { useCandidate } from "@/api/candidates/candidates-api";
 import { useParams } from "next/navigation";
 import LoadingState from "@/components/built/loaders/loading-state";
 import AppNotifications from "@/components/built/app-notifications";
 import { ApiOnBoardingTask } from "@/app/types";
-import ManageCandidateContracts from "./contract";
+import ManageCandidateContracts from "./manage-contracts-tab";
 
 export default function ManageCandidatePage() {
   const { TabComponent } = useCustomTabs({ defaultTab: "config" });

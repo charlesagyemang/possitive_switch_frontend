@@ -12,7 +12,7 @@ function CustomButton(
 ) {
   const { loading, children, className, ...rest } = props;
   return (
-    <Button className={`flex items-center ${className || ""}`} {...rest}>
+    <Button className={`flex items-center cursor-pointer ${className || ""}`} {...rest}>
       {loading ? <LoaderCircle className="animate-spin" /> : children}
     </Button>
   );
