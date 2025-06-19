@@ -9,3 +9,4 @@ export const API_CREATE_NEW_CANDIDATE = `${API_BASE}/whoami`
 export const API_LIST_USERS_COMPANIES = `${API_BASE}/companies`
 export const API_LIST_ALL_COMPANIES = `${API_BASE}/companies`
 export const API_LIST_CANDIDATES = `${API_BASE}/candidates`
+export const API_UTILITIES = `${API_BASE}/utilities`

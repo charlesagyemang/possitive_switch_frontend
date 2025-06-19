@@ -54,3 +54,4 @@ export const useCandidate = (id: string) => {
     enabled: !!id,
   });
 };
+
