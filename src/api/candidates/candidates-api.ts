@@ -16,7 +16,6 @@ const listCandidates = async (company_id: string) => {
       method: "GET",
     }
   );
-
   return obj?.data?.company?.candidates || [];
 };
 

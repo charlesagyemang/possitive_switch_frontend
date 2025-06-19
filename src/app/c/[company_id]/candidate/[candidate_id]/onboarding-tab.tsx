@@ -6,11 +6,14 @@ function OnboardingTab({ tasks }: { tasks?: ApiOnBoardingTask[] }) {
   return (
     <div className="bg-gradient-to-br rounded-2xl p-10 max-w-xl mt-4 bg-white shadow-sm  mx-auto">
       <h2 className="text-3xl flex items-center font-extrabold mb-8 text-primary  tracking-tight ">
-        Onboarding Steps <span className="ml-auto opacity-40 font-normal text-xl">4/25</span>
+        Onboarding Steps{" "}
+        <span className="ml-auto opacity-40 font-normal text-xl">
+          0/{tasks?.length}
+        </span>
       </h2>
       <div>
         {tasks && tasks.length > 0 ? (
-          <ol className="relative space-y-10">
+          <ol className="relative space-y-6">
             {tasks.map((task, idx) => (
               <li
                 key={task.id || idx}

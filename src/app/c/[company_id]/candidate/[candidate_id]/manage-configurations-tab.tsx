@@ -1,8 +1,12 @@
+import { Q_LOAD_ONE_CANDIDATE } from "@/api/auth/constants";
+import { useBulkRemoveOnboardingTasks } from "@/api/candidates/onboarding-api";
 import { ApiCandidate, Candidate } from "@/app/seed/candidates";
 import { ApiOnBoardingTask, FullApiCandidate } from "@/app/types";
+import AppNotifications from "@/components/built/app-notifications";
 import CustomButton from "@/components/built/button/custom-button";
 import CustomTooltip from "@/components/built/tooltip/custom-tooltip";
 import { Tooltip } from "@/components/ui/tooltip";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, X } from "lucide-react";
 import React from "react";
 
@@ -12,23 +16,51 @@ function Configuration({
   excluded = [],
   exclude,
   candidate,
+  reset,
 }: {
   //   tasks?: ApiOnBoardingTask[];
   candidate: FullApiCandidate;
   excluded?: ApiOnBoardingTask[];
   exclude: (tasks: ApiOnBoardingTask) => void;
+  reset: () => void;
 }) {
   const tasks: ApiOnBoardingTask[] = candidate?.onboarding_tasks || [];
+  const client = useQueryClient();
+  const { run, isPending, error } = useBulkRemoveOnboardingTasks();
+
+  const handleSave = () => {
+    run(
+      {
+        ca_id: candidate.id,
+        tasks: excluded.map((task) => task.id),
+      },
+      {
+        onSuccess: () => {
+          reset();
+          client.refetchQueries({
+            queryKey: [Q_LOAD_ONE_CANDIDATE, candidate.id],
+          });
+        },
+      }
+    );
+  };
   return (
     <div className="py-4">
-      <div className="flex items-center gap-4 mb-6">
+      <AppNotifications.Error message={error?.message} />
+      <div className="flex items-center gap-4 mt-1 mb-6">
         <p className="text-gray-600">
           Uncheck all the options that do not apply to {candidate?.name}
         </p>
         {excluded?.length ? (
           <div className="ml-auto flex items-center gap-2">
             <span className="font-semibold">{excluded.length} excluded</span>
-            <CustomButton>Save </CustomButton>
+            <CustomButton
+              onClick={handleSave}
+              disabled={isPending}
+              loading={isPending}
+            >
+              Save{" "}
+            </CustomButton>
           </div>
         ) : (
           <></>

@@ -8,7 +8,7 @@ import { API_CANDIDATES, API_UTILITIES } from "../auth/routes";
 import { useGenericMutation, useGenericQuery } from "../query";
 
 const fetchContractTemplates = async () => {
-  const obj = await apiCall(`${API_UTILITIES}/contract_templates`, {
+  const obj = await apiCall(`${API_UTILITIES}/contract_templates`, null, {
     method: "GET",
   });
 

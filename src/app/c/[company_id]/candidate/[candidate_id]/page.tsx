@@ -60,6 +60,7 @@ export default function ManageCandidatePage() {
           excluded={excluded}
           exclude={excludeATask}
           candidate={candidate}
+          reset={() => setExcluded([])}
         />
       ),
     },
