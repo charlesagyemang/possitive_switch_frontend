@@ -1,3 +1,4 @@
+import { ApiCandidate } from "@/app/seed/candidates";
 import { ApiContractTemplate } from "@/app/seed/contracts";
 import CustomButton from "@/components/built/button/custom-button";
 import Image from "next/image";
@@ -5,16 +6,18 @@ import React from "react";
 
 function ContractPreview({
   contract,
+  candidate,
   close,
 }: {
   contract: ApiContractTemplate;
+  candidate: ApiCandidate;
   close?: () => void;
 }) {
   return (
     <div>
       <p>
-        Here is a preview of the kind of contract letter you will be sending to
-        your user
+        Here is a preview of the kind of contract letter you will be sending to{" "}
+        {candidate?.name}
       </p>
       <Image
         width={300}

@@ -15,8 +15,9 @@ import { Textbox } from "@/components/built/input/input";
 import { Input } from "@/components/ui/input";
 import ContractPreview from "./contract-preview";
 import { useContractTemplatesListHandler } from "@/api/candidates/contracts-api";
+import { ApiCandidate } from "@/app/seed/candidates";
 
-function ManageCandidateContracts() {
+function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
   const { ModalPortal, open, close } = useModal();
 
   const {
@@ -65,7 +66,11 @@ function ManageCandidateContracts() {
             <button
               onClick={() =>
                 open(
-                  <ContractPreview close={close} contract={contract} />,
+                  <ContractPreview
+                    candidate={candidate}
+                    close={close}
+                    contract={contract}
+                  />,
                   contract.name
                 )
               }

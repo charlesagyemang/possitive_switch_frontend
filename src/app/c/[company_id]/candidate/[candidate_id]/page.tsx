@@ -49,7 +49,7 @@ export default function ManageCandidatePage() {
       name: "Contracts",
       key: "contracts",
       icon: <Signature className="h-4 w-4" />,
-      render: () => <ManageCandidateContracts />,
+      render: () => <ManageCandidateContracts candidate={candidate} />,
     },
     {
       name: "Configurations",
