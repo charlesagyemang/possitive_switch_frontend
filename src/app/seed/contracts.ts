@@ -8,6 +8,7 @@ export type ApiContractTemplate = {
   active: boolean;
   created_at: string;
   updated_at: string;
+  logo_url?:string;
 };
 
 export type ApiCandidateContract = {

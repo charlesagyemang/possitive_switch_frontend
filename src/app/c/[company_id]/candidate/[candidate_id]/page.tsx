@@ -83,9 +83,11 @@ export default function ManageCandidatePage() {
 
   if (error)
     return (
-      <AppNotifications.Error
-        message={`Error fetching candidate: ${error.message}`}
-      />
+      <div className="p-6">
+        <AppNotifications.Error
+          message={`Error fetching candidate: ${error.message}`}
+        />
+      </div>
     );
 
   if (!candidate && isFetched)

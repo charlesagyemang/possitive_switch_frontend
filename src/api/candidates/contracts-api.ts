@@ -4,15 +4,15 @@ import {
   M_SEND_CONTRACT,
   Q_LIST_CONTRACT_TEMPLATES,
 } from "../auth/constants";
-import { API_CANDIDATES, API_UTILITIES } from "../auth/routes";
+import { API_BASE, API_CANDIDATES, API_UTILITIES } from "../auth/routes";
 import { useGenericMutation, useGenericQuery } from "../query";
 
 const fetchContractTemplates = async () => {
-  const obj = await apiCall(`${API_UTILITIES}/contract_templates`, null, {
+  const obj = await apiCall(`${API_BASE}/contract_templates`, null, {
     method: "GET",
   });
 
-  return obj?.data?.templates;
+  return obj?.data?.contract_templates || [];
 };
 
 const approveContract = async (cand_id: string, cont_id: string) => {
@@ -34,7 +34,7 @@ const approveAndSend = async (cand_id: string, cont_id: string) => {
   return obj?.data?.contract;
 };
 
-const useContractTemplatesListHandler = () => {
+export const useContractTemplatesListHandler = () => {
   return useGenericQuery([Q_LIST_CONTRACT_TEMPLATES], fetchContractTemplates);
 };
 

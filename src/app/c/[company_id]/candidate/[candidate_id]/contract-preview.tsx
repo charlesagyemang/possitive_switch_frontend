@@ -1,10 +1,36 @@
 import { ApiContractTemplate } from "@/app/seed/contracts";
+import CustomButton from "@/components/built/button/custom-button";
+import Image from "next/image";
 import React from "react";
 
-function ContractPreview({ contract }: { contract: ApiContractTemplate }) {
+function ContractPreview({
+  contract,
+  close,
+}: {
+  contract: ApiContractTemplate;
+  close?: () => void;
+}) {
   return (
     <div>
-      <p className="text-gray-600 mb-2">{contract.description}</p>
+      <p>
+        Here is a preview of the kind of contract letter you will be sending to
+        your user
+      </p>
+      <Image
+        width={300}
+        height={400}
+        src={contract.logo_url || ""}
+        alt={`${contract.name} preview`}
+        className="w-full h-[400px] object-contain"
+      />
+
+      <div className="flex gap-2 justify-end">
+        <CustomButton onClick={() => close?.()} variant={"outline"}>
+          Cancel
+        </CustomButton>
+        <CustomButton>Use</CustomButton>
+      </div>
+      {/* <p className="text-gray-600 mb-2">{contract.description}</p>
       <div className="mb-1">
         <span className="font-semibold text-xs text-gray-500 mr-1">
           Variables:
@@ -32,7 +58,7 @@ function ContractPreview({ contract }: { contract: ApiContractTemplate }) {
         <span className="text-xs text-gray-700">
           {new Date(contract.created_at).toLocaleDateString()}
         </span>
-      </div>
+      </div> */}
     </div>
   );
 }

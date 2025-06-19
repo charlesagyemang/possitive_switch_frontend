@@ -90,7 +90,7 @@ export function SuperAdminSidebar({
   const { data: response } = useCompanyList();
 
   const companies = (response || []).map((company: any) => ({
-    name:  company.name,
+    name: company.name,
     url: `/c/${company.id}`,
     icon: Landmark,
   }));
@@ -114,7 +114,9 @@ export function SuperAdminSidebar({
       </SidebarHeader>
       <SidebarContent>
         <CustomNavMain items={data.navMain} />
-        {!!companies && <NavCompanies companies={companies} />}
+        {!!companies && companies?.length && (
+          <NavCompanies companies={companies} />
+        )}
         <CustomNavProject projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
