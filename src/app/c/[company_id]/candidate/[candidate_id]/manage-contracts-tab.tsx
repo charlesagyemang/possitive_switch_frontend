@@ -14,7 +14,7 @@ import {
   Stamp,
   Trash,
 } from "lucide-react";
-import React from "react";
+import React, { useMemo } from "react";
 import { candidateContractsColumns } from "./contracts-table-structure";
 import ContractPreview from "./modals/contract-preview";
 import {
@@ -36,6 +36,14 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     isPending: loadingContracts,
     error,
   } = useCandidateContractList(candidate.id);
+
+  const usedTemplates = useMemo(() => {
+    return candidateContracts?.map(
+      (contract: ApiCandidateContract) => contract.contract_template.id
+    );
+  }, [candidateContracts]);
+
+  console.log("usedTemplates", usedTemplates);
 
   const openUseModal = (
     contract: ApiContractTemplate,
@@ -145,57 +153,68 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
   const renderTemplates = () => {
     if (!!!listofContracts)
       return <span className="text-gray-500">No templates found.</span>;
+
     return listofContracts.map(
-      (contract: ApiContractTemplate, index: number) => (
-        <div
-          key={index + contract.id}
-          className="flex flex-col  justify-between p-3 mb-3 bg-white border border-gray-100 rounded-lg  hover:shadow-md transition-shadow  group"
-        >
-          <div>
-            <span className="text-sm font-semibold truncate flex items-center gap-1 text-gray-900 group-hover:text-primary">
-              {contract.name}
-            </span>
-            <div className="text-xs text-gray-400">
-              {contract.description}
-              {/* {contract.variables.length > 0
+      (contract: ApiContractTemplate, index: number) => {
+        const isUsed = usedTemplates?.includes(contract.id);
+        return (
+          <div
+            key={index + contract.id}
+            className="flex flex-col  justify-between p-3 mb-3 bg-white border border-gray-100 rounded-lg  hover:shadow-md transition-shadow  group"
+          >
+            <div>
+              <span className="text-sm font-semibold truncate flex items-center gap-1 text-gray-900 group-hover:text-primary">
+                {contract.name}
+              </span>
+              <div className="text-xs text-gray-400">
+                {contract.description}
+                {/* {contract.variables.length > 0
                             ? `Fields: ${contract.variables.join(", ")}`
                             : "No variables"} */}
+              </div>
+            </div>
+            <div className="flex mt-1 items-center gap-2">
+              <FileText size={14} className="text-gray-400" />{" "}
+              <small className="text-gray-600">
+                {contract.variables?.length} Fields
+              </small>
+              {isUsed && (
+                <span className="text-green-600 text-xs font-semibold">
+                  In Use
+                </span>
+              )}
+              <button
+                onClick={() =>
+                  open(
+                    <ContractPreview
+                      candidate={candidate}
+                      close={close}
+                      contract={contract}
+                      use={() => openUseModal(contract)}
+                    />,
+                    contract.name
+                  )
+                }
+                className=" ml-auto px-2 py-1 text-xs hover:opacity-70 rounded bg-primary/10 text-primary font-semibold cursor-pointer   transition-opacity"
+                tabIndex={-1}
+                type="button"
+              >
+                Preview
+              </button>
+              {!!!isUsed && (
+                <button
+                  onClick={() => openUseModal(contract)}
+                  className="ml-3 px-2 py-1 text-xs rounded bg-green-700/10 text-green-700 cursor-pointer font-semibold  transition-opacity"
+                  tabIndex={-1}
+                  type="button"
+                >
+                  Use
+                </button>
+              )}
             </div>
           </div>
-          <div className="flex mt-1 items-center gap-2">
-            <FileText size={14} className="text-gray-400" />{" "}
-            <small className="text-gray-600">
-              {contract.variables?.length} Fields
-            </small>
-            <button
-              onClick={() =>
-                open(
-                  <ContractPreview
-                    candidate={candidate}
-                    close={close}
-                    contract={contract}
-                    use={() => openUseModal(contract)}
-                  />,
-                  contract.name
-                )
-              }
-              className=" ml-auto px-2 py-1 text-xs hover:opacity-70 rounded bg-primary/10 text-primary font-semibold cursor-pointer   transition-opacity"
-              tabIndex={-1}
-              type="button"
-            >
-              Preview
-            </button>
-            <button
-              onClick={() => openUseModal(contract)}
-              className="ml-3 px-2 py-1 text-xs rounded bg-green-700/10 text-green-700 cursor-pointer font-semibold  transition-opacity"
-              tabIndex={-1}
-              type="button"
-            >
-              Use
-            </button>
-          </div>
-        </div>
-      )
+        );
+      }
     );
   };
 

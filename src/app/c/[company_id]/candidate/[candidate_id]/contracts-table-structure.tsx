@@ -4,6 +4,7 @@ import {
   AsDropdownMenu,
   DOption,
 } from "@/components/built/dropdown/custom-dropdown";
+import CustomTooltip from "@/components/built/tooltip/custom-tooltip";
 import { Button } from "@/components/ui/button";
 import { formatDateString } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -38,13 +39,15 @@ export const candidateContractsColumns = ({
       header: "Contract Name",
       cell: (info) => {
         const row = info.getValue();
-
+        const name = row?.contract_template?.name || "N/A";
         return (
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
-            <span className="text-sm truncate w-[160px] font-medium">
-              {row?.contract_template?.name}
-            </span>
+            <CustomTooltip tip={name}>
+              <span className="text-sm truncate w-[160px] font-medium">
+                {name}
+              </span>
+            </CustomTooltip>
           </div>
         );
       },
