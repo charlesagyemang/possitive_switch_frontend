@@ -19,12 +19,22 @@ import { ApiOnBoardingTask } from "@/app/types";
 import ManageCandidateContracts from "./manage-contracts-tab";
 
 export default function ManageCandidatePage() {
-  const { TabComponent } = useCustomTabs({ defaultTab: "config" });
+  const { TabComponent } = useCustomTabs({ defaultTab: "onboarding-tasks" });
   const { candidate_id } = useParams();
   const [excluded, setExcluded] = useState<ApiOnBoardingTask[]>([]);
+  const [checked, setChecked] = useState<ApiOnBoardingTask[]>([]);
 
   const excludeATask = (task: ApiOnBoardingTask) => {
     setExcluded((prev) => {
+      if (prev.some((t) => t.id === task.id)) {
+        return prev.filter((t) => t.id !== task.id);
+      }
+      return [...prev, task];
+    });
+  };
+
+  const markATaskAsChecked = (task: ApiOnBoardingTask) => {
+    setChecked((prev) => {
       if (prev.some((t) => t.id === task.id)) {
         return prev.filter((t) => t.id !== task.id);
       }
@@ -43,7 +53,15 @@ export default function ManageCandidatePage() {
       name: "OnBoarding Tasks",
       key: "onboarding-tasks",
       icon: <CheckCircle className="h-4 w-4" />,
-      render: () => <OnboardingTab tasks={candidate.onboarding_tasks} />,
+      render: () => (
+        <OnboardingTab
+          tasks={candidate.onboarding_tasks}
+          checked={checked}
+          markAsChecked={markATaskAsChecked}
+          candidate={candidate}
+          reset={() => setChecked([])}
+        />
+      ),
     },
     {
       name: "Contracts",

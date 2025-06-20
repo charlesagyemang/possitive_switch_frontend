@@ -20,3 +20,4 @@ export const M_APPROVE_AND_SEND_CONTRACT = "m-approve-and-send";
 export const Q_LIST_ALL_CANDIDATE_CONTRACTS = "q-list-all-candidate-contracts";
 export const M_BULK_REMOVE_ONBOARDING_TASKS = "m-remove-onboarding-tasks-bulk";
 export const M_CREATE_CONTRACT = "m-create-contracts";
+export const M_CHECK_MULTIPLE_TASKS = "m-check-multiple-tasks";
