@@ -14,10 +14,14 @@ function InitialiseContract({
   close,
   candidate,
   contract,
+  flag,
+  data,
 }: {
   close?: () => void;
   candidate?: ApiCandidate;
   contract?: ApiContractTemplate;
+  flag?: string;
+  data?: Record<string, any>;
 }) {
   const variables = contract?.variables || [];
   const formFields = variables.map((variable: ContractVariable) => {
@@ -33,7 +37,7 @@ function InitialiseContract({
   });
 
   const { run, isPending, error } = useCreateContract();
-  console.log("SEE ERROR", error?.message);
+
   const client = useQueryClient();
 
   const {
@@ -68,6 +72,25 @@ function InitialiseContract({
       },
     });
   };
+
+  //   ---------------------------------------------------------
+
+  const ContextualProps: Record<string, any> = {
+    approve: { text: "Approve", loading: false, disabled: false },
+    edit: { text: "Save Draft", loading: false, disabled: false },
+    send: { text: "Send Contract", loading: false, disabled: false },
+    create: { text: "Create Contract", loading: false, disabled: false },
+    approve_and_send: {
+      text: "Approve & Send",
+      loading: false,
+      disabled: false,
+    },
+  };
+
+  const btnProps = ContextualProps[flag || "create"];
+  const { text, ...props } = btnProps;
+
+  // ----------------------------------------------------------
   // const { ModalPortal, open,
   return (
     <form onSubmit={handleSubmit(saveDraft)}>
@@ -87,8 +110,8 @@ function InitialiseContract({
         <CustomButton variant={"outline"} onClick={() => close?.()}>
           Cancel
         </CustomButton>
-        <CustomButton loading={isPending} disabled={isPending} type="submit">
-          Create
+        <CustomButton {...props} type="submit">
+          {text}
         </CustomButton>
       </div>
     </form>

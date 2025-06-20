@@ -23,7 +23,13 @@ export type ApiCandidateContract = {
   signature_request_id: string | null;
   created_at: string;
   updated_at: string;
+  contract_template : ApiContractTemplate
 };
+
+export type ApiCandidateContractWithTemplate = ApiCandidateContract & {
+  contract_template: ApiContractTemplate;
+};
+
 
 export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
   {
@@ -174,6 +180,9 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
   },
 ];
 
+
+
+
 export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
   {
     id: "c1",
@@ -188,6 +197,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_001",
     created_at: "2024-02-01T10:00:00Z",
     updated_at: "2024-02-01T10:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[0],
   },
   {
     id: "c2",
@@ -198,6 +208,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: null,
     created_at: "2024-02-02T11:00:00Z",
     updated_at: "2024-02-02T11:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[1],
   },
   {
     id: "c3",
@@ -212,6 +223,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_003",
     created_at: "2024-02-03T12:00:00Z",
     updated_at: "2024-02-03T12:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[2],
   },
   {
     id: "c4",
@@ -222,6 +234,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_004",
     created_at: "2024-02-04T13:00:00Z",
     updated_at: "2024-02-04T13:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[3],
   },
   {
     id: "c5",
@@ -232,6 +245,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: null,
     created_at: "2024-02-05T14:00:00Z",
     updated_at: "2024-02-05T14:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[4],
   },
   {
     id: "c6",
@@ -242,6 +256,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_006",
     created_at: "2024-02-06T15:00:00Z",
     updated_at: "2024-02-06T15:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[5],
   },
   {
     id: "c7",
@@ -256,6 +271,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_007",
     created_at: "2024-02-07T16:00:00Z",
     updated_at: "2024-02-07T16:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[6],
   },
   {
     id: "c8",
@@ -270,6 +286,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: null,
     created_at: "2024-02-08T17:00:00Z",
     updated_at: "2024-02-08T17:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[7],
   },
   {
     id: "c9",
@@ -284,6 +301,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_009",
     created_at: "2024-02-09T18:00:00Z",
     updated_at: "2024-02-09T18:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[8],
   },
   {
     id: "c10",
@@ -294,5 +312,6 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_010",
     created_at: "2024-02-10T19:00:00Z",
     updated_at: "2024-02-10T19:00:00Z",
+    contract_template: CONTRACT_TEMPLATE_EXAMPLES[9],
   },
 ];

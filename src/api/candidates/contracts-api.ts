@@ -63,12 +63,10 @@ export const useApproveAndSendHandler = () => {
 };
 
 const listCandidateContracts = async (cand_id: string) => {
-  const obj = await apiCall(
-    `${API_CANDIDATES}/candidates/${cand_id}/contracts`,
-    null,
-    { method: "GET" }
-  );
-  return obj?.data;
+  const obj = await apiCall(`${API_CANDIDATES}/${cand_id}/contracts`, null, {
+    method: "GET",
+  });
+  return obj?.data?.contracts || [];
 };
 
 export const useCandidateContractList = (can_id: string) => {
@@ -85,7 +83,8 @@ export const createContract = async (body: any) => {
     `${API_CANDIDATES}/${candidate_id}/contracts`,
     data
   );
-  if (!!!obj.success) throw new Error(obj.message ||"Contract creation failed");
+  if (!!!obj.success)
+    throw new Error(obj.message || "Contract creation failed");
 
   return obj?.data;
 };

@@ -11,6 +11,7 @@ import {
   CheckCircle,
   Clock,
   Ellipsis,
+  FileText,
   Mail,
   Send,
   Signature,
@@ -26,8 +27,21 @@ export const candidateContractsColumns = ({
   actions: (r: ApiCandidateContract) => DOption[];
 }) => {
   return [
-    contractColumnHelper.accessor("id", {
-      header: "ID",
+    contractColumnHelper.accessor((row) => row, {
+      id: "name",
+      header: "Contract Name",
+      cell: (info) => {
+        const row = info.getValue();
+
+        return (
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            <span className="text-sm font-medium">
+              {row?.contract_template?.name}
+            </span>
+          </div>
+        );
+      },
     }),
 
     contractColumnHelper.accessor("status", {
@@ -43,6 +57,8 @@ export const candidateContractsColumns = ({
             color = "bg-green-50 text-green-800";
             icon = <Signature className="w-4 h-4 mr-1 inline" />;
             break;
+
+          case "draft":
           case "pending":
             color = "bg-orange-50 text-orange-700";
             icon = <Clock className="w-4 h-4 mr-1 inline" />;
@@ -69,42 +85,42 @@ export const candidateContractsColumns = ({
     //   header: "created at",
     //   cell: (info) => <span>{formatDateString(info.getValue())}</span>,
     // }),
-    contractColumnHelper.accessor("id", {
-      id: "actions",
-      header: "Actions",
-      cell: (info) => {
-        return (
-          <div>
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex cursor-pointer items-center gap-1"
-              >
-                <Stamp className="size-4" />
-                Approve
-              </Button>
-              <Button
-                size="sm"
-                variant="link"
-                className="flex cursor-pointer items-center gap-1"
-              >
-                <Send className="size-4" />
-                Send
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex text-blue-600 border-blue-100 hover:bg-blue-200/50   cursor-pointer bg-white shadow-none items-center gap-1"
-              >
-                <Mail className="size-4" />
-                Send &amp; Approve
-              </Button>
-            </div>
-          </div>
-        );
-      },
-    }),
+    // contractColumnHelper.accessor("id", {
+    //   id: "actions",
+    //   header: "Actions",
+    //   cell: (info) => {
+    //     return (
+    //       <div>
+    //         <div className="flex gap-2">
+    //           <Button
+    //             size="sm"
+    //             variant="outline"
+    //             className="flex cursor-pointer items-center gap-1"
+    //           >
+    //             <Stamp className="size-4" />
+    //             Approve
+    //           </Button>
+    //           <Button
+    //             size="sm"
+    //             variant="link"
+    //             className="flex cursor-pointer items-center gap-1"
+    //           >
+    //             <Send className="size-4" />
+    //             Send
+    //           </Button>
+    //           <Button
+    //             size="sm"
+    //             variant="outline"
+    //             className="flex text-blue-600 border-blue-100 hover:bg-blue-200/50   cursor-pointer bg-white shadow-none items-center gap-1"
+    //           >
+    //             <Mail className="size-4" />
+    //             Send &amp; Approve
+    //           </Button>
+    //         </div>
+    //       </div>
+    //     );
+    //   },
+    // }),
     contractColumnHelper.accessor((row) => row, {
       header: "Options",
       cell: (info) => {

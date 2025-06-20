@@ -1,18 +1,21 @@
 import {
   ApiCandidateContract,
   ApiContractTemplate,
-  CANDIDATE_CONTRACT_EXAMPLES,
-  CONTRACT_TEMPLATE_EXAMPLES,
 } from "@/app/seed/contracts";
-import CustomButton from "@/components/built/button/custom-button";
 import useModal from "@/components/built/modal/useModal";
 import { GenericTable } from "@/components/built/table/data-table";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, LoaderCircle, Plus } from "lucide-react";
+import {
+  CheckCircle,
+  Edit2,
+  FileText,
+  LoaderCircle,
+  Send,
+  Stamp,
+  Trash,
+} from "lucide-react";
 import React from "react";
 import { candidateContractsColumns } from "./contracts-table-structure";
-import { Textbox } from "@/components/built/input/input";
-import { Input } from "@/components/ui/input";
 import ContractPreview from "./modals/contract-preview";
 import {
   useCandidateContractList,
@@ -29,29 +32,84 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     useContractTemplatesListHandler();
 
   const {
-    data,
+    data: candidateContracts,
     isPending: loadingContracts,
     error,
   } = useCandidateContractList(candidate.id);
 
-  console.log("Candidate Contracts", data);
+  const openUseModal = (
+    contract: ApiContractTemplate,
+    flag?: string,
+    options?: Record<string, any>
+  ) => {
+    const { candidateContract, title } = options || {};
 
-  const openUseModal = (contract: ApiContractTemplate) => {
     open(
       <InitialiseContract
         close={close}
         contract={contract}
         candidate={candidate}
+        flag={flag}
+        data={candidateContract}
       />,
-      `Initialise Contract: ${contract.name}`
+      title || `Initialise Contract: ${contract.name}`
     );
   };
 
   const makeDropdownActions = (row: ApiCandidateContract) => {
     return [
       {
+        label: "Edit",
+        value: "edit",
+        Icon: Edit2,
+        onClick: () => {
+          // deleteConfirmation(row);
+          openUseModal(row.contract_template, "edit", {
+            candidateContract: row,
+            title: `Edit Contract: ${row.contract_template.name}`,
+          });
+        },
+      },
+      {
+        label: "Send",
+        value: "send",
+        Icon: Send,
+        onClick: () => {
+          // deleteConfirmation(row);
+          openUseModal(row.contract_template, "send", {
+            candidateContract: row,
+            title: `Send Contract: ${row.contract_template.name}`,
+          });
+        },
+      },
+      {
+        label: "Approve",
+        value: "approve",
+        Icon: Stamp,
+        onClick: () => {
+          // deleteConfirmation(row);
+          openUseModal(row.contract_template, "approve", {
+            candidateContract: row,
+            title: `Approve Contract: ${row.contract_template.name}`,
+          });
+        },
+      },
+      {
+        label: "Approve & Send",
+        value: "approve_and_send",
+        Icon: CheckCircle,
+        onClick: () => {
+          // deleteConfirmation(row);
+          openUseModal(row.contract_template, "approve_and_send", {
+            candidateContract: row,
+            title: `Approve & Send Contract: ${row.contract_template.name}`,
+          });
+        },
+      },
+      {
         label: "Delete",
         value: "delete",
+        Icon: Trash,
         onClick: () => {
           // deleteConfirmation(row);
         },
@@ -129,7 +187,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         <GenericTable<ApiCandidateContract, any>
           pageSize={8}
           name="Contracts"
-          data={CANDIDATE_CONTRACT_EXAMPLES}
+          data={candidateContracts || []}
           columns={candidateContractsColumns({
             actions: makeDropdownActions,
           })}
