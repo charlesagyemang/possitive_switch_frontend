@@ -43,7 +43,6 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     );
   }, [candidateContracts]);
 
-  console.log("usedTemplates", usedTemplates);
 
   const openUseModal = (
     contract: ApiContractTemplate,
@@ -218,8 +217,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     );
   };
 
-  console.log("candidateContracts", candidateContracts);
-  console.log("listofContracts", listofContracts);
+
   const renderContracts = () => {
     if (error)
       return (

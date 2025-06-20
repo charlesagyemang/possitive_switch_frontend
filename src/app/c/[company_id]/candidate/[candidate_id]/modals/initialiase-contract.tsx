@@ -143,12 +143,8 @@ function InitialiseContract({
         },
       };
 
-    console.log("Submitting form", body, flag);
-
     run(body, { onSuccess });
   };
-
-  //   ---------------------------------------------------------
 
   // ----------------------------------------------------------
   // const { ModalPortal, open,
