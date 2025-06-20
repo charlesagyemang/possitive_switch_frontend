@@ -57,6 +57,27 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     );
   };
 
+  const send = (row: ApiCandidateContract) => {
+    openUseModal(row.contract_template, "send", {
+      candidateContract: row,
+      title: `Send Contract -  ${row.contract_template.name}`,
+    });
+  };
+
+  const approve = (row: ApiCandidateContract) => {
+    openUseModal(row.contract_template, "approve", {
+      candidateContract: row,
+      title: `Approve Contract - ${row.contract_template.name}`,
+    });
+  };
+
+  const approveAndSend = (row: ApiCandidateContract) => {
+    openUseModal(row.contract_template, "approve_and_send", {
+      candidateContract: row,
+      title: `Approve & Send Contract - ${row.contract_template.name}`,
+    });
+  };
+
   const makeDropdownActions = (row: ApiCandidateContract) => {
     return [
       {
@@ -76,11 +97,12 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         value: "send",
         Icon: Send,
         onClick: () => {
+          send(row);
           // deleteConfirmation(row);
-          openUseModal(row.contract_template, "send", {
-            candidateContract: row,
-            title: `Send Contract -  ${row.contract_template.name}`,
-          });
+          // openUseModal(row.contract_template, "send", {
+          //   candidateContract: row,
+          //   title: `Send Contract -  ${row.contract_template.name}`,
+          // });
         },
       },
       {
@@ -88,11 +110,12 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         value: "approve",
         Icon: Stamp,
         onClick: () => {
+          approve(row);
           // deleteConfirmation(row);
-          openUseModal(row.contract_template, "approve", {
-            candidateContract: row,
-            title: `Approve Contract - ${row.contract_template.name}`,
-          });
+          // openUseModal(row.contract_template, "approve", {
+          //   candidateContract: row,
+          //   title: `Approve Contract - ${row.contract_template.name}`,
+          // });
         },
       },
       {
@@ -100,11 +123,12 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         value: "approve_and_send",
         Icon: CheckCircle,
         onClick: () => {
+          approveAndSend(row);
           // deleteConfirmation(row);
-          openUseModal(row.contract_template, "approve_and_send", {
-            candidateContract: row,
-            title: `Approve & Send Contract - ${row.contract_template.name}`,
-          });
+          // openUseModal(row.contract_template, "approve_and_send", {
+          //   candidateContract: row,
+          //   title: `Approve & Send Contract - ${row.contract_template.name}`,
+          // });
         },
       },
       {
@@ -193,6 +217,9 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
           data={candidateContracts || []}
           columns={candidateContractsColumns({
             actions: makeDropdownActions,
+            send,
+            approve,
+            approveAndSend,
           })}
           noRecordsText="No contracts found."
         />
@@ -223,8 +250,8 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         </CustomButton> */}
       </div>
 
-      <div className="grid grid-cols-6 gap-2">
-        <Card className="shadow-none col-span-4 py-6 mb-6">
+      <div className="grid grid-cols-7 gap-2">
+        <Card className="shadow-none col-span-5 py-6 mb-6">
           {loadingContracts ? (
             <span className="flex m-3 text-sm items-center gap-2 text-gray-500">
               <LoaderCircle className="animate-spin text-primary" /> Fetching

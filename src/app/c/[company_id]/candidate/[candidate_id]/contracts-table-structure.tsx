@@ -23,8 +23,14 @@ const contractColumnHelper = createColumnHelper<ApiCandidateContract>();
 
 export const candidateContractsColumns = ({
   actions,
+  send,
+  approve,
+  approveAndSend,
 }: {
   actions: (r: ApiCandidateContract) => DOption[];
+  send?: (r: ApiCandidateContract) => void;
+  approve?: (r: ApiCandidateContract) => void;
+  approveAndSend?: (r: ApiCandidateContract) => void;
 }) => {
   return [
     contractColumnHelper.accessor((row) => row, {
@@ -36,7 +42,7 @@ export const candidateContractsColumns = ({
         return (
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
-            <span className="text-sm font-medium">
+            <span className="text-sm truncate w-[160px] font-medium">
               {row?.contract_template?.name}
             </span>
           </div>
@@ -53,7 +59,7 @@ export const candidateContractsColumns = ({
 
         switch (status) {
           case "sent":
-            color = "bg-green-blue-50 text-blue-800";
+            color = "bg-blue-50 text-blue-800";
             icon = <Send className="w-4 h-4 mr-1 inline" />;
             break;
           case "signed":
@@ -88,62 +94,79 @@ export const candidateContractsColumns = ({
         );
       },
     }),
-    // contractColumnHelper.accessor("created_at", {
-    //   header: "created at",
-    //   cell: (info) => <span>{formatDateString(info.getValue())}</span>,
-    // }),
-    // contractColumnHelper.accessor("id", {
-    //   id: "actions",
-    //   header: "Actions",
-    //   cell: (info) => {
-    //     return (
-    //       <div>
-    //         <div className="flex gap-2">
-    //           <Button
-    //             size="sm"
-    //             variant="outline"
-    //             className="flex cursor-pointer items-center gap-1"
-    //           >
-    //             <Stamp className="size-4" />
-    //             Approve
-    //           </Button>
-    //           <Button
-    //             size="sm"
-    //             variant="link"
-    //             className="flex cursor-pointer items-center gap-1"
-    //           >
-    //             <Send className="size-4" />
-    //             Send
-    //           </Button>
-    //           <Button
-    //             size="sm"
-    //             variant="outline"
-    //             className="flex text-blue-600 border-blue-100 hover:bg-blue-200/50   cursor-pointer bg-white shadow-none items-center gap-1"
-    //           >
-    //             <Mail className="size-4" />
-    //             Send &amp; Approve
-    //           </Button>
-    //         </div>
-    //       </div>
-    //     );
-    //   },
-    // }),
+    contractColumnHelper.accessor("created_at", {
+      header: "created",
+      cell: (info) => <span>{formatDateString(info.getValue())}</span>,
+    }),
     contractColumnHelper.accessor((row) => row, {
-      header: "Options",
+      id: "actions",
+      header: "Actions",
       cell: (info) => {
         const row = info.getValue();
-        const options = actions(row);
+        const isApproved = row.status === "approved";
+        const isSent = row.status === "sent";
         return (
-          <AsDropdownMenu
-            options={options}
-            className="text-xs font-medium text-gray-600 hover:text-gray-900"
-          >
-            <Button variant="ghost" size="sm" className="p-2">
-              <Ellipsis className="size-4" />
-            </Button>
-          </AsDropdownMenu>
+          <div>
+            <div className="flex gap-2">
+              {isApproved || isSent ? (
+                <Button
+                  onClick={() => {
+                    if (send) send(row);
+                  }}
+                  size="sm"
+                  variant="outline"
+                  className="flex cursor-pointer items-center gap-1"
+                >
+                  <Send className="size-4" />
+                  {isSent ? "Send Again" : "Send"}
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    onClick={() => {
+                      if (approve) approve(row);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    className="flex cursor-pointer items-center gap-1"
+                  >
+                    <Stamp className="size-4" />
+                    Approve
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (approveAndSend) approveAndSend(row);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    className="flex cursor-pointer items-center gap-1"
+                  >
+                    <Mail className="size-4" />
+                    Approve &amp; Send
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
         );
       },
     }),
+    // contractColumnHelper.accessor((row) => row, {
+    //   header: "Options",
+    //   cell: (info) => {
+    //     const row = info.getValue();
+    //     const options = actions(row);
+    //     return (
+    //       <AsDropdownMenu
+    //         options={options}
+    //         className="text-xs font-medium text-gray-600 hover:text-gray-900"
+    //       >
+    //         <Button variant="ghost" size="sm" className="p-2">
+    //           <Ellipsis className="size-4" />
+    //         </Button>
+    //       </AsDropdownMenu>
+    //     );
+    //   },
+    // }),
   ];
 };
