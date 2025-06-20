@@ -4,7 +4,6 @@ import { FieldErrors, FieldError } from "react-hook-form";
 
 import { Textarea as ShadcnTextarea } from "@/components/ui/textarea";
 
-
 function getErrorMessage(
   errors: FieldErrors,
   name: string
@@ -34,7 +33,7 @@ export const Textbox = ({
         </Label>
       )} */}
       <Input
-        className={className}
+        className={`shadow-none ${className}`}
         {...register(
           name,
           rules ??

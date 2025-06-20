@@ -8,10 +8,12 @@ function ContractPreview({
   contract,
   candidate,
   close,
+  use,
 }: {
   contract: ApiContractTemplate;
   candidate: ApiCandidate;
   close?: () => void;
+  use?: () => void;
 }) {
   return (
     <div>
@@ -31,7 +33,7 @@ function ContractPreview({
         <CustomButton onClick={() => close?.()} variant={"outline"}>
           Cancel
         </CustomButton>
-        <CustomButton>Use</CustomButton>
+        <CustomButton onClick={() => use?.()}>Use</CustomButton>
       </div>
       {/* <p className="text-gray-600 mb-2">{contract.description}</p>
       <div className="mb-1">

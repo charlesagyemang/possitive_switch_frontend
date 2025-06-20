@@ -2,15 +2,18 @@ export type ApiContractTemplate = {
   id: string;
   name: string;
   hellosign_template_id: string;
-  variables: string[];
+  variables: ContractVariable[];
   email_template_id: string | null;
   description: string;
   active: boolean;
   created_at: string;
   updated_at: string;
-  logo_url?:string;
+  logo_url?: string;
 };
-
+export type ContractVariable = {
+  name: string;
+  type: string;
+};
 export type ApiCandidateContract = {
   id: string;
   candidate_id: string;
@@ -27,7 +30,11 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "1",
     name: "Employment Agreement",
     hellosign_template_id: "hs_temp_001",
-    variables: ["employee_name", "start_date", "position"],
+    variables: [
+      { name: "employee_name", type: "string" },
+      { name: "start_date", type: "string" },
+      { name: "position", type: "string" }
+    ],
     email_template_id: "email_001",
     description: "Standard employment agreement template.",
     active: true,
@@ -38,7 +45,10 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "2",
     name: "NDA",
     hellosign_template_id: "hs_temp_002",
-    variables: ["party_name", "effective_date"],
+    variables: [
+      { name: "party_name", type: "string" },
+      { name: "effective_date", type: "string" }
+    ],
     email_template_id: "email_002",
     description: "Non-disclosure agreement template.",
     active: true,
@@ -49,7 +59,11 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "3",
     name: "Consulting Agreement",
     hellosign_template_id: "hs_temp_003",
-    variables: ["consultant_name", "project_name", "rate"],
+    variables: [
+      { name: "consultant_name", type: "string" },
+      { name: "project_name", type: "string" },
+      { name: "rate", type: "string" }
+    ],
     email_template_id: "email_003",
     description: "Consulting services agreement.",
     active: true,
@@ -60,7 +74,10 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "4",
     name: "Internship Agreement",
     hellosign_template_id: "hs_temp_004",
-    variables: ["intern_name", "duration"],
+    variables: [
+      { name: "intern_name", type: "string" },
+      { name: "duration", type: "string" }
+    ],
     email_template_id: "email_004",
     description: "Agreement for internship positions.",
     active: true,
@@ -71,7 +88,10 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "5",
     name: "Freelance Contract",
     hellosign_template_id: "hs_temp_005",
-    variables: ["freelancer_name", "deliverables"],
+    variables: [
+      { name: "freelancer_name", type: "string" },
+      { name: "deliverables", type: "string" }
+    ],
     email_template_id: "email_005",
     description: "Freelance work contract.",
     active: true,
@@ -82,7 +102,11 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "6",
     name: "Sales Agreement",
     hellosign_template_id: "hs_temp_006",
-    variables: ["buyer_name", "item", "price"],
+    variables: [
+      { name: "buyer_name", type: "string" },
+      { name: "item", type: "string" },
+      { name: "price", type: "string" }
+    ],
     email_template_id: "email_006",
     description: "Sales agreement template.",
     active: true,
@@ -93,7 +117,11 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "7",
     name: "Partnership Agreement",
     hellosign_template_id: "hs_temp_007",
-    variables: ["partner1", "partner2", "partnership_terms"],
+    variables: [
+      { name: "partner1", type: "string" },
+      { name: "partner2", type: "string" },
+      { name: "partnership_terms", type: "string" }
+    ],
     email_template_id: "email_007",
     description: "Business partnership agreement.",
     active: true,
@@ -104,7 +132,11 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "8",
     name: "Lease Agreement",
     hellosign_template_id: "hs_temp_008",
-    variables: ["tenant_name", "property_address", "lease_term"],
+    variables: [
+      { name: "tenant_name", type: "string" },
+      { name: "property_address", type: "string" },
+      { name: "lease_term", type: "string" }
+    ],
     email_template_id: "email_008",
     description: "Property lease agreement.",
     active: true,
@@ -115,7 +147,11 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "9",
     name: "Supplier Agreement",
     hellosign_template_id: "hs_temp_009",
-    variables: ["supplier_name", "goods", "delivery_date"],
+    variables: [
+      { name: "supplier_name", type: "string" },
+      { name: "goods", type: "string" },
+      { name: "delivery_date", type: "string" }
+    ],
     email_template_id: "email_009",
     description: "Supplier contract template.",
     active: true,
@@ -126,7 +162,10 @@ export const CONTRACT_TEMPLATE_EXAMPLES: ApiContractTemplate[] = [
     id: "10",
     name: "Termination Agreement",
     hellosign_template_id: "hs_temp_010",
-    variables: ["employee_name", "termination_date"],
+    variables: [
+      { name: "employee_name", type: "string" },
+      { name: "termination_date", type: "string" }
+    ],
     email_template_id: "email_010",
     description: "Employment termination agreement.",
     active: true,

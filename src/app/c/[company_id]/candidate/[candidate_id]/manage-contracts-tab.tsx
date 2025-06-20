@@ -13,9 +13,10 @@ import React from "react";
 import { candidateContractsColumns } from "./contracts-table-structure";
 import { Textbox } from "@/components/built/input/input";
 import { Input } from "@/components/ui/input";
-import ContractPreview from "./contract-preview";
+import ContractPreview from "./modals/contract-preview";
 import { useContractTemplatesListHandler } from "@/api/candidates/contracts-api";
 import { ApiCandidate } from "@/app/seed/candidates";
+import InitialiseContract from "./modals/initialiase-contract";
 
 function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
   const { ModalPortal, open, close } = useModal();
@@ -28,6 +29,17 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
   } = useContractTemplatesListHandler();
 
   console.log("List of Contracts", listofContracts);
+
+  const openUseModal = (contract: ApiContractTemplate) => {
+    open(
+      <InitialiseContract
+        close={close}
+        contract={contract}
+        candidate={candidate}
+      />,
+      `Initialise Contract: ${contract.name}`
+    );
+  };
 
   const makeDropdownActions = (row: ApiCandidateContract) => {
     return [
@@ -61,8 +73,11 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
                             : "No variables"} */}
             </div>
           </div>
-          <div className="flex mt-1 items-center">
-            <FileText size={14} className="text-gray-400" />
+          <div className="flex mt-1 items-center gap-2">
+            <FileText size={14} className="text-gray-400" />{" "}
+            <small className="text-gray-600">
+              {contract.variables?.length} Fields
+            </small>
             <button
               onClick={() =>
                 open(
@@ -70,6 +85,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
                     candidate={candidate}
                     close={close}
                     contract={contract}
+                    use={() => openUseModal(contract)}
                   />,
                   contract.name
                 )
@@ -81,6 +97,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
               Preview
             </button>
             <button
+              onClick={() => openUseModal(contract)}
               className="ml-3 px-2 py-1 text-xs rounded bg-green-700/10 text-green-700 cursor-pointer font-semibold  transition-opacity"
               tabIndex={-1}
               type="button"
