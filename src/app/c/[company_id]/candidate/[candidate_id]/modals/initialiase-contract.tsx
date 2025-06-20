@@ -123,7 +123,6 @@ function InitialiseContract({
     client.refetchQueries({
       queryKey: [Q_LIST_ALL_CANDIDATE_CONTRACTS, candidate?.id || ""],
     });
-    console.log("Contract created successfully", response);
     reset();
     close?.();
   };

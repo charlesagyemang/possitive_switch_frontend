@@ -108,10 +108,17 @@ export const candidateContractsColumns = ({
         const row = info.getValue();
         const isApproved = row.status === "approved";
         const isSent = row.status === "sent";
+        if (isSent)
+          return (
+            <span className="text-xs text-gray-500 flex items-center">
+              <CheckCircle className="inline w-4 h-4 mr-1" />
+              Already sent
+            </span>
+          );
         return (
           <div>
             <div className="flex gap-2">
-              {isApproved || isSent ? (
+              {isApproved ? (
                 <Button
                   onClick={() => {
                     if (send) send(row);
@@ -121,7 +128,7 @@ export const candidateContractsColumns = ({
                   className="flex cursor-pointer items-center gap-1"
                 >
                   <Send className="size-4" />
-                  {isSent ? "Send Again" : "Send"}
+                  {"Send"}
                 </Button>
               ) : (
                 <>

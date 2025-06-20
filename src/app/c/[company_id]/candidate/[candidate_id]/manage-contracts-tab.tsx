@@ -43,7 +43,6 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     );
   }, [candidateContracts]);
 
-
   const openUseModal = (
     contract: ApiContractTemplate,
     flag?: string,
@@ -177,11 +176,11 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
               <small className="text-gray-600">
                 {contract.variables?.length} Fields
               </small>
-              {isUsed && (
+              {/* {isUsed && (
                 <span className="text-green-600 text-xs font-semibold">
                   In Use
                 </span>
-              )}
+              )} */}
               <button
                 onClick={() =>
                   open(
@@ -200,23 +199,20 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
               >
                 Preview
               </button>
-              {!!!isUsed && (
-                <button
-                  onClick={() => openUseModal(contract, "create")}
-                  className="ml-3 px-2 py-1 text-xs rounded bg-green-700/10 text-green-700 cursor-pointer font-semibold  transition-opacity"
-                  tabIndex={-1}
-                  type="button"
-                >
-                  Use
-                </button>
-              )}
+              <button
+                onClick={() => openUseModal(contract, "create")}
+                className="ml-3 px-2 py-1 text-xs rounded bg-green-700/10 text-green-700 cursor-pointer font-semibold  transition-opacity"
+                tabIndex={-1}
+                type="button"
+              >
+                Use
+              </button>
             </div>
           </div>
         );
       }
     );
   };
-
 
   const renderContracts = () => {
     if (error)
