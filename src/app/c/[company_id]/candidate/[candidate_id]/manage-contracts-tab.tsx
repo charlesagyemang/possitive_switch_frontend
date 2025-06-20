@@ -190,7 +190,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
                       candidate={candidate}
                       close={close}
                       contract={contract}
-                      use={() => openUseModal(contract)}
+                      use={() => openUseModal(contract, "create")}
                     />,
                     contract.name
                   )
@@ -203,7 +203,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
               </button>
               {!!!isUsed && (
                 <button
-                  onClick={() => openUseModal(contract)}
+                  onClick={() => openUseModal(contract, "create")}
                   className="ml-3 px-2 py-1 text-xs rounded bg-green-700/10 text-green-700 cursor-pointer font-semibold  transition-opacity"
                   tabIndex={-1}
                   type="button"

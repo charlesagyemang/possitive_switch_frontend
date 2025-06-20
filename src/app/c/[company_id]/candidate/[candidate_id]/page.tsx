@@ -67,15 +67,27 @@ export default function ManageCandidatePage() {
   ];
   const renderProfilePhoto = () => {
     return (
-      <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gray-200">
-        <Image
-          width={56}
-          height={56}
-          src="https://randomuser.me/api/portraits/men/40.jpg"
-          alt="Stella Opoku Agyemang"
-          className="w-full h-full object-cover rounded-full"
-        />
-      </div>
+      <>
+        {candidate?.profile_photo_url ? (
+          <Image
+            src={candidate.profile_photo_url}
+            alt={candidate.name || "Candidate Photo"}
+            width={56}
+            height={56}
+            className="w-14 h-14 rounded-full object-cover border-2 border-primary shadow-md"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-primary/70 to-pink-200 text-2xl font-bold text-white shadow-sm">
+            {candidate?.name
+              ? candidate.name
+                  .split(" ")
+                  .map((n: string) => n[0])
+                  .join("")
+                  .slice(0, 2)
+              : ""}
+          </div>
+        )}
+      </>
     );
   };
 
