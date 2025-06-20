@@ -28,7 +28,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     isFetched: templatesFetched,
   } = useContractTemplatesListHandler();
 
-  console.log("List of Contracts", listofContracts);
+
 
   const openUseModal = (contract: ApiContractTemplate) => {
     open(

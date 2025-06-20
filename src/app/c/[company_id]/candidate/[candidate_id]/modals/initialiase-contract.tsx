@@ -37,7 +37,6 @@ function InitialiseContract({
   } = useForm<any>({
     defaultValues: { CANDIDATE_NAME: candidate?.name || "" },
   });
-  console.log("Form Fields", formFields);
 
   const saveDraft = (data: any) => {
     console.log("Draft Data", data);
