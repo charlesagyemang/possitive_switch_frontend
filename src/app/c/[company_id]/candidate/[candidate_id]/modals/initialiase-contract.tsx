@@ -57,7 +57,7 @@ function InitialiseContract({
         <CustomButton variant={"outline"} onClick={() => close?.()}>
           Cancel
         </CustomButton>
-        <CustomButton type="submit">Save Draft</CustomButton>
+        <CustomButton type="submit">Create</CustomButton>
       </div>
     </form>
   );

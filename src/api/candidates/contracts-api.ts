@@ -2,6 +2,7 @@ import { apiCall } from "../api-utils";
 import {
   M_APPROVE_CONTRACT,
   M_SEND_CONTRACT,
+  Q_LIST_ALL_CANDIDATE_CONTRACTS,
   Q_LIST_CONTRACT_TEMPLATES,
 } from "../auth/constants";
 import { API_BASE, API_CANDIDATES, API_UTILITIES } from "../auth/routes";
@@ -57,5 +58,22 @@ const useApproveAndSendHandler = () => {
     [M_SEND_CONTRACT],
     ({ ca_id, co_id }: { ca_id: string; co_id: string }) =>
       approveAndSend(ca_id, co_id)
+  );
+};
+
+const listCandidateContracts = async (cand_id: string) => {
+  const obj = await apiCall(
+    `${API_CANDIDATES}/candidates/${cand_id}/contracts`,
+    null,
+    { method: "GET" }
+  );
+  return obj?.data;
+};
+
+export const useCandidateContractList = (can_id: string) => {
+  return useGenericQuery(
+    [Q_LIST_ALL_CANDIDATE_CONTRACTS],
+    () => listCandidateContracts(can_id),
+    { enabled: !!can_id }
   );
 };

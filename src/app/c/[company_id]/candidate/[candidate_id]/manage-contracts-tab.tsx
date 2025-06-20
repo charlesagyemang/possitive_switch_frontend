@@ -14,21 +14,27 @@ import { candidateContractsColumns } from "./contracts-table-structure";
 import { Textbox } from "@/components/built/input/input";
 import { Input } from "@/components/ui/input";
 import ContractPreview from "./modals/contract-preview";
-import { useContractTemplatesListHandler } from "@/api/candidates/contracts-api";
+import {
+  useCandidateContractList,
+  useContractTemplatesListHandler,
+} from "@/api/candidates/contracts-api";
 import { ApiCandidate } from "@/app/seed/candidates";
 import InitialiseContract from "./modals/initialiase-contract";
+import AppNotifications from "@/components/built/app-notifications";
 
 function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
   const { ModalPortal, open, close } = useModal();
 
+  const { data: listofContracts, isPending: loadingTemplates } =
+    useContractTemplatesListHandler();
+
   const {
-    data: listofContracts,
-    isPending: loadingTemplates,
+    data,
+    isPending: loadingContracts,
     error,
-    isFetched: templatesFetched,
-  } = useContractTemplatesListHandler();
+  } = useCandidateContractList(candidate.id);
 
-
+  console.log("Candidate Contracts", data);
 
   const openUseModal = (contract: ApiContractTemplate) => {
     open(
@@ -109,6 +115,30 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
       )
     );
   };
+
+  const renderContracts = () => {
+    if (error)
+      return (
+        <div className="mx-2">
+          <AppNotifications.Error message={error.message} />
+        </div>
+      );
+
+    return (
+      <CardContent>
+        <GenericTable<ApiCandidateContract, any>
+          pageSize={8}
+          name="Contracts"
+          data={CANDIDATE_CONTRACT_EXAMPLES}
+          columns={candidateContractsColumns({
+            actions: makeDropdownActions,
+          })}
+          noRecordsText="No contracts found."
+        />
+      </CardContent>
+    );
+  };
+
   return (
     <div className="mt-6 ">
       <ModalPortal className="!max-w-3xl w-full" />
@@ -134,17 +164,14 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
 
       <div className="grid grid-cols-6 gap-2">
         <Card className="shadow-none col-span-4 py-6 mb-6">
-          <CardContent>
-            <GenericTable<ApiCandidateContract, any>
-              pageSize={8}
-              name="Contracts"
-              data={CANDIDATE_CONTRACT_EXAMPLES}
-              columns={candidateContractsColumns({
-                actions: makeDropdownActions,
-              })}
-              noRecordsText="No contracts found."
-            />
-          </CardContent>
+          {loadingContracts ? (
+            <span className="flex m-3 text-sm items-center gap-2 text-gray-500">
+              <LoaderCircle className="animate-spin text-primary" /> Fetching
+              contracts...
+            </span>
+          ) : (
+            <>{renderContracts()}</>
+          )}
         </Card>
 
         <Card className="shadow-none col-span-2 mb-6 ">
