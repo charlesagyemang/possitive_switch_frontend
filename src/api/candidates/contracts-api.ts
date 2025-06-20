@@ -1,6 +1,7 @@
 import { apiCall } from "../api-utils";
 import {
   M_APPROVE_CONTRACT,
+  M_CREATE_CONTRACT,
   M_SEND_CONTRACT,
   Q_LIST_ALL_CANDIDATE_CONTRACTS,
   Q_LIST_CONTRACT_TEMPLATES,
@@ -39,21 +40,21 @@ export const useContractTemplatesListHandler = () => {
   return useGenericQuery([Q_LIST_CONTRACT_TEMPLATES], fetchContractTemplates);
 };
 
-const useContractApprovalHandler = () => {
+export const useContractApprovalHandler = () => {
   return useGenericMutation(
     [M_APPROVE_CONTRACT],
     ({ ca_id, co_id }: { ca_id: string; co_id: string }) =>
       approveContract(ca_id, co_id)
   );
 };
-const useSendContractHandler = () => {
+export const useSendContractHandler = () => {
   return useGenericMutation(
     [M_SEND_CONTRACT],
     ({ ca_id, co_id }: { ca_id: string; co_id: string }) =>
       sendContract(ca_id, co_id)
   );
 };
-const useApproveAndSendHandler = () => {
+export const useApproveAndSendHandler = () => {
   return useGenericMutation(
     [M_SEND_CONTRACT],
     ({ ca_id, co_id }: { ca_id: string; co_id: string }) =>
@@ -72,8 +73,23 @@ const listCandidateContracts = async (cand_id: string) => {
 
 export const useCandidateContractList = (can_id: string) => {
   return useGenericQuery(
-    [Q_LIST_ALL_CANDIDATE_CONTRACTS],
+    [Q_LIST_ALL_CANDIDATE_CONTRACTS, can_id],
     () => listCandidateContracts(can_id),
     { enabled: !!can_id }
   );
+};
+
+export const createContract = async (body: any) => {
+  const { candidate_id, ...data } = body || {};
+  const obj = await apiCall(
+    `${API_CANDIDATES}/${candidate_id}/contracts`,
+    data
+  );
+  if (!!!obj.success) throw new Error(obj.message ||"Contract creation failed");
+
+  return obj?.data;
+};
+
+export const useCreateContract = () => {
+  return useGenericMutation([M_CREATE_CONTRACT], createContract);
 };

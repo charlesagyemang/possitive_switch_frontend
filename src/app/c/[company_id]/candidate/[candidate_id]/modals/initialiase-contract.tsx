@@ -1,12 +1,15 @@
+import { Q_LIST_ALL_CANDIDATE_CONTRACTS } from "@/api/auth/constants";
+import { useCreateContract } from "@/api/candidates/contracts-api";
 import { ApiCandidate } from "@/app/seed/candidates";
-import { ApiContractTemplate } from "@/app/seed/contracts";
+import { ApiContractTemplate, ContractVariable } from "@/app/seed/contracts";
+import AppNotifications from "@/components/built/app-notifications";
 import CustomButton from "@/components/built/button/custom-button";
 import { renderFormField } from "@/components/built/form/generator";
 import { TEMPLATE_FORM_KEYS } from "@/lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { Fragment } from "react";
 import { useForm } from "react-hook-form";
 
-type Variable = { name: string; type: string };
 function InitialiseContract({
   close,
   candidate,
@@ -17,7 +20,7 @@ function InitialiseContract({
   contract?: ApiContractTemplate;
 }) {
   const variables = contract?.variables || [];
-  const formFields = variables.map((variable: Variable) => {
+  const formFields = variables.map((variable: ContractVariable) => {
     const formFieldType = TEMPLATE_FORM_KEYS[variable.type];
     const cleanName = variable.name?.split("_").join(" ").toLowerCase();
     return {
@@ -28,6 +31,10 @@ function InitialiseContract({
       required: true,
     };
   });
+
+  const { run, isPending, error } = useCreateContract();
+  console.log("SEE ERROR", error?.message);
+  const client = useQueryClient();
 
   const {
     control,
@@ -40,6 +47,26 @@ function InitialiseContract({
 
   const saveDraft = (data: any) => {
     console.log("Draft Data", data);
+
+    const body = {
+      candidate_id: candidate?.id,
+      contract: {
+        contract_template_id: contract?.id,
+        status: "draft",
+        data,
+      },
+    };
+
+    run(body, {
+      onSuccess: (response) => {
+        client.refetchQueries({
+          queryKey: [Q_LIST_ALL_CANDIDATE_CONTRACTS, candidate?.id || ""],
+        });
+        console.log("Contract created successfully", response);
+        reset();
+        close?.();
+      },
+    });
   };
   // const { ModalPortal, open,
   return (
@@ -53,11 +80,16 @@ function InitialiseContract({
           );
         })}
       </div>
+      <div className="mt-1">
+        <AppNotifications.Error message={error?.message || null} />
+      </div>
       <div className="mt-2 flex gap-2 justify-end">
         <CustomButton variant={"outline"} onClick={() => close?.()}>
           Cancel
         </CustomButton>
-        <CustomButton type="submit">Create</CustomButton>
+        <CustomButton loading={isPending} disabled={isPending} type="submit">
+          Create
+        </CustomButton>
       </div>
     </form>
   );

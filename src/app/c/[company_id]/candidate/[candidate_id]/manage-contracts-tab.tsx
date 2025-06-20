@@ -178,10 +178,10 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
           <CardContent className="">
             <div className="flex flex-col gap-1  ">
               <h5 className="text-lg font-semibold">Contract Templates</h5>
-              <Input
+              {/* <Input
                 placeholder="Search templates..."
                 className="mb-2 shadow-none"
-              />
+              /> */}
               {/* <p className="text-gray-500 mb-2 text-xs">
                 Use predefined templates to ensure consistency and compliance.
               </p> */}
@@ -191,7 +191,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
                   Fetching templates...
                 </span>
               ) : (
-                <div className="max-h-[480px] overflow-y-auto scrollbar-hide">
+                <div className="max-h-[480px] mt-2 overflow-y-auto scrollbar-hide">
                   {renderTemplates()}
                 </div>
               )}
