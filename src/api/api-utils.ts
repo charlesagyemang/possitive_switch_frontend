@@ -97,7 +97,7 @@ export const apiCall = (
     .then((res) => {
       if (res?.success) return res;
       if (server) return res; // even if there is an error, dont throw on the server. Throw only on client side requests
-      throw new Error(res.error);
+      throw new Error(res.message || JSON.stringify(res?.error));
     });
 };
 

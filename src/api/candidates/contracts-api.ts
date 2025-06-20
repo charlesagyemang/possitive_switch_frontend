@@ -19,19 +19,24 @@ const fetchContractTemplates = async () => {
 
 const approveContract = async (cand_id: string, cont_id: string) => {
   const obj = await apiCall(
-    `${API_CANDIDATES}/candidates/${cand_id}/contracts/${cont_id}/approve`
+    `${API_CANDIDATES}/${cand_id}/contracts/${cont_id}/approve`
   );
   return obj?.data?.contract;
 };
 const sendContract = async (cand_id: string, cont_id: string) => {
   const obj = await apiCall(
-    `${API_CANDIDATES}/candidates/${cand_id}/contracts/${cont_id}/send_contract`
+    `${API_CANDIDATES}/${cand_id}/contracts/${cont_id}/send_contract`
   );
+  if (!!!obj?.success) {
+    console.log("I threw someting here meerhn");
+    throw new Error(obj?.message);
+  } else console.log("I did not throw something in here");
+
   return obj?.data?.contract;
 };
 const approveAndSend = async (cand_id: string, cont_id: string) => {
   const obj = await apiCall(
-    `${API_CANDIDATES}/candidates/${cand_id}/contracts/${cont_id}/approve_and_send`
+    `${API_CANDIDATES}/${cand_id}/contracts/${cont_id}/approve_and_send`
   );
   return obj?.data?.contract;
 };

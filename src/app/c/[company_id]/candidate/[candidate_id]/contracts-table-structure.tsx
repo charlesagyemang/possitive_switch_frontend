@@ -52,10 +52,17 @@ export const candidateContractsColumns = ({
         let icon = null;
 
         switch (status) {
+          case "sent":
+            color = "bg-green-blue-50 text-blue-800";
+            icon = <Send className="w-4 h-4 mr-1 inline" />;
+            break;
           case "signed":
-          case "approved":
             color = "bg-green-50 text-green-800";
             icon = <Signature className="w-4 h-4 mr-1 inline" />;
+            break;
+          case "approved":
+            color = "bg-green-50 text-green-800";
+            icon = <CheckCircle className="w-4 h-4 mr-1 inline" />;
             break;
 
           case "draft":

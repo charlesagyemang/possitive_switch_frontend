@@ -50,7 +50,8 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         contract={contract}
         candidate={candidate}
         flag={flag}
-        data={candidateContract}
+        data={candidateContract?.data}
+        candidateContract={candidateContract}
       />,
       title || `Initialise Contract: ${contract.name}`
     );
@@ -64,10 +65,10 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         Icon: Edit2,
         onClick: () => {
           // deleteConfirmation(row);
-          openUseModal(row.contract_template, "edit", {
-            candidateContract: row,
-            title: `Edit Contract: ${row.contract_template.name}`,
-          });
+          // openUseModal(row.contract_template, "edit", {
+          //   candidateContract: row,
+          //   title: `Edit Contract - ${row.contract_template.name}`,
+          // });
         },
       },
       {
@@ -78,7 +79,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
           // deleteConfirmation(row);
           openUseModal(row.contract_template, "send", {
             candidateContract: row,
-            title: `Send Contract: ${row.contract_template.name}`,
+            title: `Send Contract -  ${row.contract_template.name}`,
           });
         },
       },
@@ -90,7 +91,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
           // deleteConfirmation(row);
           openUseModal(row.contract_template, "approve", {
             candidateContract: row,
-            title: `Approve Contract: ${row.contract_template.name}`,
+            title: `Approve Contract - ${row.contract_template.name}`,
           });
         },
       },
@@ -102,7 +103,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
           // deleteConfirmation(row);
           openUseModal(row.contract_template, "approve_and_send", {
             candidateContract: row,
-            title: `Approve & Send Contract: ${row.contract_template.name}`,
+            title: `Approve & Send Contract - ${row.contract_template.name}`,
           });
         },
       },
@@ -174,6 +175,8 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     );
   };
 
+  console.log("candidateContracts", candidateContracts);
+  console.log("listofContracts", listofContracts);
   const renderContracts = () => {
     if (error)
       return (
