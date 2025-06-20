@@ -32,9 +32,10 @@ export function NavCompanies({
       <SidebarMenu>
         {companies.map((item) => {
           // Check if the item is locked
+          const isActive = pathname?.includes(item.url) || false;
           return (
             <SidebarMenuItem key={item.name}>
-              <SidebarMenuButton isActive={item.url === pathname} asChild>
+              <SidebarMenuButton isActive={isActive} asChild>
                 <Link href={item.url}>
                   {/* <item.icon />  */}
                   <Landmark className="" />

@@ -32,8 +32,7 @@ function OnboardingTab({
         ids: checked?.map((t) => t.id),
       },
       {
-        onSuccess: (response) => {
-          console.log("Tasks updated successfully", response);
+        onSuccess: () => {
           client.refetchQueries({
             queryKey: [Q_LOAD_ONE_CANDIDATE, candidate.id],
           });
