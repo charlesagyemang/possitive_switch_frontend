@@ -26,7 +26,6 @@ function UploadCompanyLogo({
         onSuccess: (response) => {
           client.refetchQueries({ queryKey: [Q_LIST_COMPANIES] });
           client.refetchQueries({ queryKey: [Q_LOAD_ONE_COMPANY, company.id] });
-          console.log("Logo uploaded successfully", response);
           setLogoFile(null); // Reset the file input after successful upload
           close?.();
         },
