@@ -71,15 +71,14 @@ const data = {
       icon: PieChart,
     },
     {
-      name: "VR OnBoarding",
-      url: "#",
-      icon: RectangleGoggles,
-    },
-
-    {
       name: "Countdown Mailer",
       url: "#",
       icon: AlarmClockCheck,
+    },
+    {
+      name: "VR OnBoarding",
+      url: "#",
+      icon: RectangleGoggles,
     },
   ],
 };
@@ -115,8 +114,10 @@ export function SuperAdminSidebar({
       </SidebarHeader>
       <SidebarContent>
         <CustomNavMain items={data.navMain} />
-        {!!companies && companies?.length && (
+        {!!companies && companies?.length ? (
           <NavCompanies companies={companies} />
+        ) : (
+          <></>
         )}
         <CustomNavProject projects={data.projects} />
       </SidebarContent>

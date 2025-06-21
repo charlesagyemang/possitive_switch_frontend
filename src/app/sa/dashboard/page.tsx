@@ -36,10 +36,7 @@ export default function SadminDashboard() {
   const { data: user } = useAuthenticatedUser();
   const { run, isPending: isDeleting } = useCompanyDeleteHandler();
   const client = useQueryClient();
-
   const router = useRouter();
-
-  console.log("Company List:", companyList);
 
   const addNewCompany = useCallback(
     (data?: Company) => {
