@@ -15,23 +15,21 @@ import {
   Mail,
   PersonStanding,
   Plus,
+  PlusIcon,
   Trash,
 } from "lucide-react";
 import React from "react";
 import { invitationColumns } from "./company-table-structure";
-import {
-  ApiCandidate,
-} from "@/app/seed/candidates";
+import { ApiCandidate } from "@/app/seed/candidates";
 import { DOption } from "@/components/built/dropdown/custom-dropdown";
 import { useRouter, useParams } from "next/navigation";
 import { companyDashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CandidateForm from "@/app/shared/forms/candidate-form";
-import {
-  
-  useCandidateList,
-} from "@/api/candidates/candidates-api";
+import { useCandidateList } from "@/api/candidates/candidates-api";
 import { useCompanyFetchHandler } from "@/api/companies/company-api";
+import Image from "next/image";
+import UploadCompanyLogo from "./upload-company-logo";
 
 function OneCompanyDashboard() {
   const router = useRouter();
@@ -102,7 +100,7 @@ function OneCompanyDashboard() {
     return (
       <GenericTable<ApiCandidate, any>
         pageSize={7}
-        name="Invited Candidates"
+        name="Candidates"
         columns={invitationColumns({
           actions: makeActions,
           companyId: companyId,
@@ -115,6 +113,36 @@ function OneCompanyDashboard() {
     );
   };
 
+  const uploadLogo = () => {
+    open(
+      <UploadCompanyLogo close={close} company={company} />,
+      `${company.name}`
+    );
+  };
+
+  const renderIcon = () => {
+    if (company.logo_url) {
+      return (
+        <Image
+          onClick={() => uploadLogo()}
+          width={50}
+          height={50}
+          src={company.logo_url}
+          alt="Company Logo"
+          className="w-12 h-12 rounded-lg cursor-pointer hover:opacity-70  object-cover border border-gray-200 dark:border-gray-700 bg-white"
+        />
+      );
+    }
+    return (
+      <div
+        onClick={() => uploadLogo()}
+        className="w-12 cursor-pointer hover:opacity-70 h-12 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400"
+      >
+        <PlusIcon className="w-6 h-6" />
+      </div>
+    );
+  };
+
   if (isFetched && error) return <div>Error: {error.message}</div>;
   return (
     <div>
@@ -122,6 +150,7 @@ function OneCompanyDashboard() {
       <SadminSpace>
         <div className="flex items-center justify-between mb-6">
           <PageTitle
+            customIcon={renderIcon}
             Icon={Landmark}
             title={company?.name || "..."}
             description="Company management dashboard to help you manage candidates and employees."

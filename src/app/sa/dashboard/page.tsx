@@ -69,7 +69,10 @@ export default function SadminDashboard() {
   };
 
   const uploadLogo = (company: Company) => {
-    open(<UploadCompanyLogo company={company} />, `${company.name}`);
+    open(
+      <UploadCompanyLogo close={close} company={company} />,
+      `${company.name}`
+    );
   };
 
   const makeDropdownActions = (row: Company) => {

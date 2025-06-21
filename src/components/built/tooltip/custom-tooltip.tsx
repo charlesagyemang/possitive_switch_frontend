@@ -10,15 +10,17 @@ function CustomTooltip({
   title,
   tip,
   message,
+  asChild,
 }: {
   children?: React.ReactNode;
   title?: string;
   tip?: string;
   message?: string;
+  asChild?: boolean;
 }) {
   return (
     <Tooltip>
-      <TooltipTrigger>{children}</TooltipTrigger>
+      <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
       <TooltipContent>{title || tip || message}</TooltipContent>
     </Tooltip>
   );

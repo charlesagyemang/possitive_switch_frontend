@@ -1,4 +1,4 @@
-import { Q_LIST_COMPANIES } from "@/api/auth/constants";
+import { Q_LIST_COMPANIES, Q_LOAD_ONE_COMPANY } from "@/api/auth/constants";
 import { useCompanyLogoHandler } from "@/api/companies/company-api";
 import { Company } from "@/app/seed/companies";
 import AppNotifications from "@/components/built/app-notifications";
@@ -8,7 +8,13 @@ import { SimpleFileUploader } from "@/components/built/upload/simple-file-upload
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-function UploadCompanyLogo({ company }: { company: Company }) {
+function UploadCompanyLogo({
+  company,
+  close,
+}: {
+  company: Company;
+  close?: () => void;
+}) {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const { run, isPending, error } = useCompanyLogoHandler();
   const client = useQueryClient();
@@ -19,8 +25,10 @@ function UploadCompanyLogo({ company }: { company: Company }) {
       {
         onSuccess: (response) => {
           client.refetchQueries({ queryKey: [Q_LIST_COMPANIES] });
+          client.refetchQueries({ queryKey: [Q_LOAD_ONE_COMPANY, company.id] });
           console.log("Logo uploaded successfully", response);
           setLogoFile(null); // Reset the file input after successful upload
+          close?.();
         },
       }
     );
@@ -30,6 +38,8 @@ function UploadCompanyLogo({ company }: { company: Company }) {
     <div>
       {/* <p>Upload logo for {company?.name}</p> */}
       <SimpleFileUploader
+        multiple={false}
+        accept="image/jpg,image/jpeg,image/png,image/webp"
         onChange={(files) => {
           const file = files?.[0];
           setLogoFile(file);
@@ -41,15 +51,18 @@ function UploadCompanyLogo({ company }: { company: Company }) {
 
       <AppNotifications.Error message={error?.message} />
       <div className="flex items-center justify-end mt-1">
-        <CustomTooltip tip={!!logoFile ? "Finish" : "Select a logo first"}>
-          <CustomButton
-            onClick={() => upload()}
-            loading={isPending}
-            disabled={!!!logoFile}
+        <CustomButton
+          onClick={() => upload()}
+          loading={isPending}
+          disabled={!!!logoFile}
+        >
+          <CustomTooltip
+            asChild
+            tip={!!logoFile ? "Finish" : "Select a logo first"}
           >
-            Upload
-          </CustomButton>
-        </CustomTooltip>
+            <span>Upload</span>
+          </CustomTooltip>
+        </CustomButton>
       </div>
     </div>
   );
