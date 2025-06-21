@@ -8,7 +8,7 @@ import {
 } from "./constants";
 import { API_LOGIN, API_REGISTER_USER, API_WHO_AM_I } from "./routes";
 
-const register = (body: unknown) => {
+const register = (body: Record<string, any>) => {
   return apiCall(API_REGISTER_USER, body);
 };
 
@@ -16,7 +16,7 @@ export const useRegistrationHandler = () => {
   return useGenericMutation([M_REGISTER_USER], (body) => register(body));
 };
 
-const login = (body: unknown) => {
+const login = (body: Record<string, any>) => {
   return apiCall(API_LOGIN, body);
 };
 

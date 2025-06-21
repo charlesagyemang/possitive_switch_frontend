@@ -69,7 +69,7 @@ function CandidateForm({
 
   const onSuccess = () => {
     client.refetchQueries({ queryKey: [Q_LIST_CANDIDATES, companyId] });
-    close && close();
+    close?.();
   };
   const handleCreation = (data: any) => {
     const body = {

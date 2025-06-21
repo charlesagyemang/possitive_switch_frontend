@@ -27,7 +27,7 @@ export const useCandidateList = (company_id: string) => {
   );
 };
 
-const createCandidate = (body: unknown) => {
+const createCandidate = (body: Record<string, any> | FormData) => {
   return apiCall(`${API_CANDIDATES}`, body);
 };
 
@@ -36,7 +36,7 @@ export const useCreateCandidateHandler = () => {
     createCandidate(body)
   );
 };
-const editCandidate = (body: unknown) => {
+const editCandidate = (body: FormData | Record<string, any>) => {
   return apiCall(`${API_CANDIDATES}`, body, { method: "PATCH" });
 };
 
@@ -53,4 +53,3 @@ export const useCandidate = (id: string) => {
     enabled: !!id,
   });
 };
-

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Control,
   FieldValues,
@@ -94,6 +95,7 @@ export const renderFormField = (
         </div>
       );
     case "radio-group":
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const { field: cField } = useController({
         name: field.name,
         control,

@@ -64,7 +64,7 @@ const makeHeaders = (
 
 export const apiCall = (
   url: string,
-  body?: FormData | {} | null,
+  body?: FormData | Record<string, any> | null,
   options?: ApiOptions
 ) => {
   const {
@@ -101,13 +101,13 @@ export const apiCall = (
     });
 };
 
-export const removeUndefinedFromObject = (object: {}) => {
+export const removeUndefinedFromObject = (object: Record<string, any>) => {
   return Object.fromEntries(
     Object.entries(object || {}).filter(([_, v]) => v !== undefined)
   );
 };
 
-export const replaceUndefinedWithNull = (object: {}) => {
+export const replaceUndefinedWithNull = (object: Record<string, any>) => {
   return Object.fromEntries(
     Object.entries(object).map(([k, v]) => [k, v === undefined ? null : v])
   );

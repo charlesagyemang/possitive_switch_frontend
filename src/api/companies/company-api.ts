@@ -29,7 +29,7 @@ import { useGenericMutation, useGenericQuery } from "../query";
 //   };
 // };
 
-const createCompany = (body: unknown) => {
+const createCompany = (body: Record<string, any>) => {
   return apiCall(API_CREATE_NEW_COMPANY, body);
 };
 
