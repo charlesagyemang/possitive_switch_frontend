@@ -66,15 +66,16 @@ const data = {
   ],
   projects: [
     {
-      name: "VR OnBoarding",
-      url: "#",
-      icon: RectangleGoggles,
-    },
-    {
       name: "Recruiter's Lounge",
       url: "#",
       icon: PieChart,
     },
+    {
+      name: "VR OnBoarding",
+      url: "#",
+      icon: RectangleGoggles,
+    },
+
     {
       name: "Countdown Mailer",
       url: "#",

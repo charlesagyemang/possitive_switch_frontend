@@ -28,6 +28,7 @@ import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Q_LIST_COMPANIES } from "@/api/auth/constants";
 import { useRouter } from "next/navigation";
+import UploadCompanyLogo from "@/app/c/[company_id]/upload-company-logo";
 
 export default function SadminDashboard() {
   const { ModalPortal, open, close } = useModal();
@@ -37,6 +38,8 @@ export default function SadminDashboard() {
   const client = useQueryClient();
 
   const router = useRouter();
+
+  console.log("Company List:", companyList);
 
   const addNewCompany = useCallback(
     (data?: Company) => {
@@ -48,7 +51,6 @@ export default function SadminDashboard() {
   const doApiDelete = (data?: Company) => {
     run(data?.id, {
       onSuccess: () => {
-        console.log("Company created successfully", data);
         client.refetchQueries({
           queryKey: [Q_LIST_COMPANIES],
         });
@@ -66,6 +68,10 @@ export default function SadminDashboard() {
     );
   };
 
+  const uploadLogo = (company: Company) => {
+    open(<UploadCompanyLogo company={company} />, `${company.name}`);
+  };
+
   const makeDropdownActions = (row: Company) => {
     return [
       {
@@ -74,6 +80,14 @@ export default function SadminDashboard() {
 
         onClick: () => {
           addNewCompany(row);
+        },
+      },
+      {
+        label: "Upload Logo",
+        value: "logo",
+
+        onClick: () => {
+          uploadLogo(row);
         },
       },
       {
@@ -110,7 +124,7 @@ export default function SadminDashboard() {
       <GenericTable<Company, any>
         pageSize={6}
         name="Companies"
-        columns={companyColumns({ actions: makeDropdownActions })}
+        columns={companyColumns({ actions: makeDropdownActions, router })}
         // data={companyData}
         noRecordsText="No companies found"
         data={companyList || []}

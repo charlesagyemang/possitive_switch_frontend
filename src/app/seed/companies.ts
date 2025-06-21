@@ -7,6 +7,7 @@ export type Company = {
   updated_at: string;
   email : string; 
   phone_number : string;
+  logo_url?:string; 
 };
 
 export const companyData: Company[] = [

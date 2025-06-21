@@ -6,22 +6,45 @@ import {
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Building2, Ellipsis, Mail } from "lucide-react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const companyColumnHelper = createColumnHelper<Company>();
 export const companyColumns = ({
   actions,
+  router,
 }: {
   actions: (row: Company) => DOption[];
+  router: AppRouterInstance;
 }) => [
-  companyColumnHelper.accessor("name", {
+  companyColumnHelper.accessor((row) => row, {
     id: "name",
 
-    cell: (info) => (
-      <span className="font-semibold flex items-center gap-2 hover:underline cursor-pointer transition-colors ">
-        <Building2 className="size-4" />
-        {info.getValue()}
-      </span>
-    ),
+    cell: (info) => {
+      const row = info.getValue();
+      const logo = row?.logo_url;
+      return (
+        <span
+          onClick={() => router.push(`/c/${row.id}`)}
+          className="font-semibold flex items-center gap-2 hover:underline hover:opacity-70 cursor-pointer transition-colors "
+        >
+          {logo ? (
+            <Image
+              alt={row.name}
+              src={logo}
+              width={50}
+              height={50}
+              className="object-contain"
+            />
+          ) : (
+            <Building2 className="size-4" />
+          )}
+
+          {row.name}
+        </span>
+      );
+    },
   }),
   companyColumnHelper.accessor("email", {
     id: "email",

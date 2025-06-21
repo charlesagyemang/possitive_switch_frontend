@@ -4,10 +4,12 @@ import {
   M_CREATE_COMPANY,
   M_DELETE_COMPANY,
   M_UPDATE_COMPANY,
+  M_UPLOAD_COMPANY_LOGO,
   Q_LIST_COMPANIES,
   Q_LOAD_ONE_COMPANY,
 } from "../auth/constants";
 import {
+  API_CANDIDATES,
   API_COMPANIES,
   API_CREATE_NEW_CANDIDATE,
   API_CREATE_NEW_COMPANY,
@@ -90,4 +92,15 @@ const listCompanies = async () => {
 
 export const useCompanyList = () => {
   return useGenericQuery([Q_LIST_COMPANIES], listCompanies);
+};
+
+const uploadLogo = (body: any) => {
+  const { id, ...rest } = body;
+  return apiCall(`${API_COMPANIES}/${id}/logo`, createForm(rest));
+};
+
+export const useCompanyLogoHandler = () => {
+  return useGenericMutation([M_UPLOAD_COMPANY_LOGO], (body) =>
+    uploadLogo(body)
+  );
 };
