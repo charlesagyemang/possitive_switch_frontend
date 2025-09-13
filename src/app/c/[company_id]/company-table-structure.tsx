@@ -5,7 +5,7 @@ import {
   AsDropdownMenu,
   DOption,
 } from "@/components/built/dropdown/custom-dropdown";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Eye, Edit, Trash, UserPlus, Mail, Calendar, Star, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 
@@ -13,37 +13,43 @@ const candidateColumnHelper = createColumnHelper<ApiCandidate>();
 
 const statusColors: Record<
   string,
-  { bg: string; text: string; border: string }
+  { bg: string; text: string; border: string; dot: string }
 > = {
   pending: {
-    bg: "bg-yellow-50",
-    text: "text-yellow-800",
-    border: "border-yellow-200",
+    bg: "bg-yellow-100 dark:bg-yellow-900/30",
+    text: "text-yellow-700 dark:text-yellow-300",
+    border: "border-yellow-200 dark:border-yellow-700/30",
+    dot: "bg-yellow-500"
   },
   signed: {
-    bg: "bg-blue-50",
-    text: "text-blue-800",
-    border: "border-blue-200",
+    bg: "bg-blue-100 dark:bg-blue-900/30",
+    text: "text-blue-700 dark:text-blue-300",
+    border: "border-blue-200 dark:border-blue-700/30",
+    dot: "bg-blue-500"
   },
   orrientation: {
-    bg: "bg-purple-50",
-    text: "text-purple-800",
-    border: "border-purple-200",
+    bg: "bg-purple-100 dark:bg-purple-900/30",
+    text: "text-purple-700 dark:text-purple-300",
+    border: "border-purple-200 dark:border-purple-700/30",
+    dot: "bg-purple-500"
   },
   onboarding: {
-    bg: "bg-purple-50",
-    text: "text-purple-800",
-    border: "border-purple-200",
+    bg: "bg-purple-100 dark:bg-purple-900/30",
+    text: "text-purple-700 dark:text-purple-300",
+    border: "border-purple-200 dark:border-purple-700/30",
+    dot: "bg-purple-500"
   },
   completed: {
-    bg: "bg-green-50",
-    text: "text-green-800",
-    border: "border-green-200",
+    bg: "bg-emerald-100 dark:bg-emerald-900/30",
+    text: "text-emerald-700 dark:text-emerald-300",
+    border: "border-emerald-200 dark:border-emerald-700/30",
+    dot: "bg-emerald-500"
   },
   default: {
-    bg: "bg-gray-50",
-    text: "text-gray-800",
-    border: "border-gray-200",
+    bg: "bg-gray-100 dark:bg-gray-900/30",
+    text: "text-gray-700 dark:text-gray-300",
+    border: "border-gray-200 dark:border-gray-700/30",
+    dot: "bg-gray-500"
   },
 };
 
@@ -51,9 +57,10 @@ function StatusBadge({ status }: { status: string }) {
   const color = statusColors[status] || statusColors["default"];
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${color.bg} ${color.text} ${color.border}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${color.bg} ${color.text} ${color.border}`}
     >
-      {status}
+      <div className={`w-2 h-2 rounded-full ${color.dot}`} />
+      {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
 }
@@ -69,60 +76,100 @@ export const invitationColumns = ({
 }) => {
   return [
     candidateColumnHelper.accessor((row) => row, {
-      header: "First Name",
+      header: "Candidate",
       cell: (info) => {
         const row = info.getValue();
         return (
-          <span
-            onClick={() => router?.push(`/c/${companyId}/candidate/${row.id}`)}
-            className="hover:underline cursor-pointer font-semibold hover:opacity-70"
-          >
-            {row.name}
-          </span>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-sm">
+              {row.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div
+                onClick={() => router?.push(`/c/${companyId}/candidate/${row.id}`)}
+                className="font-bold text-gray-900 dark:text-white hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-600 cursor-pointer transition-all duration-300"
+              >
+                {row.name}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                <Mail className="w-3 h-3" />
+                {row.email}
+              </div>
+            </div>
+          </div>
         );
       },
     }),
-    candidateColumnHelper.accessor("email", {
-      header: "Email",
-      cell: (info) => <b>{info.getValue()}</b>,
-    }),
     candidateColumnHelper.accessor("job_title", {
-      header: "Job Title",
-      cell: (info) => <>{info.getValue()}</>,
+      header: "Position",
+      cell: (info) => (
+        <div className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-sm font-medium inline-flex items-center gap-1">
+          <Star className="w-3 h-3" />
+          {info.getValue() || "Not specified"}
+        </div>
+      ),
     }),
-
-    // candidateColumnHelper.accessor("last_name", {
-    //   header: "Last Name",
-    //   cell: (info) => info.getValue(),
-    // }),
-    // candidateColumnHelper.accessor("deadline", {
-    //   header: "Deadline",
-    //   cell: (info) => {
-    //     const value = info.getValue();
-    //     if (!value) return "-";
-    //     const date = new Date(value);
-    //     if (isNaN(date.getTime())) return value;
-    //     return format(date, "P"); // Shorter date format
-    //   },
-    // }),
-    // candidateColumnHelper.accessor((row) => String(row.status), {
-    //   header: "Status",
-    //   cell: (info) => <StatusBadge status={info.getValue()} />,
-    // }),
-    candidateColumnHelper.accessor((row) => row.id, {
-      id: "id",
-      header: "",
+    candidateColumnHelper.accessor((row) => row.status || "pending", {
+      header: "Status",
+      cell: (info) => <StatusBadge status={info.getValue()} />,
+    }),
+    candidateColumnHelper.accessor((row) => row.created_at || new Date().toISOString(), {
+      header: "Joined",
       cell: (info) => {
-        // const options: DOption[] = [
-        //   { label: "View", value: "view", onClick: () => {} },
-        //   { label: "Delete", value: "delete", onClick: () => {} },
-        // ];
+        const dateValue = info.getValue();
+        const date = new Date(dateValue);
+        const isValidDate = !isNaN(date.getTime());
+        
         return (
-          <AsDropdownMenu options={actions(info.row.original)} className="w-8">
-            <button className="p-1 rounded hover:bg-muted">
-              <MoreVertical className="w-4 h-4" />
+          <div className="bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium inline-flex items-center gap-1">
+            <Calendar className="w-3 h-3" />
+            {isValidDate ? format(date, "MMM dd, yyyy") : "Recently"}
+          </div>
+        );
+      },
+    }),
+    candidateColumnHelper.accessor((row) => row.id, {
+      id: "actions",
+      header: "Actions",
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <div className="flex items-center gap-2">
+            {/* Quick View */}
+            <button
+              onClick={() => router?.push(`/c/${companyId}/candidate/${row.id}`)}
+              className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-300 hover:scale-105 group"
+              title="View Details"
+            >
+              <Eye className="w-4 h-4 text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300" />
             </button>
-          </AsDropdownMenu>
+
+            {/* Edit */}
+            <button
+              onClick={() => {
+                // Handle edit action
+                const editAction = actions(row).find(action => action.value === "edit");
+                editAction?.onClick?.();
+              }}
+              className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-xl transition-all duration-300 hover:scale-105 group"
+              title="Edit Candidate"
+            >
+              <Edit className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300" />
+            </button>
+
+            {/* Delete */}
+            <button
+              onClick={() => {
+                // Handle delete action
+                const deleteAction = actions(row).find(action => action.value === "delete");
+                deleteAction?.onClick?.();
+              }}
+              className="p-2 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-xl transition-all duration-300 hover:scale-105 group"
+              title="Delete Candidate"
+            >
+              <Trash className="w-4 h-4 text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300" />
+            </button>
+          </div>
         );
       },
     }),

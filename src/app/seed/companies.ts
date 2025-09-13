@@ -8,6 +8,7 @@ export type Company = {
   email : string; 
   phone_number : string;
   logo_url?:string; 
+  status?: "active" | "inactive";
 };
 
 export const companyData: Company[] = [

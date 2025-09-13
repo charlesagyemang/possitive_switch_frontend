@@ -10,7 +10,11 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { LoaderCircle, Plus } from "lucide-react";
+import { LoaderCircle, Plus, Sparkles, Heart, Star, Crown, Gem, Rainbow, Search, Filter, Calendar, Building2, Edit, Upload, Users, Eye, Trash } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React from "react";
 import { GenericTable } from "@/components/built/table/data-table";
 import { companyColumns } from "./company-table-structure";
 import { Company, companyData } from "@/app/seed/companies";
@@ -24,7 +28,7 @@ import {
 } from "@/api/companies/company-api";
 import { useAuthenticatedUser } from "@/api/auth/auth";
 import DeleteConfirmation from "@/components/built/dialogs/delete-confirmation";
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Q_LIST_COMPANIES } from "@/api/auth/constants";
 import { useRouter } from "next/navigation";
@@ -37,6 +41,47 @@ export default function SadminDashboard() {
   const { run, isPending: isDeleting } = useCompanyDeleteHandler();
   const client = useQueryClient();
   const router = useRouter();
+  
+  const [sparkles, setSparkles] = useState<Array<{left: number, top: number, delay: number, duration: number}>>([]);
+  const [isClient, setIsClient] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("all");
+
+  useEffect(() => {
+    setIsClient(true);
+    // Generate sparkles only on client
+    const newSparkles = [...Array(20)].map(() => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 3,
+      duration: 2 + Math.random() * 3
+    }));
+    setSparkles(newSparkles);
+  }, []);
+
+  const FloatingSparkles = () => {
+    if (!isClient) return null;
+    
+    return (
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        {sparkles.map((sparkle, i) => (
+          <div
+            key={i}
+            className="absolute text-pink-300 dark:text-purple-400 animate-pulse opacity-30 dark:opacity-50"
+            style={{
+              left: `${sparkle.left}%`,
+              top: `${sparkle.top}%`,
+              animationDelay: `${sparkle.delay}s`,
+              animationDuration: `${sparkle.duration}s`
+            }}
+          >
+            ✨
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   const addNewCompany = useCallback(
     (data?: Company) => {
@@ -75,9 +120,9 @@ export default function SadminDashboard() {
   const makeDropdownActions = (row: Company) => {
     return [
       {
-        label: "Edit",
+        label: "Edit Company",
         value: "edit",
-
+        Icon: Edit,
         onClick: () => {
           addNewCompany(row);
         },
@@ -85,25 +130,32 @@ export default function SadminDashboard() {
       {
         label: "Upload Logo",
         value: "logo",
-
+        Icon: Upload,
         onClick: () => {
           uploadLogo(row);
         },
       },
       {
-        label: "View Details",
-        value: "view-details",
-
+        label: "View Candidates",
+        value: "candidates",
+        Icon: Users,
         onClick: () => {
-          // Handle add employee action
-          // console.log("View Details for company ID:", row);
           router.push(`/c/${row.id}`);
         },
       },
       {
-        label: "Delete",
+        label: "Company Details",
+        value: "view-details",
+        Icon: Eye,
+        onClick: () => {
+          router.push(`/c/${row.id}`);
+        },
+      },
+      {
+        label: "Delete Company",
         value: "delete",
-
+        Icon: Trash,
+        className: "text-red-600 dark:text-red-400",
         onClick: () => {
           deleteConfirmation(row);
         },
@@ -111,88 +163,244 @@ export default function SadminDashboard() {
     ];
   };
 
+  // Filter and search companies
+  const filteredCompanies = React.useMemo(() => {
+    if (!companyList) return [];
+    
+    return companyList.filter((company: Company) => {
+      // Search filter
+      const matchesSearch = searchTerm === "" || 
+        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        company.email.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      // Status filter (you can customize this based on your company status field)
+      const matchesStatus = statusFilter === "all" || 
+        (statusFilter === "active" && company.status === "active") ||
+        (statusFilter === "inactive" && company.status === "inactive");
+      
+      // Date filter
+      const matchesDate = dateFilter === "all" || (() => {
+        const companyDate = new Date(company.created_at);
+        const now = new Date();
+        const daysDiff = Math.floor((now.getTime() - companyDate.getTime()) / (1000 * 3600 * 24));
+        
+        switch (dateFilter) {
+          case "week": return daysDiff <= 7;
+          case "month": return daysDiff <= 30;
+          case "year": return daysDiff <= 365;
+          default: return true;
+        }
+      })();
+      
+      return matchesSearch && matchesStatus && matchesDate;
+    });
+  }, [companyList, searchTerm, statusFilter, dateFilter]);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
+    setDateFilter("all");
+  };
+
   const renderCompanies = () => {
     if (isPending)
       return (
-        <div className="flex items-center font-medium">
-          <LoaderCircle className="animate-spin text-primary mr-2" /> Loading
-          companies...
+        <div className="flex items-center font-medium text-purple-500 dark:text-purple-400">
+          <LoaderCircle className="animate-spin mr-3" />
+          <span>Loading companies... ✨</span>
         </div>
       );
 
     return (
       <GenericTable<Company, any>
-        pageSize={6}
-        name="Companies"
+        pageSize={8}
+        name=""
         columns={companyColumns({ actions: makeDropdownActions, router })}
-        // data={companyData}
-        noRecordsText="No companies found"
-        data={companyList || []}
+        noRecordsText="No companies found 🔍"
+        data={filteredCompanies}
       />
     );
   };
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/30 dark:to-black relative overflow-hidden">
+      {/* Beautiful Gradient Background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-pink-100/30 via-purple-100/30 to-blue-100/30 dark:from-pink-500/10 dark:via-purple-500/10 dark:to-blue-500/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,182,193,0.2),transparent)] dark:bg-[radial-gradient(circle_at_20%_80%,rgba(255,182,193,0.1),transparent)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(221,160,221,0.2),transparent)] dark:bg-[radial-gradient(circle_at_80%_20%,rgba(221,160,221,0.1),transparent)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(173,216,230,0.2),transparent)] dark:bg-[radial-gradient(circle_at_40%_40%,rgba(173,216,230,0.1),transparent)]"></div>
+      </div>
+
+      <FloatingSparkles />
       <ModalPortal />
-      <SadminSpace>
-        <div className="flex flex-row items-center justify-between">
-          <PageTitle
-            // Icon={Smile}
-            title={`Welcome ${user?.name || "Super Admin"}`}
-            description="You are a super admin, manage all the companies and candidates from here!"
-          />
-
-          <Button
-            onClick={() => addNewCompany()}
-            variant="outline"
-            className="mt-4"
-          >
-            <Plus className="" />
-            Add New Company
-          </Button>
-        </div>
-
-        <div className="mt-6">
-          {/*
-            Dashboard cards data
-            */}
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {dashboardCards.map((card) => (
-              <Card
-                key={card.title}
-                className={`border-none shadow-lg hover:shadow-xl transition-shadow duration-200 ${card.cardBg}`}
-              >
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
+      
+      <div className="relative z-10">
+        <SadminSpace>
+          {/* Beautiful Header */}
+          <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-pink-200/50 dark:border-purple-500/30 mb-8">
+            <div className="flex flex-row items-center justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <Crown className="w-6 h-6 text-white" />
+                  </div>
                   <div>
-                    <CardTitle className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                      {card.title}
+                    <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600">
+                      Welcome {user?.name || "Beautiful Admin"} ✨
+                    </h1>
+                    <p className="text-purple-600 dark:text-purple-300 font-medium">
+                      You&apos;re doing amazing! Manage your companies and candidates with style 💎
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <ThemeToggle />
+                <Button
+                  onClick={() => addNewCompany()}
+                  className="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0"
+                >
+                  <Plus className="mr-2" />
+                  Add New Company ✨
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Gorgeous Dashboard Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            {dashboardCards.map((card, index) => {
+              const gradients = [
+                "from-pink-400 via-rose-400 to-red-400",
+                "from-purple-400 via-violet-400 to-indigo-400", 
+                "from-blue-400 via-cyan-400 to-teal-400",
+                "from-green-400 via-emerald-400 to-lime-400"
+              ];
+              const sparkleIcons = [Heart, Star, Gem, Sparkles];
+              const SparkleIcon = sparkleIcons[index % sparkleIcons.length];
+              
+              return (
+                <Card
+                  key={card.title}
+                  className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl hover:shadow-2xl dark:hover:shadow-purple-500/25 transition-all duration-500 transform hover:scale-105 rounded-3xl overflow-hidden relative"
+                >
+                  {/* Gradient Border Effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${gradients[index % gradients.length]} opacity-0 group-hover:opacity-20 dark:group-hover:opacity-30 transition-opacity duration-500 rounded-3xl`}></div>
+                  
+                  <CardHeader className="pb-3 relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-2">
+                        <CardTitle className="text-lg font-bold text-gray-800 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
+                          {card.title}
+                        </CardTitle>
+                        <CardDescription className="text-sm text-gray-600 dark:text-gray-300">
+                          {card.description}
+                        </CardDescription>
+                      </div>
+                      <div className={`w-14 h-14 bg-gradient-to-r ${gradients[index % gradients.length]} rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:rotate-12`}>
+                        <card.icon className="w-7 h-7 text-white" />
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="relative z-10">
+                    <div className="flex items-end gap-2">
+                      <span className={`text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r ${gradients[index % gradients.length]}`}>
+                        {card.value}
+                      </span>
+                      <SparkleIcon className="w-6 h-6 text-pink-400 dark:text-pink-300 animate-pulse mb-2" />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Beautiful Companies Table */}
+          <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10 dark:from-pink-500/20 dark:via-purple-500/20 dark:to-blue-500/20 border-b border-purple-100 dark:border-purple-500/30">
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-purple-500 rounded-xl flex items-center justify-center">
+                    <Rainbow className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-700">
+                      Companies Dashboard 🏢
                     </CardTitle>
-                    <CardDescription className="text-xs text-gray-500 dark:text-gray-400">
-                      {card.description}
+                    <CardDescription className="text-purple-600 dark:text-purple-300 font-medium">
+                      Search, filter, and manage all your beautiful companies!
                     </CardDescription>
                   </div>
-                  <span
-                    className={`rounded-full p-3 flex items-center justify-center ${card.iconBg} shadow-md`}
-                  >
-                    <card.icon className="w-6 h-6" />
-                  </span>
-                </CardHeader>
-                <CardContent>
-                  <span className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                    {card.value}
-                  </span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-        <div className="mt-6">
-          <Card className="shadow-none bg-white">
-            <CardContent>{renderCompanies()}</CardContent>
+                  <div className="text-sm bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-full font-semibold text-purple-700 dark:text-purple-300">
+                    {filteredCompanies.length} / {companyList?.length || 0} companies
+                  </div>
+                </div>
+
+                {/* Search and Filters */}
+                <div className="flex flex-col lg:flex-row gap-4">
+                  {/* Search */}
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-500" />
+                    <Input
+                      placeholder="Search companies by name or email... ✨"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 focus:border-purple-400 dark:focus:border-purple-400 rounded-2xl h-12 placeholder:text-purple-400 dark:placeholder:text-purple-500"
+                    />
+                  </div>
+
+                  {/* Filters */}
+                  <div className="flex gap-3">
+                    <div className="relative">
+                      <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-500 z-10" />
+                      <Select value={statusFilter} onValueChange={setStatusFilter}>
+                        <SelectTrigger className="pl-10 w-40 bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 focus:border-purple-400 dark:focus:border-purple-400 rounded-2xl h-12">
+                          <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-600/30 rounded-2xl">
+                          <SelectItem value="all">All Status ✨</SelectItem>
+                          <SelectItem value="active">Active 🟢</SelectItem>
+                          <SelectItem value="inactive">Inactive 🔴</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-500 z-10" />
+                      <Select value={dateFilter} onValueChange={setDateFilter}>
+                        <SelectTrigger className="pl-10 w-40 bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 focus:border-purple-400 dark:focus:border-purple-400 rounded-2xl h-12">
+                          <SelectValue placeholder="Date" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-600/30 rounded-2xl">
+                          <SelectItem value="all">All Time ⏰</SelectItem>
+                          <SelectItem value="week">Last Week 📅</SelectItem>
+                          <SelectItem value="month">Last Month 🗓️</SelectItem>
+                          <SelectItem value="year">Last Year 📆</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Clear Filters Button */}
+                    {(searchTerm || statusFilter !== "all" || dateFilter !== "all") && (
+                      <Button
+                        onClick={clearFilters}
+                        variant="outline"
+                        className="bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-2xl h-12 px-4"
+                      >
+                        Clear 🧹
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-8">
+              {renderCompanies()}
+            </CardContent>
           </Card>
-        </div>
-      </SadminSpace>
+        </SadminSpace>
+      </div>
     </div>
   );
 }

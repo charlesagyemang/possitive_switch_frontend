@@ -5,7 +5,7 @@ import {
 } from "@/components/built/dropdown/custom-dropdown";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Building2, Ellipsis, Mail } from "lucide-react";
+import { Building2, Ellipsis, Mail, Eye, Edit, Trash, Upload, Users, Calendar } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -86,11 +86,32 @@ export const companyColumns = ({
   //     </span>
   //   ),
   // }),
+  // Add status column
+  companyColumnHelper.accessor((row) => row.status || "active", {
+    id: "status",
+    header: "Status",
+    cell: (info) => {
+      const status = info.getValue();
+      return (
+        <span className={`px-3 py-1 font-medium rounded-full text-xs flex items-center gap-1 ${
+          status === "active" 
+            ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300" 
+            : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
+        }`}>
+          <div className={`w-2 h-2 rounded-full ${
+            status === "active" ? "bg-emerald-500" : "bg-red-500"
+          }`} />
+          {status === "active" ? "Active" : "Inactive"}
+        </span>
+      );
+    },
+  }),
   companyColumnHelper.accessor((row) => row.created_at, {
     id: "Created",
-
+    header: "Created",
     cell: (info) => (
-      <span className="bg-gray-100 text-gray-700 px-3 py-1 font-medium rounded-full text-xs ">
+      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 font-medium rounded-full text-xs flex items-center gap-1">
+        <Calendar className="w-3 h-3" />
         {new Date(info.getValue()).toLocaleDateString(undefined, {
           year: "numeric",
           month: "short",
@@ -101,19 +122,37 @@ export const companyColumns = ({
   }),
   companyColumnHelper.accessor((row) => row.id, {
     id: "actions",
-
+    header: "Actions",
     cell: (info) => {
       const options = actions(info.row.original);
 
       return (
-        <AsDropdownMenu
-          options={options}
-          className="text-xs font-medium text-gray-600 hover:text-gray-900"
-        >
-          <Button variant="ghost" size="sm" className="p-2">
-            <Ellipsis className="size-4" />
+        <div className="flex items-center gap-2">
+          {/* Quick Actions */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push(`/c/${info.row.original.id}`)}
+            className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            title="View Details"
+          >
+            <Eye className="w-4 h-4 text-purple-600 dark:text-purple-400" />
           </Button>
-        </AsDropdownMenu>
+
+          {/* Dropdown Menu */}
+          <AsDropdownMenu
+            options={options}
+            className="text-xs font-medium text-gray-600 hover:text-gray-900"
+          >
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            >
+              <Ellipsis className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            </Button>
+          </AsDropdownMenu>
+        </div>
       );
     },
   }),

@@ -1,40 +1,36 @@
-import { Building2, User, UserCheck, Users } from "lucide-react";
+import { Building2, User, UserCheck, Users, Heart, Star, Gem, Sparkles } from "lucide-react";
 
-export  const dashboardCards = [
+export const dashboardCards = [
     {
-      title: "Candidates Invited",
-      description: "Total number of candidates invited for all companies",
+      title: "Amazing Candidates ✨",
+      description: "Total number of wonderful candidates invited to join your companies",
       value: 120,
       icon: Users,
-      iconBg: "bg-white/70 text-blue-700",
-      cardBg:
-        "bg-gradient-to-br from-purple-100 via-purple-50 to-white dark:from-purple-900 dark:via-purple-800 dark:to-gray-900",
+      iconBg: "bg-gradient-to-r from-pink-400 to-rose-400",
+      cardBg: "bg-gradient-to-br from-pink-50 to-rose-50",
     },
     {
-      title: "Candidates Responded",
-      description: "Candidates who have responded from all companies",
+      title: "Happy Responses 💖",
+      description: "Candidates who responded with enthusiasm and excitement",
       value: 85,
       icon: UserCheck,
-      iconBg: "bg-white/70 text-green-700",
-      cardBg:
-        "bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-green-900 dark:via-green-800 dark:to-gray-900",
+      iconBg: "bg-gradient-to-r from-purple-400 to-violet-400",
+      cardBg: "bg-gradient-to-br from-purple-50 to-violet-50",
     },
     {
-      title: "Companies",
-      description: "Companies that you manage on this platform",
+      title: "Thriving Companies 🏢",
+      description: "Beautiful companies that you manage with style and grace",
       value: 12,
       icon: Building2,
-      iconBg: "bg-white/70 text-purple-700",
-      cardBg:
-        "bg-gradient-to-br from-blue-100 via-blue-50 to-white dark:from-blue-900 dark:via-blue-800 dark:to-gray-900",
+      iconBg: "bg-gradient-to-r from-blue-400 to-cyan-400",
+      cardBg: "bg-gradient-to-br from-blue-50 to-cyan-50",
     },
     {
-      title: "Employees",
-      description: "Total candidates/employees in all companies",
+      title: "Team Members 👑",
+      description: "Total amazing people making magic happen in your companies",
       value: 340,
       icon: User,
-      iconBg: "bg-white/70 text-yellow-700",
-      cardBg:
-        "bg-gradient-to-br from-yellow-100 via-yellow-50 to-white dark:from-yellow-900 dark:via-yellow-800 dark:to-gray-900",
+      iconBg: "bg-gradient-to-r from-green-400 to-emerald-400",
+      cardBg: "bg-gradient-to-br from-green-50 to-emerald-50",
     },
   ];

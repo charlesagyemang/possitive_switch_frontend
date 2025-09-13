@@ -26,6 +26,8 @@ export type ApiCandidate = {
   email: string;
   job_title: string;
   name: string;
+  status?: "pending" | "signed" | "orrientation" | "onboarding" | "completed";
+  created_at?: string;
 }
 export type CandidateInvitation = {
   id: string;

@@ -45,23 +45,23 @@ function OnboardingTab({
   const checkedAndSaved = tasks?.filter((task) => task.status === "done");
 
   return (
-    <div className="bg-gradient-to-br rounded-2xl p-10 max-w-xl mt-4 bg-white shadow-sm  mx-auto">
+    <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl p-10 max-w-2xl mt-4 shadow-xl dark:shadow-purple-500/25 border-0 mx-auto">
       <AppNotifications.Error message={error?.message} lite />
-      <h2 className="text-3xl flex items-center font-extrabold mb-8 gap-2 text-primary  tracking-tight ">
-        Onboarding Steps{" "}
+      <h2 className="text-3xl flex items-center font-extrabold mb-8 gap-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 tracking-tight">
+        ✨ Onboarding Steps{" "}
         {!!checked?.length ? (
           <CustomButton
             variant={"outline"}
-            className="ml-auto font-semibold text-black"
+            className="ml-auto font-semibold bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 text-white border-0 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             loading={isPending}
             onClick={saveChanges}
             disabled={isPending}
           >
-            Save Changes ({checked.length})
+            Save Changes ({checked.length}) ✨
           </CustomButton>
         ) : (
-          <span className="ml-auto opacity-40 font-normal text-xl">
-            {checkedAndSaved?.length}/{tasks?.length}
+          <span className="ml-auto opacity-60 font-normal text-xl text-purple-500 dark:text-purple-300">
+            {checkedAndSaved?.length}/{tasks?.length} 💎
           </span>
         )}
       </h2>
@@ -73,22 +73,25 @@ function OnboardingTab({
               const isChecked = task.status === "done";
               // const isChecked = true;
 
-              let classes, Icon;
+              let classes, Icon, bgClasses;
               if (isChecked) {
-                classes = "text-primary";
+                classes = "text-emerald-500";
+                bgClasses = "bg-emerald-100 dark:bg-emerald-900/30";
                 Icon = CheckCircle;
               } else if (checkButUnsaved) {
-                classes = "text-orange-600";
+                classes = "text-orange-500";
+                bgClasses = "bg-orange-100 dark:bg-orange-900/30";
                 Icon = CircleFadingArrowUp;
               } else {
-                classes = "text-gray-900";
+                classes = "text-purple-500 dark:text-purple-400";
+                bgClasses = "bg-purple-50 dark:bg-purple-900/20";
                 Icon = Circle;
               }
 
               return (
                 <li
                   key={task.id || idx}
-                  className=" cursor-pointer flex items-start gap-5 group"
+                  className={`cursor-pointer group transition-all duration-300 hover:scale-[1.02] ${bgClasses} rounded-2xl p-4 border border-transparent hover:border-purple-200 dark:hover:border-purple-500/30 hover:shadow-lg dark:hover:shadow-purple-500/25`}
                 >
                   <div
                     className="flex items-center gap-4"
@@ -96,52 +99,35 @@ function OnboardingTab({
                   >
                     <span className="flex-shrink-0 cursor-pointer">
                       <Icon
-                        size={24}
-                        className={` ${classes} group-hover:scale-110 group-hover:text-primary transition-transform duration-200`}
+                        size={28}
+                        className={`${classes} group-hover:scale-110 transition-all duration-300 drop-shadow-sm`}
                       />
-                      {/* {isChecked ? (
-                        <CheckCircle
-                          size={24}
-                          className={` ${
-                            isChecked ? "text-primary" : ""
-                          } group-hover:scale-110 group-hover:text-primary transition-transform duration-200`}
-                        />
-                      ) : (
-                        <Circle
-                          size={24}
-                          className={`${
-                            isChecked ? "text-primary" : ""
-                          }  group-hover:scale-110 group-hover:text-primary transition-transform duration-200`}
-                        />
-                      )} */}
                     </span>
                     <CustomTooltip
                       tip={
                         checkButUnsaved
-                          ? "Unsaved changes"
+                          ? "Unsaved changes - click save! ⏳"
                           : isChecked
-                          ? "Task completed"
-                          : "Click to mark as done"
+                          ? "Task completed! ✅"
+                          : "Click to mark as done 💫"
                       }
                     >
                       <span
-                        className={` ${classes} text-md font-semibold text-gray-900 group-hover:text-primary transition-colors`}
+                        className={`text-lg font-bold text-gray-900 dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-purple-600 transition-all duration-300 ${isChecked ? "line-through opacity-75" : ""}`}
                       >
                         {task.onboarding_task_template.title}
                       </span>
                     </CustomTooltip>
-                    {/* {task.onboarding_task_template.description && (
-                  <p className="text-gray-500 text-sm mt-2">
-                    {task.onboarding_task_template.description}
-                  </p>
-                )} */}
                   </div>
                 </li>
               );
             })}
           </ol>
         ) : (
-          <p className="text-gray-400 text-center">No onboarding tasks.</p>
+          <div className="text-center py-8">
+            <p className="text-gray-400 dark:text-gray-500 text-lg">✨ No onboarding tasks yet!</p>
+            <p className="text-gray-300 dark:text-gray-600 text-sm mt-2">Tasks will appear here when assigned 💫</p>
+          </div>
         )}
       </div>
     </div>

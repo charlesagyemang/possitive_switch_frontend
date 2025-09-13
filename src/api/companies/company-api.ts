@@ -104,3 +104,253 @@ export const useCompanyLogoHandler = () => {
     uploadLogo(body)
   );
 };
+
+// ===============================
+// COMPANY SETTINGS API FUNCTIONS
+// ===============================
+
+// Email Templates
+const fetchEmailTemplates = async (companyId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/email_templates`, null, {
+    method: "GET",
+  });
+  return obj.data?.company_email_templates || [];
+};
+
+export const useEmailTemplates = (companyId: string) => {
+  return useGenericQuery(
+    ["Q_COMPANY_EMAIL_TEMPLATES", companyId], 
+    () => fetchEmailTemplates(companyId),
+    { 
+      enabled: !!companyId,
+      retry: false, // Disable retries completely for now
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+};
+
+const fetchEmailTemplate = async (companyId: string, templateId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/email_templates/${templateId}`, null, {
+    method: "GET",
+  });
+  return obj.data?.company_email_template || null;
+};
+
+export const useEmailTemplate = (companyId: string, templateId: string) => {
+  return useGenericQuery(
+    ["Q_COMPANY_EMAIL_TEMPLATE", companyId, templateId], 
+    () => fetchEmailTemplate(companyId, templateId),
+    { enabled: !!companyId && !!templateId }
+  );
+};
+
+const createEmailTemplate = (companyId: string, templateData: any) => {
+  const payload = { company_email_template: templateData };
+  
+  console.log(`
+🚀 ====== CREATE EMAIL TEMPLATE API CALL ======
+🏢 Company ID: ${companyId}
+🌐 URL: ${API_COMPANIES}/${companyId}/email_templates
+📦 Final Payload:
+`, JSON.stringify(payload, null, 2));
+  
+  return apiCall(`${API_COMPANIES}/${companyId}/email_templates`, payload);
+};
+
+export const useCreateEmailTemplate = () => {
+  return useGenericMutation(["M_CREATE_EMAIL_TEMPLATE"], ({ companyId, templateData }: any) =>
+    createEmailTemplate(companyId, templateData)
+  );
+};
+
+const updateEmailTemplate = (companyId: string, templateId: string, templateData: any) => {
+  const payload = { company_email_template: templateData };
+  
+  console.log(`
+🚀 ====== UPDATE EMAIL TEMPLATE API CALL ======
+🏢 Company ID: ${companyId}
+🆔 Template ID: ${templateId}
+🌐 URL: ${API_COMPANIES}/${companyId}/email_templates/${templateId}
+📦 Final Payload:
+`, JSON.stringify(payload, null, 2));
+  
+  return apiCall(`${API_COMPANIES}/${companyId}/email_templates/${templateId}`, payload, { method: "PUT" });
+};
+
+export const useUpdateEmailTemplate = () => {
+  return useGenericMutation(["M_UPDATE_EMAIL_TEMPLATE"], ({ companyId, templateId, templateData }: any) =>
+    updateEmailTemplate(companyId, templateId, templateData)
+  );
+};
+
+const deleteEmailTemplate = (companyId: string, templateId: string) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/email_templates/${templateId}`, null, {
+    method: "DELETE",
+  });
+};
+
+export const useDeleteEmailTemplate = () => {
+  return useGenericMutation(["M_DELETE_EMAIL_TEMPLATE"], ({ companyId, templateId }: any) =>
+    deleteEmailTemplate(companyId, templateId)
+  );
+};
+
+// Contract Templates
+const fetchContractTemplates = async (companyId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/contract_templates`, null, {
+    method: "GET",
+  });
+  return obj.data?.company_contract_templates || [];
+};
+
+export const useContractTemplates = (companyId: string) => {
+  return useGenericQuery(
+    ["Q_COMPANY_CONTRACT_TEMPLATES", companyId], 
+    () => fetchContractTemplates(companyId),
+    { 
+      enabled: !!companyId,
+      retry: (failureCount, error: any) => {
+        if (error?.status === 404) return false;
+        return failureCount < 3;
+      },
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+};
+
+const fetchContractTemplate = async (companyId: string, templateId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/contract_templates/${templateId}`, null, {
+    method: "GET",
+  });
+  return obj.data?.company_contract_template || null;
+};
+
+export const useContractTemplate = (companyId: string, templateId: string) => {
+  return useGenericQuery(
+    ["Q_COMPANY_CONTRACT_TEMPLATE", companyId, templateId], 
+    () => fetchContractTemplate(companyId, templateId),
+    { enabled: !!companyId && !!templateId }
+  );
+};
+
+const createContractTemplate = (companyId: string, templateData: any) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/contract_templates`, {
+    company_contract_template: templateData
+  });
+};
+
+export const useCreateContractTemplate = () => {
+  return useGenericMutation(["M_CREATE_CONTRACT_TEMPLATE"], ({ companyId, templateData }: any) =>
+    createContractTemplate(companyId, templateData)
+  );
+};
+
+const updateContractTemplate = (companyId: string, templateId: string, templateData: any) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/contract_templates/${templateId}`, {
+    company_contract_template: templateData
+  }, { method: "PUT" });
+};
+
+export const useUpdateContractTemplate = () => {
+  return useGenericMutation(["M_UPDATE_CONTRACT_TEMPLATE"], ({ companyId, templateId, templateData }: any) =>
+    updateContractTemplate(companyId, templateId, templateData)
+  );
+};
+
+const deleteContractTemplate = (companyId: string, templateId: string) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/contract_templates/${templateId}`, null, {
+    method: "DELETE",
+  });
+};
+
+export const useDeleteContractTemplate = () => {
+  return useGenericMutation(["M_DELETE_CONTRACT_TEMPLATE"], ({ companyId, templateId }: any) =>
+    deleteContractTemplate(companyId, templateId)
+  );
+};
+
+// Onboarding Task Templates
+const fetchOnboardingTaskTemplates = async (companyId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/onboarding_task_templates`, null, {
+    method: "GET",
+  });
+  return obj.data?.company_onboarding_task_templates || [];
+};
+
+export const useOnboardingTaskTemplates = (companyId: string) => {
+  return useGenericQuery(
+    ["Q_COMPANY_ONBOARDING_TASK_TEMPLATES", companyId], 
+    () => fetchOnboardingTaskTemplates(companyId),
+    { 
+      enabled: !!companyId,
+      retry: (failureCount, error: any) => {
+        if (error?.status === 404) return false;
+        return failureCount < 3;
+      },
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+};
+
+const fetchOnboardingTaskTemplate = async (companyId: string, templateId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/onboarding_task_templates/${templateId}`, null, {
+    method: "GET",
+  });
+  return obj.data?.company_onboarding_task_template || null;
+};
+
+export const useOnboardingTaskTemplate = (companyId: string, templateId: string) => {
+  return useGenericQuery(
+    ["Q_COMPANY_ONBOARDING_TASK_TEMPLATE", companyId, templateId], 
+    () => fetchOnboardingTaskTemplate(companyId, templateId),
+    { enabled: !!companyId && !!templateId }
+  );
+};
+
+const createOnboardingTaskTemplate = (companyId: string, templateData: any) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/onboarding_task_templates`, {
+    company_onboarding_task_template: templateData
+  });
+};
+
+export const useCreateOnboardingTaskTemplate = () => {
+  return useGenericMutation(["M_CREATE_ONBOARDING_TASK_TEMPLATE"], ({ companyId, templateData }: any) =>
+    createOnboardingTaskTemplate(companyId, templateData)
+  );
+};
+
+const updateOnboardingTaskTemplate = (companyId: string, templateId: string, templateData: any) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/onboarding_task_templates/${templateId}`, {
+    company_onboarding_task_template: templateData
+  }, { method: "PUT" });
+};
+
+export const useUpdateOnboardingTaskTemplate = () => {
+  return useGenericMutation(["M_UPDATE_ONBOARDING_TASK_TEMPLATE"], ({ companyId, templateId, templateData }: any) =>
+    updateOnboardingTaskTemplate(companyId, templateId, templateData)
+  );
+};
+
+const deleteOnboardingTaskTemplate = (companyId: string, templateId: string) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/onboarding_task_templates/${templateId}`, null, {
+    method: "DELETE",
+  });
+};
+
+export const useDeleteOnboardingTaskTemplate = () => {
+  return useGenericMutation(["M_DELETE_ONBOARDING_TASK_TEMPLATE"], ({ companyId, templateId }: any) =>
+    deleteOnboardingTaskTemplate(companyId, templateId)
+  );
+};
+
+const reorderOnboardingTaskTemplates = (companyId: string, positions: any[]) => {
+  return apiCall(`${API_COMPANIES}/${companyId}/onboarding_task_templates/reorder`, {
+    positions
+  }, { method: "PATCH" });
+};
+
+export const useReorderOnboardingTaskTemplates = () => {
+  return useGenericMutation(["M_REORDER_ONBOARDING_TASK_TEMPLATES"], ({ companyId, positions }: any) =>
+    reorderOnboardingTaskTemplates(companyId, positions)
+  );
+};

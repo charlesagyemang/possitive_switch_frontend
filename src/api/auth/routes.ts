@@ -1,4 +1,4 @@
-export const API_BASE = `https://api.newfiremedia.org/api/v1`
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.newfiremedia.org/api/v1'
 export const API_REGISTER_USER =`${API_BASE}/register`
 export const API_LOGIN = `${API_BASE}/login`
 export const API_WHO_AM_I = `${API_BASE}/whoami`
