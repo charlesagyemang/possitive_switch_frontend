@@ -67,7 +67,7 @@ export function EmailTemplateForm({ template, onSave, onCancel, mode }: EmailTem
   // Extract variables from the HTML content dynamically
   const extractVariablesFromHTML = (html: string) => {
     const variableRegex = /\{\{([^}]+)\}\}/g;
-    const matches = [];
+    const matches: Array<{name: string, type: string}> = [];
     let match;
     
     while ((match = variableRegex.exec(html)) !== null) {

@@ -294,7 +294,7 @@ function EmailTemplatesSection() {
           </div>
         ) : (
           <div className="grid gap-6">
-            {templates.map((template) => (
+            {templates.map((template: any) => (
               <div key={template.id} className="group bg-white/80 dark:bg-gray-700/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-100 dark:border-purple-500/30 hover:shadow-lg dark:hover:shadow-purple-500/25 transition-all duration-300 hover:scale-[1.02]">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -479,7 +479,7 @@ function ContractTemplatesSection() {
           </div>
         ) : (
           <div className="grid gap-6">
-            {templates.map((template) => (
+            {templates.map((template: any) => (
               <div key={template.id} className="group bg-white/80 dark:bg-gray-700/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-100 dark:border-blue-500/30 hover:shadow-lg dark:hover:shadow-blue-500/25 transition-all duration-300 hover:scale-[1.02]">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -660,7 +660,7 @@ function OnboardingTasksSection() {
           </div>
         ) : (
           <div className="grid gap-6">
-            {templates.map((template) => (
+            {templates.map((template: any) => (
               <div key={template.id} className="group bg-white/80 dark:bg-gray-700/50 backdrop-blur-xl rounded-2xl p-6 border border-emerald-100 dark:border-emerald-500/30 hover:shadow-lg dark:hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-[1.02]">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">

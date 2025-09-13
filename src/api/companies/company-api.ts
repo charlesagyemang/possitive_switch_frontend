@@ -209,7 +209,7 @@ export const useContractTemplates = (companyId: string) => {
     () => fetchContractTemplates(companyId),
     { 
       enabled: !!companyId,
-      retry: (failureCount, error: any) => {
+      retry: (failureCount: number, error: any) => {
         if (error?.status === 404) return false;
         return failureCount < 3;
       },
@@ -283,7 +283,7 @@ export const useOnboardingTaskTemplates = (companyId: string) => {
     () => fetchOnboardingTaskTemplates(companyId),
     { 
       enabled: !!companyId,
-      retry: (failureCount, error: any) => {
+      retry: (failureCount: number, error: any) => {
         if (error?.status === 404) return false;
         return failureCount < 3;
       },

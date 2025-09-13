@@ -19,7 +19,7 @@ interface ContractTemplate {
   id?: string;
   name: string;
   hellosign_template_id?: string;
-  variables: Array<{name: string, type: string}>;
+  variables: ContractVariable[];
   company_email_template_id?: string;
   description?: string;
   raw_html?: string;
@@ -56,8 +56,8 @@ export function ContractTemplateForm({ template, onSave, onCancel, mode }: Contr
         console.log(`  Variable ${index}:`, variable);
         console.log(`    - name:`, variable.name, typeof variable.name);
         console.log(`    - type:`, variable.type, typeof variable.type);
-        console.log(`    - label:`, variable.label, typeof variable.label);
-        console.log(`    - required:`, variable.required, typeof variable.required);
+        console.log(`    - label:`, (variable as any).label, typeof (variable as any).label);
+        console.log(`    - required:`, (variable as any).required, typeof (variable as any).required);
       });
     }
   }
@@ -117,7 +117,7 @@ export function ContractTemplateForm({ template, onSave, onCancel, mode }: Contr
       // Create new variable with smart defaults
       return {
         name: varName,
-        type: "text",
+        type: "text" as const,
         label: varName.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
         required: true
       };
