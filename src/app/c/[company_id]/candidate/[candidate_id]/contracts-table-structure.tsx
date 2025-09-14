@@ -111,6 +111,9 @@ export const candidateContractsColumns = ({
         const row = info.getValue();
         const isApproved = row.status === "approved";
         const isSent = row.status === "sent";
+        const isDraft = row.status === "draft" || row.status === "pending";
+        const isSigningEnabled = row.public_signing_enabled === true;
+        
         if (isSent)
           return (
             <span className="text-xs text-gray-500 flex items-center">
@@ -118,22 +121,12 @@ export const candidateContractsColumns = ({
               Already sent
             </span>
           );
+        
         return (
           <div>
             <div className="flex gap-2 flex-wrap">
               {isApproved ? (
                 <>
-                  <Button
-                    onClick={() => {
-                      if (send) send(row);
-                    }}
-                    size="sm"
-                    variant="outline"
-                    className="flex cursor-pointer items-center gap-1"
-                  >
-                    <Send className="size-4" />
-                    {"Send"}
-                  </Button>
                   <Button
                     onClick={() => {
                       if (testSigning) testSigning(row);
@@ -143,9 +136,34 @@ export const candidateContractsColumns = ({
                     className="flex cursor-pointer items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
                   >
                     <Share className="size-4" />
-                    Enable Signing
+                    Manage
                   </Button>
+                  {isSigningEnabled && (
+                    <Button
+                      onClick={() => {
+                        if (send) send(row);
+                      }}
+                      size="sm"
+                      variant="outline"
+                      className="flex cursor-pointer items-center gap-1"
+                    >
+                      <Send className="size-4" />
+                      {"Send"}
+                    </Button>
+                  )}
                 </>
+              ) : isDraft ? (
+                <Button
+                  onClick={() => {
+                    if (approve) approve(row);
+                  }}
+                  size="sm"
+                  variant="outline"
+                  className="flex cursor-pointer items-center gap-1"
+                >
+                  <Stamp className="size-4" />
+                  Approve
+                </Button>
               ) : (
                 <>
                   <Button
@@ -169,17 +187,6 @@ export const candidateContractsColumns = ({
                   >
                     <Mail className="size-4" />
                     Approve &amp; Send
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      if (testSigning) testSigning(row);
-                    }}
-                    size="sm"
-                    variant="outline"
-                    className="flex cursor-pointer items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                  >
-                    <Share className="size-4" />
-                    Enable Signing
                   </Button>
                 </>
               )}

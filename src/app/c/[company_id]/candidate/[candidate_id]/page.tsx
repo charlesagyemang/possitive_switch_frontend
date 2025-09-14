@@ -18,10 +18,9 @@ import LoadingState from "@/components/built/loaders/loading-state";
 import AppNotifications from "@/components/built/app-notifications";
 import { ApiOnBoardingTask } from "@/app/types";
 import ManageCandidateContracts from "./manage-contracts-tab";
-import ContractSigningTab from "./contract-signing-tab";
 
 export default function ManageCandidatePage() {
-  const { TabComponent } = useCustomTabs({ defaultTab: "onboarding-tasks" });
+  const { TabComponent } = useCustomTabs({ defaultTab: "config" });
   const { candidate_id, company_id } = useParams();
   const [excluded, setExcluded] = useState<ApiOnBoardingTask[]>([]);
   const [checked, setChecked] = useState<ApiOnBoardingTask[]>([]);
@@ -90,16 +89,15 @@ export default function ManageCandidatePage() {
 
   const TABS: CustomTabItem[] = [
     {
-      name: "OnBoarding Tasks",
-      key: "onboarding-tasks",
-      icon: <CheckCircle className="h-4 w-4" />,
+      name: "Configurations",
+      key: "config",
+      icon: <UserCog className="h-4 w-4" />,
       render: () => (
-        <OnboardingTab
-          tasks={candidate.onboarding_tasks}
-          checked={checked}
-          markAsChecked={markATaskAsChecked}
+        <Configuration
+          excluded={excluded}
+          exclude={excludeATask}
           candidate={candidate}
-          reset={() => setChecked([])}
+          reset={() => setExcluded([])}
         />
       ),
     },
@@ -110,21 +108,16 @@ export default function ManageCandidatePage() {
       render: () => <ManageCandidateContracts candidate={candidate} company_id={company_id as string} />,
     },
     {
-      name: "Contract Signing",
-      key: "contract-signing",
-      icon: <Share className="h-4 w-4" />,
-      render: () => <ContractSigningTab candidate={candidate} />,
-    },
-    {
-      name: "Configurations",
-      key: "config",
-      icon: <UserCog className="h-4 w-4" />,
+      name: "OnBoarding Tasks",
+      key: "onboarding-tasks",
+      icon: <CheckCircle className="h-4 w-4" />,
       render: () => (
-        <Configuration
-          excluded={excluded}
-          exclude={excludeATask}
+        <OnboardingTab
+          tasks={candidate.onboarding_tasks}
+          checked={checked}
+          markAsChecked={markATaskAsChecked}
           candidate={candidate}
-          reset={() => setExcluded([])}
+          reset={() => setChecked([])}
         />
       ),
     },

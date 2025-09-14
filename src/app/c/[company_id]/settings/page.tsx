@@ -409,7 +409,7 @@ function ContractTemplatesSection() {
     // Store template data for the signing page to access
     localStorage.setItem(`template-${mockSigningToken}`, JSON.stringify(templateData));
     
-    const signingUrl = `/contracts/${mockSigningToken}/sign`;
+    const signingUrl = `${window.location.origin}/contracts/${mockSigningToken}/sign`;
     
     // Open the signing page in a new tab
     window.open(signingUrl, '_blank');

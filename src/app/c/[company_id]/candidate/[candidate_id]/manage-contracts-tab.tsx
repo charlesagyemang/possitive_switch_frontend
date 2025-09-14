@@ -19,7 +19,10 @@ import {
   Star,
   Gem,
 } from "lucide-react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Filter } from "lucide-react";
 import { candidateContractsColumns } from "./contracts-table-structure";
 import ContractPreview from "./modals/contract-preview";
 import {
@@ -29,10 +32,19 @@ import {
 import { useContractTemplates } from "@/api/companies/company-api";
 import { ApiCandidate } from "@/app/seed/candidates";
 import InitialiseContract from "./modals/initialiase-contract";
+import ContractSigningModal from "./modals/contract-signing-modal";
 import AppNotifications from "@/components/built/app-notifications";
 
 function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCandidate; company_id: string }) {
   const { ModalPortal, open, close } = useModal();
+  
+  // Search and filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  
+  // Contract signing modal state
+  const [isSigningModalOpen, setIsSigningModalOpen] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<any>(null);
   
   // Enable contract signing mutation
   const enableSigningMutation = useEnableContractSigning();
@@ -50,6 +62,30 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
     return candidateContracts?.map(
       (contract: ApiCandidateContract) => contract.company_contract_template?.id
     ).filter(Boolean); // Filter out any undefined values
+  }, [candidateContracts]);
+
+  // Filter contracts based on search and status
+  const filteredContracts = useMemo(() => {
+    if (!candidateContracts) return [];
+    
+    return candidateContracts.filter((contract: ApiCandidateContract) => {
+      // Search filter
+      const matchesSearch = searchTerm === "" || 
+        contract.company_contract_template?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contract.status?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      // Status filter
+      const matchesStatus = statusFilter === "all" || contract.status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [candidateContracts, searchTerm, statusFilter]);
+
+  // Get unique statuses for filter dropdown
+  const availableStatuses = useMemo(() => {
+    if (!candidateContracts) return [];
+    const statuses = [...new Set(candidateContracts.map((contract: ApiCandidateContract) => contract.status))];
+    return statuses.filter(Boolean);
   }, [candidateContracts]);
 
   const openUseModal = (
@@ -93,40 +129,9 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
     });
   };
 
-  const testSigning = async (row: ApiCandidateContract) => {
-    try {
-      // Check if signing is already enabled
-      if (row.signing_token && row.public_signing_enabled) {
-        // Use existing signing URL
-        const signingUrl = `/contracts/${row.signing_token}/sign`;
-        window.open(signingUrl, '_blank');
-        console.log('Existing signing URL:', signingUrl);
-        alert(`Public signing page opened for ${row.company_contract_template.name}. This will make real API calls to the backend.`);
-        return;
-      }
-
-      // Enable public signing for this contract
-      const requiredSigners = [candidate.email, 'hr@company.com'];
-      
-      const signingData = await enableSigningMutation.mutateAsync({
-        candidateId: candidate.id,
-        contractId: row.id,
-        requiredSigners
-      });
-
-      if (signingData.signing_url) {
-        // Open the real signing URL
-        window.open(signingData.signing_url, '_blank');
-        console.log('Real signing URL:', signingData.signing_url);
-        console.log('Signing token:', signingData.signing_token);
-        alert(`✅ Public signing enabled for ${row.company_contract_template.name}!\n\nSigning URL: ${signingData.signing_url}\n\nThis will make real API calls to persist signatures in the backend.`);
-      } else {
-        throw new Error('Failed to get signing URL from backend');
-      }
-    } catch (error) {
-      console.error('Failed to enable signing:', error);
-      alert(`❌ Failed to enable signing: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+  const openSigningModal = (contract: any) => {
+    setSelectedContract(contract);
+    setIsSigningModalOpen(true);
   };
 
   const makeDropdownActions = (row: ApiCandidateContract) => {
@@ -299,15 +304,15 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
         <GenericTable<ApiCandidateContract, any>
           pageSize={8}
           name="Contracts"
-          data={candidateContracts || []}
+          data={filteredContracts || []}
           columns={candidateContractsColumns({
             actions: makeDropdownActions,
             send,
             approve,
             approveAndSend,
-            testSigning,
+            testSigning: openSigningModal,
           })}
-          noRecordsText="No contracts found."
+          noRecordsText={searchTerm || statusFilter !== "all" ? "No contracts match your search criteria." : "No contracts found."}
         />
       </CardContent>
     );
@@ -330,19 +335,41 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
         </p>
       </div>
 
-      <div className="grid grid-cols-7 gap-6">
-        {/* Contracts Table */}
-        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl overflow-hidden col-span-5 py-6 mb-6">
-          {loadingContracts ? (
-            <div className="flex m-6 text-sm items-center gap-3 text-purple-500 dark:text-purple-400">
-              <LoaderCircle className="animate-spin" />
-              <span className="font-medium">Fetching contracts... ✨</span>
-            </div>
-          ) : (
-            <>{renderContracts()}</>
-          )}
-        </Card>
+      {/* Search and Filter Section */}
+      <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-pink-200/50 dark:border-purple-500/30 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 flex-1">
+            <Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <Input
+              placeholder="Search contracts by name or status..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-40 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                {availableStatuses.map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status?.charAt(0).toUpperCase() + status?.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          Showing {filteredContracts.length} of {candidateContracts?.length || 0} contracts
+        </div>
+      </div>
 
+      <div className="grid grid-cols-5 gap-6">
         {/* Contract Templates */}
         <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl overflow-hidden col-span-2 mb-6">
           <CardContent className="p-6">
@@ -360,14 +387,37 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
                   <span className="font-medium">Loading templates... ✨</span>
                 </div>
               ) : (
-                <div className="max-h-[480px] overflow-y-auto scrollbar-hide">
+                <div className="max-h-[600px] overflow-y-auto scrollbar-hide">
                   {renderTemplates()}
                 </div>
               )}
             </div>
           </CardContent>
         </Card>
+
+        {/* Contracts Table */}
+        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl overflow-hidden col-span-3 py-6 mb-6">
+          {loadingContracts ? (
+            <div className="flex m-6 text-sm items-center gap-3 text-purple-500 dark:text-purple-400">
+              <LoaderCircle className="animate-spin" />
+              <span className="font-medium">Fetching contracts... ✨</span>
+            </div>
+          ) : (
+            <>{renderContracts()}</>
+          )}
+        </Card>
       </div>
+
+      {/* Contract Signing Modal */}
+      <ContractSigningModal
+        candidate={candidate}
+        contract={selectedContract}
+        isOpen={isSigningModalOpen}
+        onClose={() => {
+          setIsSigningModalOpen(false);
+          setSelectedContract(null);
+        }}
+      />
     </div>
   );
 }
