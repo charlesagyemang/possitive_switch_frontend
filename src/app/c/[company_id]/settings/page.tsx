@@ -18,6 +18,7 @@ import {
   Edit,
   Trash,
   Eye,
+  Share,
   Save,
   Upload,
   Palette
@@ -391,6 +392,36 @@ function ContractTemplatesSection() {
     setShowForm(true);
   };
 
+  const handleTestSigning = (template: any) => {
+    // Store the template data in localStorage for the signing page to use
+    const templateData = {
+      id: template.id,
+      name: template.name,
+      description: template.description,
+      raw_html: template.raw_html || template.content || template.description,
+      variables: template.variables || [],
+      created_at: template.created_at
+    };
+    
+    // Generate a test signing token based on the template
+    const mockSigningToken = `test-template-${template.id}-${Date.now()}`;
+    
+    // Store template data for the signing page to access
+    localStorage.setItem(`template-${mockSigningToken}`, JSON.stringify(templateData));
+    
+    const signingUrl = `/contracts/${mockSigningToken}/sign`;
+    
+    // Open the signing page in a new tab
+    window.open(signingUrl, '_blank');
+    
+    // Log for debugging
+    console.log('Test signing URL for template:', template.name, '→', signingUrl);
+    console.log('Template data stored:', templateData);
+    
+    // Show feedback
+    alert(`Test signing page opened for template: ${template.name}`);
+  };
+
   const handleSave = async (templateData: any) => {
     try {
       if (formMode === 'create') {
@@ -506,6 +537,15 @@ function ContractTemplatesSection() {
                   </div>
                   
                   <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleTestSigning(template)}
+                      className="p-2 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 rounded-xl"
+                      title="Test Signing Interface"
+                    >
+                      <Share className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    </Button>
                     <Button 
                       variant="ghost" 
                       size="sm" 

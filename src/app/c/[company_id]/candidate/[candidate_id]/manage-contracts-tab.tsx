@@ -24,17 +24,21 @@ import { candidateContractsColumns } from "./contracts-table-structure";
 import ContractPreview from "./modals/contract-preview";
 import {
   useCandidateContractList,
-  useContractTemplatesListHandler,
+  useEnableContractSigning,
 } from "@/api/candidates/contracts-api";
+import { useContractTemplates } from "@/api/companies/company-api";
 import { ApiCandidate } from "@/app/seed/candidates";
 import InitialiseContract from "./modals/initialiase-contract";
 import AppNotifications from "@/components/built/app-notifications";
 
-function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
+function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCandidate; company_id: string }) {
   const { ModalPortal, open, close } = useModal();
+  
+  // Enable contract signing mutation
+  const enableSigningMutation = useEnableContractSigning();
 
-  const { data: listofContracts, isPending: loadingTemplates } =
-    useContractTemplatesListHandler();
+  // Get company-specific contract templates for this company (same as company settings)
+  const { data: listofContracts = [], isLoading: loadingTemplates } = useContractTemplates(company_id);
 
   const {
     data: candidateContracts,
@@ -44,8 +48,8 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
 
   const usedTemplates = useMemo(() => {
     return candidateContracts?.map(
-      (contract: ApiCandidateContract) => contract.contract_template.id
-    );
+      (contract: ApiCandidateContract) => contract.company_contract_template?.id
+    ).filter(Boolean); // Filter out any undefined values
   }, [candidateContracts]);
 
   const openUseModal = (
@@ -69,24 +73,60 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
   };
 
   const send = (row: ApiCandidateContract) => {
-    openUseModal(row.contract_template, "send", {
+    openUseModal(row.company_contract_template, "send", {
       candidateContract: row,
-      title: `Send Contract -  ${row.contract_template.name}`,
+      title: `Send Contract -  ${row.company_contract_template.name}`,
     });
   };
 
   const approve = (row: ApiCandidateContract) => {
-    openUseModal(row.contract_template, "approve", {
+    openUseModal(row.company_contract_template, "approve", {
       candidateContract: row,
-      title: `Approve Contract - ${row.contract_template.name}`,
+      title: `Approve Contract - ${row.company_contract_template.name}`,
     });
   };
 
   const approveAndSend = (row: ApiCandidateContract) => {
-    openUseModal(row.contract_template, "approve_and_send", {
+    openUseModal(row.company_contract_template, "approve_and_send", {
       candidateContract: row,
-      title: `Approve & Send Contract - ${row.contract_template.name}`,
+      title: `Approve & Send Contract - ${row.company_contract_template.name}`,
     });
+  };
+
+  const testSigning = async (row: ApiCandidateContract) => {
+    try {
+      // Check if signing is already enabled
+      if (row.signing_token && row.public_signing_enabled) {
+        // Use existing signing URL
+        const signingUrl = `/contracts/${row.signing_token}/sign`;
+        window.open(signingUrl, '_blank');
+        console.log('Existing signing URL:', signingUrl);
+        alert(`Public signing page opened for ${row.company_contract_template.name}. This will make real API calls to the backend.`);
+        return;
+      }
+
+      // Enable public signing for this contract
+      const requiredSigners = [candidate.email, 'hr@company.com'];
+      
+      const signingData = await enableSigningMutation.mutateAsync({
+        candidateId: candidate.id,
+        contractId: row.id,
+        requiredSigners
+      });
+
+      if (signingData.signing_url) {
+        // Open the real signing URL
+        window.open(signingData.signing_url, '_blank');
+        console.log('Real signing URL:', signingData.signing_url);
+        console.log('Signing token:', signingData.signing_token);
+        alert(`✅ Public signing enabled for ${row.company_contract_template.name}!\n\nSigning URL: ${signingData.signing_url}\n\nThis will make real API calls to persist signatures in the backend.`);
+      } else {
+        throw new Error('Failed to get signing URL from backend');
+      }
+    } catch (error) {
+      console.error('Failed to enable signing:', error);
+      alert(`❌ Failed to enable signing: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   const makeDropdownActions = (row: ApiCandidateContract) => {
@@ -97,9 +137,9 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         Icon: Edit2,
         onClick: () => {
           // deleteConfirmation(row);
-          // openUseModal(row.contract_template, "edit", {
+          // openUseModal(row.company_contract_template, "edit", {
           //   candidateContract: row,
-          //   title: `Edit Contract - ${row.contract_template.name}`,
+          //   title: `Edit Contract - ${row.company_contract_template.name}`,
           // });
         },
       },
@@ -110,9 +150,9 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         onClick: () => {
           send(row);
           // deleteConfirmation(row);
-          // openUseModal(row.contract_template, "send", {
+          // openUseModal(row.company_contract_template, "send", {
           //   candidateContract: row,
-          //   title: `Send Contract -  ${row.contract_template.name}`,
+          //   title: `Send Contract -  ${row.company_contract_template.name}`,
           // });
         },
       },
@@ -123,9 +163,9 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         onClick: () => {
           approve(row);
           // deleteConfirmation(row);
-          // openUseModal(row.contract_template, "approve", {
+          // openUseModal(row.company_contract_template, "approve", {
           //   candidateContract: row,
-          //   title: `Approve Contract - ${row.contract_template.name}`,
+          //   title: `Approve Contract - ${row.company_contract_template.name}`,
           // });
         },
       },
@@ -136,9 +176,9 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
         onClick: () => {
           approveAndSend(row);
           // deleteConfirmation(row);
-          // openUseModal(row.contract_template, "approve_and_send", {
+          // openUseModal(row.company_contract_template, "approve_and_send", {
           //   candidateContract: row,
-          //   title: `Approve & Send Contract - ${row.contract_template.name}`,
+          //   title: `Approve & Send Contract - ${row.company_contract_template.name}`,
           // });
         },
       },
@@ -157,8 +197,8 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
     if (!!!listofContracts)
       return (
         <div className="text-center py-4">
-          <span className="text-gray-400 dark:text-gray-500">✨ No templates found</span>
-          <p className="text-gray-300 dark:text-gray-600 text-xs mt-1">Templates will appear here 💫</p>
+          <span className="text-gray-400 dark:text-gray-500">✨ No company templates found</span>
+          <p className="text-gray-300 dark:text-gray-600 text-xs mt-1">Company templates will appear here 💫</p>
         </div>
       );
 
@@ -190,6 +230,11 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
                       {contract.name}
                     </span>
                     <SparkleIcon className="w-3 h-3 text-pink-400 dark:text-pink-300 animate-pulse" />
+                    {isUsed && (
+                      <span className="px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium">
+                        Used
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                     {contract.description}
@@ -260,6 +305,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
             send,
             approve,
             approveAndSend,
+            testSigning,
           })}
           noRecordsText="No contracts found."
         />
@@ -269,7 +315,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
 
   return (
     <div className="mt-6">
-      <ModalPortal className="!max-w-3xl w-full" />
+      <ModalPortal className="!max-w-4xl w-full !max-h-[90vh]" />
       
       {/* Beautiful Header */}
       <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-pink-200/50 dark:border-purple-500/30 mb-8">
@@ -304,7 +350,7 @@ function ManageCandidateContracts({ candidate }: { candidate: ApiCandidate }) {
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-purple-500" />
                 <h5 className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-700">
-                  Contract Templates
+                  Company Templates
                 </h5>
               </div>
               

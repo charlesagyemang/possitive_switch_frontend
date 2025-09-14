@@ -9,8 +9,12 @@ import {
 import { API_BASE, API_CANDIDATES, API_UTILITIES } from "../auth/routes";
 import { useGenericMutation, useGenericQuery } from "../query";
 
-const fetchContractTemplates = async () => {
-  const obj = await apiCall(`${API_BASE}/contract_templates`, null, {
+const fetchContractTemplates = async (company_id?: string) => {
+  const endpoint = company_id 
+    ? `${API_BASE}/companies/${company_id}/contract_templates`
+    : `${API_BASE}/contract_templates`;
+    
+  const obj = await apiCall(endpoint, null, {
     method: "GET",
   });
 
@@ -41,8 +45,12 @@ const approveAndSend = async (cand_id: string, cont_id: string) => {
   return obj?.data?.contract;
 };
 
-export const useContractTemplatesListHandler = () => {
-  return useGenericQuery([Q_LIST_CONTRACT_TEMPLATES], fetchContractTemplates);
+export const useContractTemplatesListHandler = (company_id?: string) => {
+  return useGenericQuery(
+    [Q_LIST_CONTRACT_TEMPLATES, company_id || 'all'],
+    () => fetchContractTemplates(company_id),
+    { enabled: !!company_id }
+  );
 };
 
 export const useContractApprovalHandler = () => {
@@ -96,4 +104,62 @@ export const createContract = async (body: any) => {
 
 export const useCreateContract = () => {
   return useGenericMutation([M_CREATE_CONTRACT], createContract);
+};
+
+// Enable public signing for a contract
+export const enableContractSigning = async (candidateId: string, contractId: string, requiredSigners: string[]) => {
+  const obj = await apiCall(
+    `${API_CANDIDATES}/${candidateId}/contracts/${contractId}/enable_signing`,
+    { required_signers: requiredSigners },
+    { method: "POST" }
+  );
+  if (!obj.success) {
+    throw new Error(obj.message || "Failed to enable contract signing");
+  }
+  return obj.data;
+};
+
+export const useEnableContractSigning = () => {
+  return useGenericMutation(
+    [M_SEND_CONTRACT], // Reusing mutation key
+    ({ candidateId, contractId, requiredSigners }: { candidateId: string; contractId: string; requiredSigners: string[] }) =>
+      enableContractSigning(candidateId, contractId, requiredSigners)
+  );
+};
+
+// Get signing status for a contract
+export const getContractSigningStatus = async (candidateId: string, contractId: string) => {
+  const obj = await apiCall(`${API_CANDIDATES}/${candidateId}/contracts/${contractId}/signing_status`, null, {
+    method: "GET",
+  });
+  return obj?.data?.contract || null;
+};
+
+export const useContractSigningStatus = (candidateId: string, contractId: string) => {
+  return useGenericQuery(
+    [`contract-signing-status`, candidateId, contractId],
+    () => getContractSigningStatus(candidateId, contractId),
+    { enabled: !!candidateId && !!contractId }
+  );
+};
+
+// Disable public signing
+export const disableContractSigning = async (candidateId: string, contractId: string) => {
+  const obj = await apiCall(
+    `${API_CANDIDATES}/${candidateId}/contracts/${contractId}/disable_signing`,
+    null,
+    { method: "DELETE" }
+  );
+  if (!obj.success) {
+    throw new Error(obj.message || "Failed to disable contract signing");
+  }
+  return obj.data;
+};
+
+export const useDisableContractSigning = () => {
+  return useGenericMutation(
+    [M_SEND_CONTRACT], // Reusing mutation key
+    ({ candidateId, contractId }: { candidateId: string; contractId: string }) =>
+      disableContractSigning(candidateId, contractId)
+  );
 };

@@ -9,6 +9,7 @@ export type ApiContractTemplate = {
   created_at: string;
   updated_at: string;
   logo_url?: string;
+  raw_html?: string; // HTML content of the contract template
 };
 export type ContractVariable = {
   name: string;
@@ -17,13 +18,19 @@ export type ContractVariable = {
 export type ApiCandidateContract = {
   id: string;
   candidate_id: string;
-  contract_template_id: string;
+  company_contract_template_id: string;
   data: Record<string, string>;
   status: string;
   signature_request_id: string | null;
   created_at: string;
   updated_at: string;
-  contract_template : ApiContractTemplate
+  signing_token: string;
+  signatures: any[];
+  signing_status: string;
+  public_signing_enabled: boolean;
+  rendered_html: string | null;
+  required_signers: any[];
+  company_contract_template: ApiContractTemplate;
 };
 
 export type ApiCandidateContractWithTemplate = ApiCandidateContract & {
@@ -187,7 +194,7 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
   {
     id: "c1",
     candidate_id: "cand_001",
-    contract_template_id: "1",
+    company_contract_template_id: "1",
     data: {
       employee_name: "Alice Smith",
       start_date: "2024-02-01",
@@ -197,23 +204,35 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_001",
     created_at: "2024-02-01T10:00:00Z",
     updated_at: "2024-02-01T10:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[0],
+    signing_token: "token_001",
+    signatures: [],
+    signing_status: "signed",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[0],
   },
   {
     id: "c2",
     candidate_id: "cand_002",
-    contract_template_id: "2",
+    company_contract_template_id: "2",
     data: { party_name: "Bob Johnson", effective_date: "2024-02-02" },
     status: "pending",
     signature_request_id: null,
     created_at: "2024-02-02T11:00:00Z",
     updated_at: "2024-02-02T11:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[1],
+    signing_token: "token_002",
+    signatures: [],
+    signing_status: "pending",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[1],
   },
   {
     id: "c3",
     candidate_id: "cand_003",
-    contract_template_id: "3",
+    company_contract_template_id: "3",
     data: {
       consultant_name: "Carol Lee",
       project_name: "Website Redesign",
@@ -223,45 +242,69 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_003",
     created_at: "2024-02-03T12:00:00Z",
     updated_at: "2024-02-03T12:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[2],
+    signing_token: "token_003",
+    signatures: [],
+    signing_status: "sent",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[2],
   },
   {
     id: "c4",
     candidate_id: "cand_004",
-    contract_template_id: "4",
+    company_contract_template_id: "4",
     data: { intern_name: "David Kim", duration: "3 months" },
     status: "signed",
     signature_request_id: "sig_004",
     created_at: "2024-02-04T13:00:00Z",
     updated_at: "2024-02-04T13:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[3],
+    signing_token: "token_004",
+    signatures: [],
+    signing_status: "signed",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[3],
   },
   {
     id: "c5",
     candidate_id: "cand_005",
-    contract_template_id: "5",
+    company_contract_template_id: "5",
     data: { freelancer_name: "Eva Green", deliverables: "Logo Design" },
     status: "pending",
     signature_request_id: null,
     created_at: "2024-02-05T14:00:00Z",
     updated_at: "2024-02-05T14:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[4],
+    signing_token: "token_005",
+    signatures: [],
+    signing_status: "pending",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[4],
   },
   {
     id: "c6",
     candidate_id: "cand_006",
-    contract_template_id: "6",
+    company_contract_template_id: "6",
     data: { buyer_name: "Frank White", item: "Laptop", price: "1200" },
     status: "sent",
     signature_request_id: "sig_006",
     created_at: "2024-02-06T15:00:00Z",
     updated_at: "2024-02-06T15:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[5],
+    signing_token: "token_006",
+    signatures: [],
+    signing_status: "sent",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[5],
   },
   {
     id: "c7",
     candidate_id: "cand_007",
-    contract_template_id: "7",
+    company_contract_template_id: "7",
     data: {
       partner1: "Grace Hall",
       partner2: "Henry Ford",
@@ -271,12 +314,18 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_007",
     created_at: "2024-02-07T16:00:00Z",
     updated_at: "2024-02-07T16:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[6],
+    signing_token: "token_007",
+    signatures: [],
+    signing_status: "signed",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[6],
   },
   {
     id: "c8",
     candidate_id: "cand_008",
-    contract_template_id: "8",
+    company_contract_template_id: "8",
     data: {
       tenant_name: "Ivy Brown",
       property_address: "123 Main St",
@@ -286,12 +335,18 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: null,
     created_at: "2024-02-08T17:00:00Z",
     updated_at: "2024-02-08T17:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[7],
+    signing_token: "token_008",
+    signatures: [],
+    signing_status: "pending",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[7],
   },
   {
     id: "c9",
     candidate_id: "cand_009",
-    contract_template_id: "9",
+    company_contract_template_id: "9",
     data: {
       supplier_name: "Jack Black",
       goods: "Office Chairs",
@@ -301,17 +356,29 @@ export const CANDIDATE_CONTRACT_EXAMPLES: ApiCandidateContract[] = [
     signature_request_id: "sig_009",
     created_at: "2024-02-09T18:00:00Z",
     updated_at: "2024-02-09T18:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[8],
+    signing_token: "token_009",
+    signatures: [],
+    signing_status: "sent",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[8],
   },
   {
     id: "c10",
     candidate_id: "cand_010",
-    contract_template_id: "10",
+    company_contract_template_id: "10",
     data: { employee_name: "Karen Young", termination_date: "2024-03-15" },
     status: "signed",
     signature_request_id: "sig_010",
     created_at: "2024-02-10T19:00:00Z",
     updated_at: "2024-02-10T19:00:00Z",
-    contract_template: CONTRACT_TEMPLATE_EXAMPLES[9],
+    signing_token: "token_010",
+    signatures: [],
+    signing_status: "signed",
+    public_signing_enabled: false,
+    rendered_html: null,
+    required_signers: [],
+    company_contract_template: CONTRACT_TEMPLATE_EXAMPLES[9],
   },
 ];

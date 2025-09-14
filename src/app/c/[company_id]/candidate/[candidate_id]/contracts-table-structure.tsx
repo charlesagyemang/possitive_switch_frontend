@@ -18,6 +18,7 @@ import {
   Signature,
   Stamp,
   X,
+  Share,
 } from "lucide-react";
 
 const contractColumnHelper = createColumnHelper<ApiCandidateContract>();
@@ -27,11 +28,13 @@ export const candidateContractsColumns = ({
   send,
   approve,
   approveAndSend,
+  testSigning,
 }: {
   actions: (r: ApiCandidateContract) => DOption[];
   send?: (r: ApiCandidateContract) => void;
   approve?: (r: ApiCandidateContract) => void;
   approveAndSend?: (r: ApiCandidateContract) => void;
+  testSigning?: (r: ApiCandidateContract) => void;
 }) => {
   return [
     contractColumnHelper.accessor((row) => row, {
@@ -39,7 +42,7 @@ export const candidateContractsColumns = ({
       header: "Contract Name",
       cell: (info) => {
         const row = info.getValue();
-        const name = row?.contract_template?.name || "N/A";
+        const name = row?.company_contract_template?.name || "N/A";
         return (
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
@@ -117,19 +120,32 @@ export const candidateContractsColumns = ({
           );
         return (
           <div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {isApproved ? (
-                <Button
-                  onClick={() => {
-                    if (send) send(row);
-                  }}
-                  size="sm"
-                  variant="outline"
-                  className="flex cursor-pointer items-center gap-1"
-                >
-                  <Send className="size-4" />
-                  {"Send"}
-                </Button>
+                <>
+                  <Button
+                    onClick={() => {
+                      if (send) send(row);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    className="flex cursor-pointer items-center gap-1"
+                  >
+                    <Send className="size-4" />
+                    {"Send"}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (testSigning) testSigning(row);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    className="flex cursor-pointer items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                  >
+                    <Share className="size-4" />
+                    Enable Signing
+                  </Button>
+                </>
               ) : (
                 <>
                   <Button
@@ -153,6 +169,17 @@ export const candidateContractsColumns = ({
                   >
                     <Mail className="size-4" />
                     Approve &amp; Send
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (testSigning) testSigning(row);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    className="flex cursor-pointer items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                  >
+                    <Share className="size-4" />
+                    Enable Signing
                   </Button>
                 </>
               )}

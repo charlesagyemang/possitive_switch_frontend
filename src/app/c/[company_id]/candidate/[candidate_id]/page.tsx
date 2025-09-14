@@ -6,7 +6,7 @@ import {
 } from "@/components/built/tabs/tab-component";
 import useCustomTabs from "@/components/built/tabs/use-tab-component";
 import PageTitle from "@/components/built/text/page-title";
-import { CheckCircle, ListTodo, Signature, UserCog, Sparkles, Crown } from "lucide-react";
+import { CheckCircle, ListTodo, Signature, UserCog, Sparkles, Crown, Share } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -18,10 +18,11 @@ import LoadingState from "@/components/built/loaders/loading-state";
 import AppNotifications from "@/components/built/app-notifications";
 import { ApiOnBoardingTask } from "@/app/types";
 import ManageCandidateContracts from "./manage-contracts-tab";
+import ContractSigningTab from "./contract-signing-tab";
 
 export default function ManageCandidatePage() {
   const { TabComponent } = useCustomTabs({ defaultTab: "onboarding-tasks" });
-  const { candidate_id } = useParams();
+  const { candidate_id, company_id } = useParams();
   const [excluded, setExcluded] = useState<ApiOnBoardingTask[]>([]);
   const [checked, setChecked] = useState<ApiOnBoardingTask[]>([]);
   
@@ -106,7 +107,13 @@ export default function ManageCandidatePage() {
       name: "Contracts",
       key: "contracts",
       icon: <Signature className="h-4 w-4" />,
-      render: () => <ManageCandidateContracts candidate={candidate} />,
+      render: () => <ManageCandidateContracts candidate={candidate} company_id={company_id as string} />,
+    },
+    {
+      name: "Contract Signing",
+      key: "contract-signing",
+      icon: <Share className="h-4 w-4" />,
+      render: () => <ContractSigningTab candidate={candidate} />,
     },
     {
       name: "Configurations",
