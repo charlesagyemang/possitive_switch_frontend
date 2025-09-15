@@ -1,6 +1,7 @@
 import { apiCall } from "../api-utils";
 import {
   M_CREATE_CANDIDATE,
+  M_DELETE_CANDIDATE,
   M_EDIT_CANDIDATE,
   Q_LIST_CANDIDATES,
   Q_LOAD_ONE_CANDIDATE,
@@ -36,12 +37,20 @@ export const useCreateCandidateHandler = () => {
     createCandidate(body)
   );
 };
-const editCandidate = (body: FormData | Record<string, any>) => {
-  return apiCall(`${API_CANDIDATES}`, body, { method: "PATCH" });
+const editCandidate = (id: string, body: FormData | Record<string, any>) => {
+  return apiCall(`${API_CANDIDATES}/${id}`, body, { method: "PUT" });
 };
 
 export const useEditCandidateHandler = () => {
-  return useGenericMutation([M_EDIT_CANDIDATE], (body) => editCandidate(body));
+  return useGenericMutation([M_EDIT_CANDIDATE], ({ id, ...body }) => editCandidate(id, body));
+};
+
+const deleteCandidate = (id: string) => {
+  return apiCall(`${API_CANDIDATES}/${id}`, null, { method: "DELETE" });
+};
+
+export const useDeleteCandidateHandler = () => {
+  return useGenericMutation([M_DELETE_CANDIDATE], (id: string) => deleteCandidate(id));
 };
 const fetchCandidate = async (id: string) => {
   const obj = await apiCall(`${API_CANDIDATES}/${id}`, null, { method: "GET" });

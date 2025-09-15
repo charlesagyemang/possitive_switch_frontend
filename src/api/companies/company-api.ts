@@ -9,6 +9,7 @@ import {
   Q_LOAD_ONE_COMPANY,
 } from "../auth/constants";
 import {
+  API_BASE,
   API_CANDIDATES,
   API_COMPANIES,
   API_CREATE_NEW_CANDIDATE,
@@ -87,6 +88,17 @@ const listCompanies = async () => {
   const obj = await apiCall(API_LIST_ALL_COMPANIES, null, {
     method: "GET",
   });
+  
+  console.log(`
+🚀 ====== COMPANIES LIST API RESPONSE ======
+🌐 URL: ${API_LIST_ALL_COMPANIES}
+📦 Full Response Object:
+`, JSON.stringify(obj, null, 2));
+
+  console.log(`
+📊 Companies Data:
+`, obj?.data?.companies);
+
   return obj?.data?.companies;
 };
 
@@ -102,6 +114,30 @@ const uploadLogo = (body: any) => {
 export const useCompanyLogoHandler = () => {
   return useGenericMutation([M_UPLOAD_COMPANY_LOGO], (body) =>
     uploadLogo(body)
+  );
+};
+
+// Company API Key Validation
+const validateCompanyApiKey = async (apiKey: string) => {
+  const obj = await apiCall(`${API_BASE}/login/api_key`, {
+    api_key: apiKey
+  }, {
+    method: "POST",
+  });
+  
+  console.log(`
+🔑 ====== API KEY VALIDATION ======
+🔑 API Key: ${apiKey}
+🌐 URL: ${API_BASE}/login/api_key
+📦 Company Data:
+`, JSON.stringify(obj, null, 2));
+
+  return obj?.data?.company || null;
+};
+
+export const useValidateCompanyApiKey = () => {
+  return useGenericMutation(["M_VALIDATE_API_KEY"], (apiKey: string) => 
+    validateCompanyApiKey(apiKey)
   );
 };
 

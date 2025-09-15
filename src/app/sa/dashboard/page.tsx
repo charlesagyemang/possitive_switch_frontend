@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { LoaderCircle, Plus, Sparkles, Heart, Star, Crown, Gem, Rainbow, Search, Filter, Calendar, Building2, Edit, Upload, Users, Eye, Trash } from "lucide-react";
+import { LoaderCircle, Plus, Crown, Rainbow, Search, Calendar, Building2, Edit, Upload, Users, Eye, Trash } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -19,7 +19,6 @@ import { GenericTable } from "@/components/built/table/data-table";
 import { companyColumns } from "./company-table-structure";
 import { Company, companyData } from "@/app/seed/companies";
 import { Button } from "@/components/ui/button";
-import { dashboardCards } from "./values";
 import useModal from "@/components/built/modal/useModal";
 import CompanyForm from "@/app/shared/forms/company-form";
 import {
@@ -267,53 +266,6 @@ export default function SadminDashboard() {
             </div>
           </div>
 
-          {/* Gorgeous Dashboard Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-            {dashboardCards.map((card, index) => {
-              const gradients = [
-                "from-pink-400 via-rose-400 to-red-400",
-                "from-purple-400 via-violet-400 to-indigo-400", 
-                "from-blue-400 via-cyan-400 to-teal-400",
-                "from-green-400 via-emerald-400 to-lime-400"
-              ];
-              const sparkleIcons = [Heart, Star, Gem, Sparkles];
-              const SparkleIcon = sparkleIcons[index % sparkleIcons.length];
-              
-              return (
-                <Card
-                  key={card.title}
-                  className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl hover:shadow-2xl dark:hover:shadow-purple-500/25 transition-all duration-500 transform hover:scale-105 rounded-3xl overflow-hidden relative"
-                >
-                  {/* Gradient Border Effect */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${gradients[index % gradients.length]} opacity-0 group-hover:opacity-20 dark:group-hover:opacity-30 transition-opacity duration-500 rounded-3xl`}></div>
-                  
-                  <CardHeader className="pb-3 relative z-10">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-2">
-                        <CardTitle className="text-lg font-bold text-gray-800 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
-                          {card.title}
-                        </CardTitle>
-                        <CardDescription className="text-sm text-gray-600 dark:text-gray-300">
-                          {card.description}
-                        </CardDescription>
-                      </div>
-                      <div className={`w-14 h-14 bg-gradient-to-r ${gradients[index % gradients.length]} rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:rotate-12`}>
-                        <card.icon className="w-7 h-7 text-white" />
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="relative z-10">
-                    <div className="flex items-end gap-2">
-                      <span className={`text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r ${gradients[index % gradients.length]}`}>
-                        {card.value}
-                      </span>
-                      <SparkleIcon className="w-6 h-6 text-pink-400 dark:text-pink-300 animate-pulse mb-2" />
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
 
           {/* Beautiful Companies Table */}
           <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl overflow-hidden">

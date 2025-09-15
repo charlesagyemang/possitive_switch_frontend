@@ -5,7 +5,7 @@ import {
   AsDropdownMenu,
   DOption,
 } from "@/components/built/dropdown/custom-dropdown";
-import { MoreVertical, Eye, Edit, Trash, UserPlus, Mail, Calendar, Star, Sparkles } from "lucide-react";
+import { MoreVertical, Eye, Edit, Trash, UserPlus, Mail, Calendar, Sparkles, Settings } from "lucide-react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 
@@ -100,15 +100,6 @@ export const invitationColumns = ({
         );
       },
     }),
-    candidateColumnHelper.accessor("job_title", {
-      header: "Position",
-      cell: (info) => (
-        <div className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-sm font-medium inline-flex items-center gap-1">
-          <Star className="w-3 h-3" />
-          {info.getValue() || "Not specified"}
-        </div>
-      ),
-    }),
     candidateColumnHelper.accessor((row) => row.status || "pending", {
       header: "Status",
       cell: (info) => <StatusBadge status={info.getValue()} />,
@@ -125,6 +116,23 @@ export const invitationColumns = ({
             <Calendar className="w-3 h-3" />
             {isValidDate ? format(date, "MMM dd, yyyy") : "Recently"}
           </div>
+        );
+      },
+    }),
+    candidateColumnHelper.accessor((row) => row.id, {
+      id: "manage",
+      header: "Manage",
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <button
+            onClick={() => router?.push(`/c/${companyId}/candidate/${row.id}`)}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg inline-flex items-center gap-2"
+            title="Manage Candidate"
+          >
+            <Settings className="w-4 h-4" />
+            Manage
+          </button>
         );
       },
     }),
@@ -169,6 +177,93 @@ export const invitationColumns = ({
             >
               <Trash className="w-4 h-4 text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300" />
             </button>
+          </div>
+        );
+      },
+    }),
+  ];
+};
+
+export const candidateColumns = ({
+  actions,
+  companyId,
+  router,
+}: {
+  actions: (r: ApiCandidate) => DOption[];
+  companyId?: string;
+  router?: ReturnType<typeof useRouter>;
+}) => {
+  return [
+    candidateColumnHelper.accessor((row) => row, {
+      header: "Candidate",
+      cell: (info) => {
+        const row = info.getValue();
+        return (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-sm">
+              {row.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div
+                onClick={() => router?.push(`/c/${companyId}/candidate/${row.id}`)}
+                className="font-medium text-gray-900 dark:text-white cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              >
+                {row.name}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">{row.email}</div>
+            </div>
+          </div>
+        );
+      },
+    }),
+    candidateColumnHelper.accessor((row) => row.job_title || "Not specified", {
+      header: "Job Title",
+      cell: (info) => (
+        <span className="text-gray-900 dark:text-white">{info.getValue()}</span>
+      ),
+    }),
+    candidateColumnHelper.accessor((row) => row.created_at || "Not set", {
+      header: "Created Date",
+      cell: (info) => {
+        const date = info.getValue();
+        return (
+          <span className="text-gray-900 dark:text-white">
+            {date === "Not set" ? date : format(new Date(date), "MMM dd, yyyy")}
+          </span>
+        );
+      },
+    }),
+    candidateColumnHelper.accessor((row) => row.id, {
+      id: "manage",
+      header: "Manage",
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <button
+            onClick={() => router?.push(`/c/${companyId}/candidate/${row.id}`)}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg inline-flex items-center gap-2"
+            title="Manage Candidate"
+          >
+            <Settings className="w-4 h-4" />
+            Manage
+          </button>
+        );
+      },
+    }),
+    candidateColumnHelper.accessor((row) => row.id, {
+      id: "actions",
+      header: "Actions",
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <AsDropdownMenu
+              options={actions(row)}
+            >
+              <button className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-300 hover:scale-105 group">
+                <MoreVertical className="w-4 h-4 text-gray-500 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
+              </button>
+            </AsDropdownMenu>
           </div>
         );
       },

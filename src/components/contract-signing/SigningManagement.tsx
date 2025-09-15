@@ -97,8 +97,8 @@ export default function SigningManagement({
           signing_url: contractData.signing_token ? `${window.location.origin}/contracts/${contractData.signing_token}/sign` : '',
           signing_progress: progress,
           required_signers: requiredSigners,
-          remaining_signers: requiredSigners.filter(email => 
-            !signatures.some(sig => sig.signer_email.toLowerCase() === email.toLowerCase())
+          remaining_signers: requiredSigners.filter((email: string) => 
+            !signatures.some((sig: any) => sig.signer_email.toLowerCase() === email.toLowerCase())
           ),
           signatures: signatures
         });
@@ -155,8 +155,8 @@ export default function SigningManagement({
           signing_url: result.data.signing_url || '',
           signing_progress: progress,
           required_signers: requiredSigners,
-          remaining_signers: requiredSigners.filter(email => 
-            !signatures.some(sig => sig.signer_email.toLowerCase() === email.toLowerCase())
+          remaining_signers: requiredSigners.filter((email: string) => 
+            !signatures.some((sig: any) => sig.signer_email.toLowerCase() === email.toLowerCase())
           ),
           signatures: signatures
         });

@@ -1,11 +1,10 @@
 import { Company } from "@/app/seed/companies";
 import {
-  AsDropdownMenu,
   DOption,
 } from "@/components/built/dropdown/custom-dropdown";
 import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Building2, Ellipsis, Mail, Eye, Edit, Trash, Upload, Users, Calendar } from "lucide-react";
+import { Building2, Eye, Edit, Trash, Upload, Users, Settings, Link } from "lucide-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -45,16 +44,6 @@ export const companyColumns = ({
         </span>
       );
     },
-  }),
-  companyColumnHelper.accessor("email", {
-    id: "email",
-
-    cell: (info) => (
-      <span className=" flex items-center gap-2 hover:underline cursor-pointer transition-colors ">
-        {/* <Mail className="size-4" /> */}
-        {info.getValue()}
-      </span>
-    ),
   }),
   // companyColumnHelper.accessor("employees", {
   //   id: "employees",
@@ -106,19 +95,21 @@ export const companyColumns = ({
       );
     },
   }),
-  companyColumnHelper.accessor((row) => row.created_at, {
-    id: "Created",
-    header: "Created",
-    cell: (info) => (
-      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 font-medium rounded-full text-xs flex items-center gap-1">
-        <Calendar className="w-3 h-3" />
-        {new Date(info.getValue()).toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })}
-      </span>
-    ),
+  companyColumnHelper.accessor((row) => row.id, {
+    id: "manage",
+    header: "Manage",
+    cell: (info) => {
+      return (
+        <button
+          onClick={() => router.push(`/c/${info.row.original.id}`)}
+          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg inline-flex items-center gap-2"
+          title="Manage Company"
+        >
+          <Settings className="w-4 h-4" />
+          Manage
+        </button>
+      );
+    },
   }),
   companyColumnHelper.accessor((row) => row.id, {
     id: "actions",
@@ -128,30 +119,92 @@ export const companyColumns = ({
 
       return (
         <div className="flex items-center gap-2">
-          {/* Quick Actions */}
+          {/* Edit Company */}
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.push(`/c/${info.row.original.id}`)}
-            className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-300 hover:scale-105"
-            title="View Details"
+            onClick={() => {
+              const editAction = options.find(action => action.value === "edit");
+              editAction?.onClick?.();
+            }}
+            className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            title="Edit Company"
           >
-            <Eye className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <Edit className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           </Button>
 
-          {/* Dropdown Menu */}
-          <AsDropdownMenu
-            options={options}
-            className="text-xs font-medium text-gray-600 hover:text-gray-900"
+          {/* Upload Logo */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const logoAction = options.find(action => action.value === "logo");
+              logoAction?.onClick?.();
+            }}
+            className="p-2 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            title="Upload Logo"
           >
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-300 hover:scale-105"
-            >
-              <Ellipsis className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            </Button>
-          </AsDropdownMenu>
+            <Upload className="w-4 h-4 text-green-600 dark:text-green-400" />
+          </Button>
+
+          {/* View Candidates */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const candidatesAction = options.find(action => action.value === "candidates");
+              candidatesAction?.onClick?.();
+            }}
+            className="p-2 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            title="View Candidates"
+          >
+            <Users className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          </Button>
+
+          {/* View Details */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const viewAction = options.find(action => action.value === "view-details");
+              viewAction?.onClick?.();
+            }}
+            className="p-2 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            title="View Details"
+          >
+            <Eye className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+          </Button>
+
+          {/* Generate Login Link */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const company = info.row.original as any; // Type assertion for API response
+              const loginUrl = `${window.location.origin}/company-login?key=${company.api_key}`;
+              navigator.clipboard.writeText(loginUrl);
+              // You could add a toast notification here
+              alert(`Login link copied to clipboard!\n\n${loginUrl}`);
+            }}
+            className="p-2 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            title="Generate Login Link"
+          >
+            <Link className="w-4 h-4 text-green-600 dark:text-green-400" />
+          </Button>
+
+          {/* Delete Company */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const deleteAction = options.find(action => action.value === "delete");
+              deleteAction?.onClick?.();
+            }}
+            className="p-2 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-xl transition-all duration-300 hover:scale-105"
+            title="Delete Company"
+          >
+            <Trash className="w-4 h-4 text-red-600 dark:text-red-400" />
+          </Button>
         </div>
       );
     },

@@ -1,6 +1,6 @@
 import { Q_LOAD_ONE_CANDIDATE } from "@/api/auth/constants";
 import { useBulkRemoveOnboardingTasks } from "@/api/candidates/onboarding-api";
-import { ApiCandidate, Candidate } from "@/app/seed/candidates";
+import { ApiCandidate } from "@/app/seed/candidates";
 import { ApiOnBoardingTask, FullApiCandidate } from "@/app/types";
 import AppNotifications from "@/components/built/app-notifications";
 import CustomButton from "@/components/built/button/custom-button";
@@ -11,15 +11,12 @@ import { CheckCircle, X, Sparkles, Crown, Heart, Star, Gem, Settings, Search } f
 import React, { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 
-function Configuration({
-  //   tasks,
-
+function CompanyConfigurationTab({
   excluded = [],
   exclude,
   candidate,
   reset,
 }: {
-  //   tasks?: ApiOnBoardingTask[];
   candidate: FullApiCandidate;
   excluded?: ApiOnBoardingTask[];
   exclude: (tasks: ApiOnBoardingTask) => void;
@@ -70,6 +67,7 @@ function Configuration({
       }
     );
   };
+  
   return (
     <div className="py-4">
       <AppNotifications.Error message={error?.message} />
@@ -321,4 +319,4 @@ function Configuration({
   );
 }
 
-export default Configuration;
+export default CompanyConfigurationTab;

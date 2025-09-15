@@ -23,19 +23,25 @@ import React, { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Filter } from "lucide-react";
-import { candidateContractsColumns } from "./contracts-table-structure";
-import ContractPreview from "./modals/contract-preview";
+import { companyCandidateContractsColumns } from "./company-contracts-table-structure";
+import CompanyContractPreview from "./modals/company-contract-preview";
 import {
   useCandidateContractList,
   useEnableContractSigning,
 } from "@/api/candidates/contracts-api";
 import { useContractTemplates } from "@/api/companies/company-api";
 import { ApiCandidate } from "@/app/seed/candidates";
-import InitialiseContract from "./modals/initialiase-contract";
-import ContractSigningModal from "./modals/contract-signing-modal";
+import CompanyInitialiseContract from "./modals/company-initialiase-contract";
+import CompanyContractSigningModal from "./modals/company-contract-signing-modal";
 import AppNotifications from "@/components/built/app-notifications";
 
-function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCandidate; company_id: string }) {
+interface CompanyManageContractsTabProps {
+  candidate: ApiCandidate;
+  api_key: string;
+  company_id: string;
+}
+
+function CompanyManageContractsTab({ candidate, api_key, company_id }: CompanyManageContractsTabProps) {
   const { ModalPortal, open, close } = useModal();
   
   // Search and filter states
@@ -96,13 +102,14 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
     const { candidateContract, title } = options || {};
 
     open(
-      <InitialiseContract
+      <CompanyInitialiseContract
         close={close}
         contract={contract}
         candidate={candidate}
         flag={flag}
         data={candidateContract?.data}
         candidateContract={candidateContract}
+        api_key={api_key}
       />,
       title || `Initialise Contract: ${contract.name}`
     );
@@ -154,11 +161,6 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
         Icon: Send,
         onClick: () => {
           send(row);
-          // deleteConfirmation(row);
-          // openUseModal(row.company_contract_template, "send", {
-          //   candidateContract: row,
-          //   title: `Send Contract -  ${row.company_contract_template.name}`,
-          // });
         },
       },
       {
@@ -167,11 +169,6 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
         Icon: Stamp,
         onClick: () => {
           approve(row);
-          // deleteConfirmation(row);
-          // openUseModal(row.company_contract_template, "approve", {
-          //   candidateContract: row,
-          //   title: `Approve Contract - ${row.company_contract_template.name}`,
-          // });
         },
       },
       {
@@ -180,11 +177,6 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
         Icon: CheckCircle,
         onClick: () => {
           approveAndSend(row);
-          // deleteConfirmation(row);
-          // openUseModal(row.company_contract_template, "approve_and_send", {
-          //   candidateContract: row,
-          //   title: `Approve & Send Contract - ${row.company_contract_template.name}`,
-          // });
         },
       },
       {
@@ -259,7 +251,7 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
                   <button
                     onClick={() =>
                       open(
-                        <ContractPreview
+                        <CompanyContractPreview
                           candidate={candidate}
                           close={close}
                           contract={contract}
@@ -305,7 +297,7 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
           pageSize={8}
           name="Contracts"
           data={filteredContracts || []}
-          columns={candidateContractsColumns({
+          columns={companyCandidateContractsColumns({
             actions: makeDropdownActions,
             send,
             approve,
@@ -409,7 +401,7 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
       </div>
 
       {/* Contract Signing Modal */}
-      <ContractSigningModal
+      <CompanyContractSigningModal
         candidate={candidate}
         contract={selectedContract}
         isOpen={isSigningModalOpen}
@@ -422,4 +414,4 @@ function ManageCandidateContracts({ candidate, company_id }: { candidate: ApiCan
   );
 }
 
-export default ManageCandidateContracts;
+export default CompanyManageContractsTab;

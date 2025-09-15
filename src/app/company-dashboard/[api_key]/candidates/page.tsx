@@ -1,98 +1,67 @@
 "use client";
-import SuperAdminRoot from "@/app/shared/wrappers/sadmin-root";
-import SadminSpace from "@/app/shared/wrappers/sadmin-space";
-import { GenericTable } from "@/components/built/table/data-table";
-import PageTitle from "@/components/built/text/page-title";
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Eye,
-  LoaderCircle,
-  LayoutDashboard,
-  Mail,
-  Plus,
-  PlusIcon,
-  Trash,
-  Crown,
-  Search,
-  Users,
-  Settings,
-  Edit,
-} from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import React from "react";
-import { invitationColumns } from "./company-table-structure";
+import { 
+  Users, 
+  Plus, 
+  Search, 
+  Edit, 
+  Trash, 
+  Eye,
+  Settings,
+  LayoutDashboard,
+  LoaderCircle,
+  Crown
+} from "lucide-react";
+import { useCandidateList, useCreateCandidateHandler, useEditCandidateHandler, useDeleteCandidateHandler } from "@/api/candidates/candidates-api";
+import { useValidateCompanyApiKey } from "@/api/companies/company-api";
 import { ApiCandidate } from "@/app/seed/candidates";
 import { DOption } from "@/components/built/dropdown/custom-dropdown";
-import { useRouter, useParams } from "next/navigation";
 import useModal from "@/components/built/modal/useModal";
-import CandidateForm from "@/app/shared/forms/candidate-form";
-import EditCandidateForm from "./edit-candidate-form";
-import DeleteCandidateDialog from "./delete-candidate-dialog";
-import { useCandidateList, useEditCandidateHandler, useDeleteCandidateHandler } from "@/api/candidates/candidates-api";
-import { useCompanyFetchHandler } from "@/api/companies/company-api";
-import Image from "next/image";
-import UploadCompanyLogo from "./upload-company-logo";
+import EditCandidateForm from "../edit-candidate-form";
+import DeleteCandidateDialog from "../delete-candidate-dialog";
+import CandidateForm from "../candidate-form";
+import { GenericTable } from "@/components/built/table/data-table";
+import { companyCandidateColumns } from "../company-table-structure";
 
-function OneCompanyDashboard() {
-  const router = useRouter();
+interface Company {
+  id: string;
+  name: string;
+  email: string;
+  location: string;
+  phone_number: string;
+  api_key: string;
+}
+
+function CompanyCandidatesContent() {
   const params = useParams();
-
-  const companyId = params.company_id as string;
+  const router = useRouter();
+  const apiKey = params.api_key as string;
+  const { open, close, ModalPortal } = useModal();
   
-  const [sparkles, setSparkles] = React.useState<Array<{left: number, top: number, delay: number, duration: number}>>([]);
-  const [isClient, setIsClient] = React.useState(false);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [statusFilter, setStatusFilter] = React.useState("all");
-  const [positionFilter, setPositionFilter] = React.useState("all");
+  const [company, setCompany] = useState<Company | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [positionFilter, setPositionFilter] = useState("all");
 
-  React.useEffect(() => {
-    setIsClient(true);
-    // Generate sparkles only on client
-    const newSparkles = [...Array(15)].map(() => ({
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      delay: Math.random() * 3,
-      duration: 2 + Math.random() * 3
-    }));
-    setSparkles(newSparkles);
+  // Get company data from localStorage
+  useEffect(() => {
+    const companyData = localStorage.getItem('companyData');
+    if (companyData) {
+      const parsed = JSON.parse(companyData);
+      setCompany(parsed);
+    }
   }, []);
 
-  const FloatingSparkles = () => {
-    if (!isClient) return null;
-    
-    return (
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        {sparkles.map((sparkle, i) => (
-          <div
-            key={i}
-            className="absolute text-pink-300 dark:text-purple-400 animate-pulse opacity-30 dark:opacity-50"
-            style={{
-              left: `${sparkle.left}%`,
-              top: `${sparkle.top}%`,
-              animationDelay: `${sparkle.delay}s`,
-              animationDuration: `${sparkle.duration}s`
-            }}
-          >
-            ✨
-          </div>
-        ))}
-      </div>
-    );
-  };
-  const {
-    data: company,
-    isPending,
-    error,
-    isFetched,
-  } = useCompanyFetchHandler(companyId);
+  // Fetch candidates for this company
   const {
     data: candidates,
     isPending: loadingCandidates,
-    // isFetched: candidateListIsFetched,
-  } = useCandidateList(companyId);
+  } = useCandidateList(company?.id || "");
 
   const makeActions = (row: ApiCandidate): DOption[] => {
     return [
@@ -105,7 +74,7 @@ function OneCompanyDashboard() {
             <EditCandidateForm 
               close={close} 
               candidate={row} 
-              companyId={companyId} 
+              companyId={company?.id || ""} 
             />,
             `Edit ${row.name}`
           );
@@ -116,8 +85,7 @@ function OneCompanyDashboard() {
         value: "manage",
         Icon: LayoutDashboard,
         onClick: () => {
-          router.push(`/c/${companyId}/candidate/${row.id}`);
-          // handle view details
+          router.push(`/company-dashboard/${apiKey}/candidates/${row.id}`);
         },
       },
       {
@@ -129,7 +97,7 @@ function OneCompanyDashboard() {
             <DeleteCandidateDialog 
               close={close} 
               candidate={row} 
-              companyId={companyId} 
+              companyId={company?.id || ""} 
             />,
             `Delete ${row.name}`
           );
@@ -138,16 +106,14 @@ function OneCompanyDashboard() {
     ];
   };
 
-  const { ModalPortal, open, close } = useModal();
-
   const openCandidateForm = () => {
     open(
-      <CandidateForm companyId={companyId} close={close} />,
+      <CandidateForm companyId={company?.id || ""} close={close} />,
       "Add a new candidate"
     );
   };
 
-  // Filter and search candidates
+  // Filter and search candidates - EXACT COPY from main admin
   const filteredCandidates = React.useMemo(() => {
     if (!candidates) return [];
     
@@ -175,13 +141,16 @@ function OneCompanyDashboard() {
     setPositionFilter("all");
   };
 
-  if (isPending)
+  if (!company) {
     return (
-      <div className="p-6 px-10 flex items-center gap-2">
-        <LoaderCircle className="animate-spin text-primary font-medium" />{" "}
-        Loading company details...
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading company data...</p>
+        </div>
       </div>
     );
+  }
 
   const renderCandidates = () => {
     if (loadingCandidates)
@@ -196,10 +165,11 @@ function OneCompanyDashboard() {
       <GenericTable<ApiCandidate, any>
         pageSize={8}
         name=""
-        columns={invitationColumns({
+        columns={companyCandidateColumns({
           actions: makeActions,
-          companyId: companyId,
+          companyId: company.id,
           router,
+          apiKey: apiKey,
         })}
         data={filteredCandidates}
         noRecordsText="No candidates found 🔍"
@@ -207,67 +177,28 @@ function OneCompanyDashboard() {
     );
   };
 
-  const uploadLogo = () => {
-    open(
-      <UploadCompanyLogo close={close} company={company} />,
-      `${company.name}`
-    );
-  };
-
-  const renderIcon = () => {
-    if (company.logo_url) {
-      return (
-        <Image
-          onClick={() => uploadLogo()}
-          width={50}
-          height={50}
-          src={company.logo_url}
-          alt="Company Logo"
-          className="w-12 h-12 rounded-lg cursor-pointer hover:opacity-70  object-cover border border-gray-200 dark:border-gray-700 bg-white"
-        />
-      );
-    }
-    return (
-      <div
-        onClick={() => uploadLogo()}
-        className="w-12 cursor-pointer hover:opacity-70 h-12 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400"
-      >
-        <PlusIcon className="w-6 h-6" />
-      </div>
-    );
-  };
-
-  if (isFetched && error) return <div>Error: {error.message}</div>;
   return (
     <div className="relative">
-      <FloatingSparkles />
       <ModalPortal />
-      <SadminSpace>
+      <div className="space-y-8">
         {/* Beautiful Header */}
         <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-pink-200/50 dark:border-purple-500/30 mb-8 relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {renderIcon()}
+              <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-purple-500 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-white" />
+              </div>
               <div>
                 <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 flex items-center gap-2">
-                  {company?.name || "..."} <Crown className="w-6 h-6 text-purple-500" />
+                  {company?.name || "..."} Candidates <Crown className="w-6 h-6 text-purple-500" />
                 </h1>
                 <p className="text-purple-600 dark:text-purple-300 font-medium">
-                  Company management dashboard - manage with style! 💎
+                  Company candidates management - manage with style! 💎
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
-              <ThemeToggle />
-              <Button
-                onClick={() => router.push(`/c/${companyId}/settings`)}
-                variant="outline"
-                className="bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                <Settings className="mr-2 w-4 h-4" />
-                Settings ⚙️
-              </Button>
               <Button
                 onClick={openCandidateForm}
                 className="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0"
@@ -278,6 +209,7 @@ function OneCompanyDashboard() {
             </div>
           </div>
         </div>
+
         <div className="mt-8">
           <div>
             {/* Enhanced Candidates Table */}
@@ -353,10 +285,11 @@ function OneCompanyDashboard() {
             </Card>
           </div>
         </div>
-      </SadminSpace>
+      </div>
     </div>
   );
 }
 
-export default OneCompanyDashboard;
-
+export default function CompanyCandidatesPage() {
+  return <CompanyCandidatesContent />;
+}
