@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: getApiHostname(),
       },
+      // S3 bucket used for company logo URLs
+      {
+        protocol: "https",
+        hostname: "positive-switch-assets.s3.eu-north-1.amazonaws.com",
+      },
+      // Generic AWS S3 pattern (safety net)
+      {
+        protocol: "https",
+        hostname: "*.s3.*.amazonaws.com",
+      },
       // Allow localhost for development (Rails Active Storage)
       {
         protocol: "http",

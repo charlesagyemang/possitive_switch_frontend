@@ -11,9 +11,11 @@ import React, { useState } from "react";
 function UploadCompanyLogo({
   company,
   close,
+  onUpdated,
 }: {
   company: Company;
   close?: () => void;
+  onUpdated?: (logoUrl: string) => void;
 }) {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const { run, isPending, error } = useCompanyLogoHandler();
@@ -24,8 +26,41 @@ function UploadCompanyLogo({
       { id: company.id, logo: logoFile },
       {
         onSuccess: (response) => {
-          client.refetchQueries({ queryKey: [Q_LIST_COMPANIES] });
-          client.refetchQueries({ queryKey: [Q_LOAD_ONE_COMPANY, company.id] });
+          // Print full API response for debugging/verification
+          try {
+            console.log(
+              "\n===== COMPANY LOGO UPLOAD RESPONSE =====\n",
+              JSON.stringify(response, null, 2)
+            );
+          } catch (e) {
+            console.log("\n===== COMPANY LOGO UPLOAD RESPONSE (raw) =====\n", response);
+          }
+
+          // Extract and persist new logo URL
+          const newLogoUrl = response?.data?.logo_url;
+          if (newLogoUrl) {
+            try {
+              const stored = localStorage.getItem("companyData");
+              if (stored) {
+                const obj = JSON.parse(stored);
+                obj.logo_url = newLogoUrl;
+                localStorage.setItem("companyData", JSON.stringify(obj));
+              }
+            } catch (err) {
+              console.warn("Failed to update localStorage companyData with new logo_url", err);
+            }
+            // Notify parent so UI updates immediately
+            onUpdated?.(newLogoUrl);
+            // Force full reload so every place picks up new logo domain/config
+            try {
+              setTimeout(() => {
+                window.location.reload();
+              }, 50);
+            } catch {}
+          }
+          // Optimistic UI update already handled; still refetch to be safe
+          client.invalidateQueries({ queryKey: [Q_LIST_COMPANIES] });
+          client.invalidateQueries({ queryKey: [Q_LOAD_ONE_COMPANY, company.id] });
           setLogoFile(null); // Reset the file input after successful upload
           close?.();
         },

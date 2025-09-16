@@ -37,6 +37,10 @@ import {
   useUpdateOnboardingTaskTemplate,
   useDeleteOnboardingTaskTemplate
 } from "@/api/companies/company-api";
+import { useUpdateCompanyHandler } from "@/api/companies/company-api";
+import UploadCompanyLogo from "@/app/c/[company_id]/upload-company-logo";
+import AppNotifications from "@/components/built/app-notifications";
+import Image from "next/image";
 import { CompanyEmailTemplateForm } from "./components/company-email-template-form";
 import { CompanyContractTemplateForm } from "./components/company-contract-template-form";
 import { CompanyOnboardingTaskForm } from "./components/company-onboarding-task-form";
@@ -189,7 +193,11 @@ export default function CompanySettingsPage() {
 
             {/* Company Info Tab */}
             <TabsContent value="company-info">
-              <CompanyInfoSection company={company} />
+              <CompanyInfoSection 
+                company={company} 
+                onLogoUpdated={(url: string) => setCompany((prev: any) => ({ ...(prev || {}), logo_url: url }))}
+                onDetailsUpdated={(updated: any) => setCompany((prev: any) => ({ ...(prev || {}), ...updated }))}
+              />
             </TabsContent>
           </Tabs>
         </div>
@@ -779,7 +787,44 @@ function CompanyOnboardingTasksSection({ companyId }: { companyId: string }) {
 }
 
 // Company Info Section Component
-function CompanyInfoSection({ company }: { company: any }) {
+function CompanyInfoSection({ company, onLogoUpdated, onDetailsUpdated }: { company: any; onLogoUpdated?: (url: string) => void; onDetailsUpdated?: (updated: any) => void }) {
+  const [name, setName] = useState<string>(company?.name || "");
+  const [email, setEmail] = useState<string>(company?.email || "");
+  const [phone, setPhone] = useState<string>(company?.phone_number || "");
+  const [website, setWebsite] = useState<string>(company?.website || "");
+  const [description, setDescription] = useState<string>(company?.description || "");
+
+  const updateCompany = useUpdateCompanyHandler();
+
+  const handleSave = () => {
+    if (!company?.id) return;
+    updateCompany.run({
+      company: {
+        id: company.id,
+        name,
+        email,
+        phone_number: phone,
+        website,
+        description,
+      },
+    }, {
+      onSuccess: (resp: any) => {
+        // Persist to localStorage so the rest of the dashboard picks it up
+        try {
+          const stored = localStorage.getItem('companyData');
+          const obj = stored ? JSON.parse(stored) : {};
+          const updated = { ...obj, name, email, phone_number: phone, website, description };
+          localStorage.setItem('companyData', JSON.stringify(updated));
+          onDetailsUpdated?.(updated);
+          // Force a full reload so every section reflects latest company details
+          setTimeout(() => {
+            window.location.reload();
+          }, 50);
+        } catch {}
+      }
+    });
+  };
+
   return (
     <div className="grid gap-6">
       {/* Company Logo & Branding */}
@@ -801,34 +846,32 @@ function CompanyInfoSection({ company }: { company: any }) {
         </CardHeader>
         
         <CardContent className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4 max-w-lg">
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900 dark:text-white">Company Logo</h3>
-              <div className="border-2 border-dashed border-purple-300 dark:border-purple-600 rounded-2xl p-8 text-center hover:border-purple-400 dark:hover:border-purple-500 transition-colors cursor-pointer">
-                <Upload className="w-12 h-12 text-purple-500 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-300 font-medium">Click to upload logo</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">SVG, PNG, JPG (max 2MB)</p>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="font-bold text-gray-900 dark:text-white">Brand Colors</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Primary Color</label>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-purple-500 rounded-xl border-2 border-white dark:border-gray-700 shadow-lg"></div>
-                    <span className="text-gray-600 dark:text-gray-300">#8B5CF6</span>
+              {company?.logo_url && (
+                <div className="flex items-center gap-4 p-4 border border-purple-200 dark:border-purple-600/50 rounded-2xl bg-white/60 dark:bg-gray-700/40">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden border border-purple-200 dark:border-purple-600/50 bg-white">
+                    <Image
+                      src={company.logo_url}
+                      alt={company?.name || "Company logo"}
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">Current Logo</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Shown across the dashboard</p>
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Secondary Color</label>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-pink-500 rounded-xl border-2 border-white dark:border-gray-700 shadow-lg"></div>
-                    <span className="text-gray-600 dark:text-gray-300">#EC4899</span>
-                  </div>
-                </div>
-              </div>
+              )}
+              <UploadCompanyLogo 
+                company={company} 
+                onUpdated={(url) => {
+                  onLogoUpdated?.(url);
+                }}
+              />
             </div>
           </div>
         </CardContent>
@@ -853,24 +896,27 @@ function CompanyInfoSection({ company }: { company: any }) {
         </CardHeader>
         
         <CardContent className="p-8">
+          <AppNotifications.Error message={updateCompany.error?.message} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company Name</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   className="w-full p-3 rounded-2xl border border-purple-200 dark:border-purple-600 bg-white/60 dark:bg-gray-700/60 focus:border-purple-400 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-colors"
                   placeholder="Your Amazing Company"
-                  defaultValue={company?.name}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   className="w-full p-3 rounded-2xl border border-purple-200 dark:border-purple-600 bg-white/60 dark:bg-gray-700/60 focus:border-purple-400 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-colors"
                   placeholder="hello@company.com"
-                  defaultValue={company?.email}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -878,19 +924,22 @@ function CompanyInfoSection({ company }: { company: any }) {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
-                <input 
-                  type="tel" 
+                <input
+                  type="tel"
                   className="w-full p-3 rounded-2xl border border-purple-200 dark:border-purple-600 bg-white/60 dark:bg-gray-700/60 focus:border-purple-400 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-colors"
                   placeholder="+1 (555) 123-4567"
-                  defaultValue={company?.phone_number}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Website</label>
-                <input 
-                  type="url" 
+                <input
+                  type="url"
                   className="w-full p-3 rounded-2xl border border-purple-200 dark:border-purple-600 bg-white/60 dark:bg-gray-700/60 focus:border-purple-400 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-colors"
                   placeholder="https://company.com"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
                 />
               </div>
             </div>
@@ -898,11 +947,20 @@ function CompanyInfoSection({ company }: { company: any }) {
           
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company Description</label>
-            <textarea 
+            <textarea
               rows={4}
               className="w-full p-3 rounded-2xl border border-purple-200 dark:border-purple-600 bg-white/60 dark:bg-gray-700/60 focus:border-purple-400 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-colors resize-none"
               placeholder="Tell us about your amazing company culture and values..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <Button onClick={handleSave} className="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border-0">
+              <Save className="mr-2 w-4 h-4" />
+              Save Details
+            </Button>
           </div>
         </CardContent>
       </Card>

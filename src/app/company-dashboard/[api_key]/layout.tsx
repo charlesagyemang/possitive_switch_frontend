@@ -140,7 +140,7 @@ function CompanyDashboardLayoutContent({
 
       <div className="relative z-10 flex min-h-screen">
         {/* Sidebar */}
-        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-purple-200/50 dark:border-purple-500/30 transform transition-transform duration-300 ease-in-out ${
+        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-purple-200/50 dark:border-purple-500/30 transform ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:static lg:inset-0 lg:sticky lg:top-0 lg:h-screen lg:flex-shrink-0`}>
           <div className="flex flex-col h-full">
@@ -211,6 +211,7 @@ function CompanyDashboardLayoutContent({
           <div
             className="fixed inset-0 z-40 bg-black/50 lg:hidden"
             onClick={() => setSidebarOpen(false)}
+            style={{ transition: 'none' }}
           />
         )}
 
