@@ -14,7 +14,8 @@ import {
   Sparkles,
   Menu,
   X,
-  FileText
+  FileText,
+  Network
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -72,6 +73,12 @@ function CompanyDashboardLayoutContent({
       href: `/company-dashboard/${apiKey}/candidates`,
       icon: Users,
       current: pathname.includes('/candidates'),
+    },
+    {
+      name: "Org Structure",
+      href: `/company-dashboard/${apiKey}/org-structure`,
+      icon: Network,
+      current: pathname.includes('/org-structure'),
     },
     {
       name: "Documents",
