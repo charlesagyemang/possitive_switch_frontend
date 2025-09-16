@@ -142,7 +142,7 @@ function CompanyDashboardLayoutContent({
         {/* Sidebar */}
         <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-purple-200/50 dark:border-purple-500/30 transform ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:inset-0 lg:sticky lg:top-0 lg:h-screen lg:flex-shrink-0`}>
+        } lg:translate-x-0`}>
           <div className="flex flex-col h-full">
             {/* Company Header */}
             <div className="p-6 border-b border-purple-200/50 dark:border-purple-500/30">
@@ -216,9 +216,9 @@ function CompanyDashboardLayoutContent({
         )}
 
         {/* Main content */}
-        <div className="flex-1 lg:ml-0 flex flex-col min-h-screen">
-          {/* Top header */}
-          <header className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border-b border-purple-200/50 dark:border-purple-500/30 px-6 py-4 flex-shrink-0">
+        <div className="flex-1 flex flex-col min-h-screen lg:ml-64">
+          {/* Top header - Fixed */}
+          <header className="sticky top-0 z-30 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border-b border-purple-200/50 dark:border-purple-500/30 px-6 py-4 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Button
@@ -250,7 +250,7 @@ function CompanyDashboardLayoutContent({
             </div>
           </header>
 
-          {/* Page content */}
+          {/* Page content - Scrollable */}
           <main className="flex-1 p-6 overflow-y-auto">
             {children}
           </main>

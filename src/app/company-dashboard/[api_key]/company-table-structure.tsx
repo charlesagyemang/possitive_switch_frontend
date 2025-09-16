@@ -5,7 +5,7 @@ import {
   AsDropdownMenu,
   DOption,
 } from "@/components/built/dropdown/custom-dropdown";
-import { MoreVertical, Eye, Edit, Trash, UserPlus, Mail, Calendar, Sparkles, Settings } from "lucide-react";
+import { MoreVertical, Eye, Edit, Trash, UserPlus, Mail, Calendar, Sparkles, Settings, ExternalLink, Copy } from "lucide-react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 
@@ -99,6 +99,58 @@ export const companyCandidateColumns = ({
           <span className="text-gray-900 dark:text-white">
             {format(new Date(date), "MMM dd, yyyy")}
           </span>
+        );
+      },
+    }),
+    candidateColumnHelper.accessor((row) => row.id, {
+      id: "dashboard",
+      header: "Dashboard",
+      cell: (info) => {
+        const row = info.row.original;
+        const candidateApiKey = row.id; // TODO: Use actual api_key when available
+        const dashboardUrl = `/candidate-dashboard/${candidateApiKey}`;
+        
+        const handleCopyLink = async () => {
+          const fullUrl = `${window.location.origin}${dashboardUrl}`;
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+            // You could add a toast notification here
+            alert('Dashboard link copied to clipboard!');
+          } catch (err) {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = fullUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Dashboard link copied to clipboard!');
+          }
+        };
+
+        const handleOpenDashboard = () => {
+          window.open(dashboardUrl, '_blank');
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleOpenDashboard}
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium py-2 px-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg inline-flex items-center gap-2"
+              title="Open Candidate Dashboard"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Open
+            </button>
+            <button
+              onClick={handleCopyLink}
+              className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium py-2 px-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg inline-flex items-center gap-2"
+              title="Copy Dashboard Link"
+            >
+              <Copy className="w-4 h-4" />
+              Copy
+            </button>
+          </div>
         );
       },
     }),

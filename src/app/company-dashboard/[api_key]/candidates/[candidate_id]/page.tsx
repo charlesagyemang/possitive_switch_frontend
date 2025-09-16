@@ -6,7 +6,7 @@ import {
   CustomTabItem,
 } from "@/components/built/tabs/tab-component";
 import useCustomTabs from "@/components/built/tabs/use-tab-component";
-import { CheckCircle, ListTodo, Signature, UserCog, Sparkles, Crown } from "lucide-react";
+import { CheckCircle, ListTodo, Signature, UserCog, Sparkles, Crown, FileText } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Image from "next/image";
 import { useCandidate } from "@/api/candidates/candidates-api";
@@ -16,6 +16,7 @@ import { ApiOnBoardingTask } from "@/app/types";
 import CompanyConfigurationTab from "./company-configuration-tab";
 import CompanyManageContractsTab from "./company-manage-contracts-tab";
 import CompanyOnboardingTab from "./company-onboarding-tab";
+import CandidateChecklistTab from "./candidate-checklist-tab";
 
 export default function CompanyManageCandidatePage() {
   const { TabComponent } = useCustomTabs({ defaultTab: "config" });
@@ -128,6 +129,17 @@ export default function CompanyManageCandidatePage() {
           markAsChecked={markATaskAsChecked}
           candidate={candidate}
           reset={() => setChecked([])}
+        />
+      ),
+    },
+    {
+      name: "Candidate Checklist",
+      key: "candidate-checklist",
+      icon: <FileText className="h-4 w-4" />,
+      render: () => (
+        <CandidateChecklistTab
+          candidateId={candidate_id as string}
+          candidateName={candidate?.name}
         />
       ),
     },

@@ -63,6 +63,15 @@ function CompanyCandidatesContent() {
     isPending: loadingCandidates,
   } = useCandidateList(company?.id || "");
 
+  // Log the candidates data when it changes
+  useEffect(() => {
+    if (candidates) {
+      console.log("✨ Candidates received in component:", candidates);
+      console.log("📊 Number of candidates:", candidates.length);
+      console.log("🎯 Sample candidate structure:", candidates[0]);
+    }
+  }, [candidates]);
+
   const makeActions = (row: ApiCandidate): DOption[] => {
     return [
       {
