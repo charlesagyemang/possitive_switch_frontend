@@ -47,6 +47,7 @@ function CompanyManageContractsTab({ candidate, api_key, company_id }: CompanyMa
   // Search and filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [templateSearchTerm, setTemplateSearchTerm] = useState("");
   
   // Contract signing modal state
   const [isSigningModalOpen, setIsSigningModalOpen] = useState(false);
@@ -190,6 +191,19 @@ function CompanyManageContractsTab({ candidate, api_key, company_id }: CompanyMa
     ];
   };
 
+  // Filter templates based on search term
+  const filteredTemplates = useMemo(() => {
+    if (!listofContracts) return [];
+    
+    return listofContracts.filter((contract: ApiContractTemplate) => {
+      const matchesSearch = templateSearchTerm === "" || 
+        contract.name?.toLowerCase().includes(templateSearchTerm.toLowerCase()) ||
+        contract.description?.toLowerCase().includes(templateSearchTerm.toLowerCase());
+      
+      return matchesSearch;
+    });
+  }, [listofContracts, templateSearchTerm]);
+
   const renderTemplates = () => {
     if (!!!listofContracts)
       return (
@@ -199,7 +213,16 @@ function CompanyManageContractsTab({ candidate, api_key, company_id }: CompanyMa
         </div>
       );
 
-    return listofContracts.map(
+    if (filteredTemplates.length === 0 && templateSearchTerm) {
+      return (
+        <div className="text-center py-4">
+          <span className="text-gray-400 dark:text-gray-500">🔍 No templates match your search</span>
+          <p className="text-gray-300 dark:text-gray-600 text-xs mt-1">Try a different search term 💫</p>
+        </div>
+      );
+    }
+
+    return filteredTemplates.map(
       (contract: ApiContractTemplate, index: number) => {
         const isUsed = usedTemplates?.includes(contract.id);
         const gradients = [
@@ -314,52 +337,7 @@ function CompanyManageContractsTab({ candidate, api_key, company_id }: CompanyMa
     <div className="mt-6">
       <ModalPortal className="!max-w-4xl w-full !max-h-[90vh]" />
       
-      {/* Beautiful Header */}
-      <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-pink-200/50 dark:border-purple-500/30 mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <Crown className="w-6 h-6 text-purple-500" />
-          <h5 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600">
-            Manage Contracts ✨
-          </h5>
-        </div>
-        <p className="text-purple-600 dark:text-purple-300 font-medium">
-          Handle all contracts with style! Use beautiful templates for consistency 💎
-        </p>
-      </div>
 
-      {/* Search and Filter Section */}
-      <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-pink-200/50 dark:border-purple-500/30 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 flex-1">
-            <Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-            <Input
-              placeholder="Search contracts by name or status..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                {availableStatuses.map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status?.charAt(0).toUpperCase() + status?.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Showing {filteredContracts.length} of {candidateContracts?.length || 0} contracts
-        </div>
-      </div>
 
       <div className="grid grid-cols-5 gap-6">
         {/* Contract Templates */}
@@ -371,6 +349,17 @@ function CompanyManageContractsTab({ candidate, api_key, company_id }: CompanyMa
                 <h5 className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-700">
                   Company Templates
                 </h5>
+              </div>
+              
+              {/* Template Search Bar */}
+              <div className="relative mb-4">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-500" />
+                <Input
+                  placeholder="Search templates by name or description... ✨"
+                  value={templateSearchTerm}
+                  onChange={(e) => setTemplateSearchTerm(e.target.value)}
+                  className="pl-10 bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 focus:border-purple-400 dark:focus:border-purple-400 rounded-2xl h-10 placeholder:text-purple-400 dark:placeholder:text-purple-500"
+                />
               </div>
               
               {loadingTemplates ? (
@@ -388,7 +377,58 @@ function CompanyManageContractsTab({ candidate, api_key, company_id }: CompanyMa
         </Card>
 
         {/* Contracts Table */}
-        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl overflow-hidden col-span-3 py-6 mb-6">
+        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl overflow-hidden col-span-3 mb-6">
+          {/* Contracts Search and Filter Header */}
+          <div className="bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-blue-500/10 dark:from-pink-500/20 dark:via-purple-500/20 dark:to-blue-500/20 border-b border-purple-100 dark:border-purple-500/30 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h5 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-700">
+                    Contracts 📄
+                  </h5>
+                  <p className="text-purple-600 dark:text-purple-300 text-sm font-medium">
+                    Manage your candidate contracts
+                  </p>
+                </div>
+              </div>
+              <div className="text-sm bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-full font-semibold text-purple-700 dark:text-purple-300">
+                {filteredContracts.length} / {candidateContracts?.length || 0} contracts
+              </div>
+            </div>
+
+            {/* Search and Filter Controls */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 flex-1">
+                <Search className="w-4 h-4 text-purple-500" />
+                <Input
+                  placeholder="Search contracts by name or status... ✨"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 focus:border-purple-400 dark:focus:border-purple-400 rounded-2xl h-10 placeholder:text-purple-400 dark:placeholder:text-purple-500"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-purple-500" />
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-40 bg-white/60 dark:bg-gray-700/60 border-purple-200 dark:border-purple-600/30 focus:border-purple-400 dark:focus:border-purple-400 rounded-2xl h-10">
+                    <SelectValue placeholder="Filter by status" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-600/30 rounded-2xl">
+                    <SelectItem value="all">All Statuses ✨</SelectItem>
+                    {availableStatuses.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {status?.charAt(0).toUpperCase() + status?.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
           {loadingContracts ? (
             <div className="flex m-6 text-sm items-center gap-3 text-purple-500 dark:text-purple-400">
               <LoaderCircle className="animate-spin" />

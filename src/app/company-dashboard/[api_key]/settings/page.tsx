@@ -140,8 +140,15 @@ export default function CompanySettingsPage() {
 
         {/* Settings Tabs */}
         <div className="relative z-10">
-          <Tabs defaultValue="email-templates" className="space-y-6">
+          <Tabs defaultValue="onboarding-tasks" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-0 shadow-xl dark:shadow-purple-500/25 rounded-3xl p-2">
+              <TabsTrigger 
+                value="onboarding-tasks"
+                className="flex items-center gap-2 rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white font-medium transition-all duration-300"
+              >
+                <CheckSquare className="w-4 h-4" />
+                Onboarding Tasks
+              </TabsTrigger>
               <TabsTrigger 
                 value="email-templates"
                 className="flex items-center gap-2 rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white font-medium transition-all duration-300"
@@ -157,13 +164,6 @@ export default function CompanySettingsPage() {
                 Contract Templates
               </TabsTrigger>
               <TabsTrigger 
-                value="onboarding-tasks"
-                className="flex items-center gap-2 rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white font-medium transition-all duration-300"
-              >
-                <CheckSquare className="w-4 h-4" />
-                Onboarding Tasks
-              </TabsTrigger>
-              <TabsTrigger 
                 value="company-info"
                 className="flex items-center gap-2 rounded-2xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white font-medium transition-all duration-300"
               >
@@ -171,6 +171,11 @@ export default function CompanySettingsPage() {
                 Company Info
               </TabsTrigger>
             </TabsList>
+
+            {/* Onboarding Tasks Tab */}
+            <TabsContent value="onboarding-tasks">
+              <CompanyOnboardingTasksSection companyId={companyId} />
+            </TabsContent>
 
             {/* Email Templates Tab */}
             <TabsContent value="email-templates">
@@ -180,11 +185,6 @@ export default function CompanySettingsPage() {
             {/* Contract Templates Tab */}
             <TabsContent value="contract-templates">
               <CompanyContractTemplatesSection companyId={companyId} />
-            </TabsContent>
-
-            {/* Onboarding Tasks Tab */}
-            <TabsContent value="onboarding-tasks">
-              <CompanyOnboardingTasksSection companyId={companyId} />
             </TabsContent>
 
             {/* Company Info Tab */}

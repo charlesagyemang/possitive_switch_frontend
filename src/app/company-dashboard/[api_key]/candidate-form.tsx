@@ -23,48 +23,6 @@ const FORM_FIELDS = [
     placeholder: "e.g. johndoe@email.com",
     required: true,
   },
-  {
-    type: "text",
-    name: "job_title",
-    label: "Job Title",
-    placeholder: "e.g. Software Engineer",
-    required: false,
-  },
-  {
-    type: "text",
-    name: "phone_number",
-    label: "Phone Number",
-    placeholder: "e.g. +1234567890",
-    required: false,
-  },
-  {
-    type: "text",
-    name: "location",
-    label: "Location",
-    placeholder: "e.g. New York, NY",
-    required: false,
-  },
-  {
-    type: "date",
-    name: "contract_date",
-    label: "Contract Date",
-    placeholder: "Select contract date",
-    required: false,
-  },
-  {
-    type: "date",
-    name: "reporting_date",
-    label: "Reporting Date",
-    placeholder: "Select reporting date",
-    required: false,
-  },
-  {
-    type: "number",
-    name: "salary",
-    label: "Salary",
-    placeholder: "e.g. 75000",
-    required: false,
-  },
 ];
 
 function CandidateForm({
@@ -98,12 +56,12 @@ function CandidateForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleCreate)} className="space-y-4 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-2xl mx-auto">
+    <form onSubmit={handleSubmit(handleCreate)} className="space-y-4 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md mx-auto">
       <h3 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 mb-6">
         Add New Candidate
       </h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-4">
         {FORM_FIELDS.map((field, index) => {
           return (
             <Fragment key={index}>

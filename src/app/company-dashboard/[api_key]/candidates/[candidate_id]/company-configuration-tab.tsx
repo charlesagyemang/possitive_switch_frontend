@@ -1,7 +1,8 @@
 import { Q_LOAD_ONE_CANDIDATE } from "@/api/auth/constants";
-import { useBulkRemoveOnboardingTasks } from "@/api/candidates/onboarding-api";
+import { useBulkRemoveOnboardingTasks, useBulkCreateOnboardingTasks } from "@/api/candidates/onboarding-api";
+import { useOnboardingTaskTemplates } from "@/api/companies/company-api";
 import { ApiCandidate } from "@/app/seed/candidates";
-import { ApiOnBoardingTask, FullApiCandidate } from "@/app/types";
+import { ApiOnBoardingTask, FullApiCandidate, OnBoardingTaskTemplate } from "@/app/types";
 import AppNotifications from "@/components/built/app-notifications";
 import CustomButton from "@/components/built/button/custom-button";
 import CustomTooltip from "@/components/built/tooltip/custom-tooltip";
@@ -16,27 +17,53 @@ function CompanyConfigurationTab({
   exclude,
   candidate,
   reset,
+  companyId,
 }: {
   candidate: FullApiCandidate;
   excluded?: ApiOnBoardingTask[];
   exclude: (tasks: ApiOnBoardingTask) => void;
   reset: () => void;
+  companyId?: string;
 }) {
   const client = useQueryClient();
   const { run, isPending, error } = useBulkRemoveOnboardingTasks();
+  const { run: createTasks, isPending: isCreatingTasks } = useBulkCreateOnboardingTasks();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Memoize tasks to prevent unnecessary re-renders
-  const tasks = useMemo(() => candidate?.onboarding_tasks || [], [candidate?.onboarding_tasks]);
+  // Fetch company onboarding task templates
+  const { data: companyTemplates = [], isLoading: loadingTemplates } = useOnboardingTaskTemplates(companyId || "") as { data: OnBoardingTaskTemplate[], isLoading: boolean };
 
-  // Filter tasks based on search term
+  // Memoize tasks to prevent unnecessary re-renders
+  const tasks = useMemo(() => candidate?.company_onboarding_tasks || [], [candidate?.company_onboarding_tasks]);
+
+  // Get template IDs that are already used as tasks
+  const usedTemplateIds = useMemo(() => 
+    tasks.map(task => task.company_onboarding_task_template_id).filter(Boolean),
+    [tasks]
+  );
+
+  // Available templates (not yet created as tasks for this candidate)
+  const availableTemplates = useMemo(() => 
+    companyTemplates.filter(template => !usedTemplateIds.includes(template.id)),
+    [companyTemplates, usedTemplateIds]
+  );
+
+  // Filter tasks and templates based on search term
   const filteredTasks = useMemo(() => {
     if (!searchTerm.trim()) return tasks;
     
     return tasks.filter(task => 
-      task.onboarding_task_template.title.toLowerCase().includes(searchTerm.toLowerCase())
+      task.company_onboarding_task_template?.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [tasks, searchTerm]);
+
+  const filteredAvailableTemplates = useMemo(() => {
+    if (!searchTerm.trim()) return availableTemplates;
+    
+    return availableTemplates.filter(template => 
+      template.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [availableTemplates, searchTerm]);
 
   // Separate filtered tasks into enabled and disabled
   const enabledTasks = useMemo(() => 
@@ -67,30 +94,38 @@ function CompanyConfigurationTab({
       }
     );
   };
+
+  const handleAddTemplate = (templateId: string) => {
+    createTasks(
+      {
+        candidate_id: candidate.id,
+        template_ids: [templateId],
+      },
+      {
+        onSuccess: () => {
+          client.refetchQueries({
+            queryKey: [Q_LOAD_ONE_CANDIDATE, candidate.id],
+          });
+          AppNotifications.Success({ message: "Template added successfully! ✨" });
+        },
+        onError: () => {
+          AppNotifications.Error({ message: "Failed to add template. Please try again." });
+        },
+      }
+    );
+  };
   
   return (
     <div className="py-4">
       <AppNotifications.Error message={error?.message} />
       
-      {/* Beautiful Header */}
-      <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-pink-200/50 dark:border-purple-500/30 mb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Settings className="w-6 h-6 text-purple-500" />
-            <div>
-              <h3 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600">
-                Task Configurations ✨
-              </h3>
-              <p className="text-purple-600 dark:text-purple-300 font-medium">
-                Customize onboarding tasks for {candidate?.name} 💎
-              </p>
-            </div>
-          </div>
-          
-          {excluded?.length ? (
+      {/* Floating Save Button */}
+      {excluded?.length > 0 && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl p-4 shadow-xl border border-purple-200/50 dark:border-purple-500/30">
             <div className="flex items-center gap-4">
-              <div className="bg-orange-100 dark:bg-orange-900/30 px-4 py-2 rounded-2xl border border-orange-200 dark:border-orange-700/30">
-                <span className="font-bold text-orange-700 dark:text-orange-300">
+              <div className="bg-orange-100 dark:bg-orange-900/30 px-3 py-1 rounded-xl border border-orange-200 dark:border-orange-700/30">
+                <span className="font-bold text-orange-700 dark:text-orange-300 text-sm">
                   {excluded.length} excluded ⚠️
                 </span>
               </div>
@@ -98,14 +133,14 @@ function CompanyConfigurationTab({
                 onClick={handleSave}
                 disabled={isPending}
                 loading={isPending}
-                className="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0"
+                className="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 text-sm"
               >
                 Save Changes ✨
               </CustomButton>
             </div>
-          ) : null}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Search Section */}
       <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-pink-200/50 dark:border-purple-500/30 mb-6">
@@ -152,13 +187,13 @@ function CompanyConfigurationTab({
               <X className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h4 className="text-lg font-bold text-red-800 dark:text-red-300">Disabled Tasks</h4>
+              <h4 className="text-lg font-bold text-red-800 dark:text-red-300">Available Templates</h4>
               <p className="text-2xl font-black text-red-600 dark:text-red-400">
-                {searchTerm ? disabledTasks.length : excluded.length}
+                {searchTerm ? filteredAvailableTemplates.length : availableTemplates.length}
               </p>
               {searchTerm && (
                 <p className="text-xs text-red-500 dark:text-red-400">
-                  (filtered from {excluded.length} total)
+                  (filtered from {availableTemplates.length} total)
                 </p>
               )}
             </div>
@@ -205,7 +240,11 @@ function CompanyConfigurationTab({
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
                               <h4 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-green-600 transition-all duration-300">
-                                {task.onboarding_task_template.title}
+                                {task.company_onboarding_task_template?.title || 
+                                 task.onboarding_task_template?.title || 
+                                 task.title || 
+                                 `Task ${task.id}` || 
+                                 'Untitled Task'}
                               </h4>
                               <SparkleIcon className="w-3 h-3 text-emerald-400 dark:text-emerald-300 animate-pulse" />
                             </div>
@@ -231,58 +270,64 @@ function CompanyConfigurationTab({
           </div>
         )}
 
-        {/* Disabled Tasks Section */}
-        {disabledTasks.length > 0 && (
+        {/* Available Templates Section */}
+        {filteredAvailableTemplates.length > 0 && (
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-red-400 to-pink-400 rounded-xl flex items-center justify-center">
-                <X className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-red-800 dark:text-red-300">
-                Disabled Tasks ({disabledTasks.length})
+              <h3 className="text-xl font-bold text-blue-800 dark:text-blue-300">
+                Available Templates ({filteredAvailableTemplates.length})
                 {searchTerm && (
-                  <span className="text-sm font-normal text-red-600 dark:text-red-400 ml-2">
+                  <span className="text-sm font-normal text-blue-600 dark:text-blue-400 ml-2">
                     (filtered)
                   </span>
                 )}
               </h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {disabledTasks.map((task, index) => {
+              {filteredAvailableTemplates.map((template, index) => {
                 const gradients = [
-                  "from-red-400 via-pink-400 to-rose-400",
-                  "from-orange-400 via-red-400 to-pink-400",
-                  "from-gray-400 via-slate-400 to-zinc-400",
-                  "from-slate-400 via-gray-400 to-stone-400"
+                  "from-blue-400 via-purple-400 to-indigo-400",
+                  "from-purple-400 via-pink-400 to-rose-400",
+                  "from-indigo-400 via-blue-400 to-cyan-400",
+                  "from-cyan-400 via-teal-400 to-emerald-400"
                 ];
                 const sparkleIcons = [Heart, Star, Gem, Sparkles];
                 const SparkleIcon = sparkleIcons[index % sparkleIcons.length];
 
                 return (
                   <div
-                    key={task.id}
-                    className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl border border-red-200 dark:border-red-700/30 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 rounded-2xl overflow-hidden relative opacity-75"
+                    key={template.id}
+                    className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-blue-200 dark:border-blue-700/30 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 rounded-2xl overflow-hidden relative"
                   >
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <h4 className="text-sm font-bold text-gray-500 dark:text-gray-400 line-through">
-                              {task.onboarding_task_template.title}
+                            <h4 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-purple-600 transition-all duration-300">
+                              {template.title}
                             </h4>
-                            <SparkleIcon className="w-3 h-3 text-red-400 dark:text-red-300" />
+                            <SparkleIcon className="w-3 h-3 text-blue-400 dark:text-blue-300 animate-pulse" />
                           </div>
-                          <div className="text-xs text-red-500 dark:text-red-400 font-medium">
-                            ❌ Disabled
+                          <div className="text-xs text-blue-500 dark:text-blue-400 font-medium">
+                            ➕ Available to Add
                           </div>
                         </div>
                         
-                        <CustomTooltip tip="Re-enable this task">
+                        <CustomTooltip tip="Add this template as a task">
                           <div
-                            onClick={() => exclude(task)}
-                            className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-green-400 hover:from-emerald-500 hover:to-green-500 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md cursor-pointer"
+                            onClick={() => !isCreatingTasks && handleAddTemplate(template.id)}
+                            className={`w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md ${
+                              isCreatingTasks ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                            }`}
                           >
-                            <CheckCircle className="w-4 h-4 text-white" />
+                            {isCreatingTasks ? (
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                              <CheckCircle className="w-4 h-4 text-white" />
+                            )}
                           </div>
                         </CustomTooltip>
                       </div>

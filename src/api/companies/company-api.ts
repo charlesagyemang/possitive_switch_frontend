@@ -379,6 +379,57 @@ export const useDeleteOnboardingTaskTemplate = () => {
   );
 };
 
+// Company Documents API
+const getCompanyDocuments = async (companyId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/company_documents`, null, {
+    method: "GET",
+  });
+  return obj.data?.company_documents || [];
+};
+
+export const useCompanyDocuments = (companyId: string) => {
+  return useGenericQuery(
+    [`Q_COMPANY_DOCUMENTS_${companyId}`],
+    () => getCompanyDocuments(companyId),
+    {
+      enabled: !!companyId,
+    }
+  );
+};
+
+const createCompanyDocument = async (companyId: string, formData: FormData) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/company_documents`, formData, {
+    method: "POST",
+    headers: {
+      // Don't set Content-Type, let the browser set it with boundary for multipart/form-data
+    },
+  });
+  return obj.data;
+};
+
+export const useCreateCompanyDocument = () => {
+  return useGenericMutation(
+    ["M_CREATE_COMPANY_DOCUMENT"],
+    ({ companyId, formData }: { companyId: string; formData: FormData }) =>
+      createCompanyDocument(companyId, formData)
+  );
+};
+
+const deleteCompanyDocument = async (companyId: string, documentId: string) => {
+  const obj = await apiCall(`${API_COMPANIES}/${companyId}/company_documents/${documentId}`, null, {
+    method: "DELETE",
+  });
+  return obj.data;
+};
+
+export const useDeleteCompanyDocument = () => {
+  return useGenericMutation(
+    ["M_DELETE_COMPANY_DOCUMENT"],
+    ({ companyId, documentId }: { companyId: string; documentId: string }) =>
+      deleteCompanyDocument(companyId, documentId)
+  );
+};
+
 const reorderOnboardingTaskTemplates = (companyId: string, positions: any[]) => {
   return apiCall(`${API_COMPANIES}/${companyId}/onboarding_task_templates/reorder`, {
     positions

@@ -7,14 +7,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { 
   Building2, 
   Users, 
-  FileText, 
   Settings, 
   BarChart3, 
   LogOut,
   Crown,
   Sparkles,
   Menu,
-  X
+  X,
+  FileText
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -74,10 +74,10 @@ function CompanyDashboardLayoutContent({
       current: pathname.includes('/candidates'),
     },
     {
-      name: "Contracts",
-      href: `/company-dashboard/${apiKey}/contracts`,
+      name: "Documents",
+      href: `/company-dashboard/${apiKey}/documents`,
       icon: FileText,
-      current: pathname.includes('/contracts'),
+      current: pathname.includes('/documents'),
     },
     {
       name: "Settings",

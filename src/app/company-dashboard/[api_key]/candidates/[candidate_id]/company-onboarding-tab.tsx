@@ -72,6 +72,7 @@ function CompanyOnboardingTab({
               const checkButUnsaved = checked?.some((t) => t.id === task.id);
               const isChecked = task.status === "done";
               // const isChecked = true;
+              
 
               let classes, Icon, bgClasses;
               if (isChecked) {
@@ -115,7 +116,11 @@ function CompanyOnboardingTab({
                       <span
                         className={`text-lg font-bold text-gray-900 dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-purple-600 transition-all duration-300 ${isChecked ? "line-through opacity-75" : ""}`}
                       >
-                        {task.onboarding_task_template.title}
+                        {task.company_onboarding_task_template?.title || 
+                         task.onboarding_task_template?.title || 
+                         task.title || 
+                         `Task ${task.id}` || 
+                         'Untitled Task'}
                       </span>
                     </CustomTooltip>
                   </div>

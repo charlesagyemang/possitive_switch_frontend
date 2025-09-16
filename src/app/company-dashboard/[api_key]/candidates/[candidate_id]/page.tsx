@@ -107,6 +107,7 @@ export default function CompanyManageCandidatePage() {
           exclude={excludeATask}
           candidate={candidate}
           reset={() => setExcluded([])}
+          companyId={company?.id}
         />
       ),
     },
@@ -122,7 +123,7 @@ export default function CompanyManageCandidatePage() {
       icon: <CheckCircle className="h-4 w-4" />,
       render: () => (
         <CompanyOnboardingTab
-          tasks={candidate?.onboarding_tasks}
+          tasks={candidate?.company_onboarding_tasks}
           checked={checked}
           markAsChecked={markATaskAsChecked}
           candidate={candidate}
@@ -198,6 +199,7 @@ export default function CompanyManageCandidatePage() {
             </div>
           </div>
         </div>
+
 
         <div className="relative z-10">
           <TabComponent items={TABS} />
