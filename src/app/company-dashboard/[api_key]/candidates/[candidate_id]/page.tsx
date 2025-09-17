@@ -6,7 +6,7 @@ import {
   CustomTabItem,
 } from "@/components/built/tabs/tab-component";
 import useCustomTabs from "@/components/built/tabs/use-tab-component";
-import { CheckCircle, ListTodo, Signature, UserCog, Sparkles, Crown, FileText } from "lucide-react";
+import { CheckCircle, ListTodo, Signature, UserCog, Sparkles, Crown, FileText, Share2 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Image from "next/image";
 import { useCandidate } from "@/api/candidates/candidates-api";
@@ -17,6 +17,7 @@ import CompanyConfigurationTab from "./company-configuration-tab";
 import CompanyManageContractsTab from "./company-manage-contracts-tab";
 import CompanyOnboardingTab from "./company-onboarding-tab";
 import CandidateChecklistTab from "./candidate-checklist-tab";
+import ShareCompanyDocumentsTab from "./share-company-documents-tab";
 
 export default function CompanyManageCandidatePage() {
   const { TabComponent } = useCustomTabs({ defaultTab: "config" });
@@ -140,6 +141,18 @@ export default function CompanyManageCandidatePage() {
         <CandidateChecklistTab
           candidateId={candidate_id as string}
           candidateName={candidate?.name}
+        />
+      ),
+    },
+    {
+      name: "Share Documents",
+      key: "share-documents",
+      icon: <Share2 className="h-4 w-4" />,
+      render: () => (
+        <ShareCompanyDocumentsTab
+          candidateId={candidate_id as string}
+          candidateName={candidate?.name}
+          apiKey={api_key as string}
         />
       ),
     },

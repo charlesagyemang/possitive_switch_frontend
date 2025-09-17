@@ -11,7 +11,8 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  LoaderCircle
+  LoaderCircle,
+  Share2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -128,6 +129,12 @@ function CandidateDashboardContent({
       href: `/candidate-dashboard/${apiKey}/documents`,
       icon: FolderOpen,
       description: "Upload & manage files"
+    },
+    {
+      name: "Shared with Me",
+      href: `/candidate-dashboard/${apiKey}/shared-documents`,
+      icon: Share2,
+      description: "Documents shared by company"
     }
   ];
 

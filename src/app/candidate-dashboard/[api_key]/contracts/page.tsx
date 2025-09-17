@@ -156,7 +156,7 @@ export default function CandidateContractsPage() {
     const a = document.createElement('a');
     a.style.display = 'none';
     a.href = url;
-    a.download = `${contract.company_contract_template.name}-${contract.id}.html`;
+    a.download = `${contract.company_contract_template?.name || 'Contract'}-${contract.id}.html`;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
@@ -321,7 +321,7 @@ export default function CandidateContractsPage() {
                       </div>
                       <div>
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                        {contract.company_contract_template.name}
+                        {contract.company_contract_template?.name || 'Contract'}
                       </h3>
                       <div className="flex items-center gap-2 mt-1">
                         <Badge className={`text-xs ${getStatusColor(contract)}`}>
@@ -329,20 +329,20 @@ export default function CandidateContractsPage() {
                         </Badge>
                         <span className="text-sm text-gray-500">•</span>
                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {contract.signing_status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          {contract.signing_status?.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Unknown'}
                         </span>
                       </div>
                       </div>
                     </div>
                     
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      {contract.company_contract_template.description}
+                      {contract.company_contract_template?.description || 'No description available'}
                     </p>
                     
                     <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
                       <div className="flex items-center gap-1">
                         <Building className="w-4 h-4" />
-                        {contract.company_contract_template.company_name}
+                        {contract.company_contract_template?.company_name || 'Company'}
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
